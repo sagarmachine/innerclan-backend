@@ -1,4 +1,8 @@
 package com.innerclan.v1.entity;
 
-public class Entity {
+
+
+
+
+public class Client {
 }
