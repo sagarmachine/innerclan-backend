@@ -8,52 +8,42 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.Set;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Client {
+public class Promo {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
-    String uuid;
-
     @Column(nullable = false)
-    String firstName;
-
-    @Column(nullable = false)
-    String lastName;
-
-    @Column(nullable = false)
-    String email;
-
-    @Column(nullable = false)
-    String password;
-
-    String phone;
-
-    @Embedded
-    Address address;
+    String name;
 
     @CreationTimestamp
     Date createdOn;
 
-    Date lastLoggedIn;
 
-    int visit;
+    Date expiryDate;
 
-    boolean newUser;
+    @Enumerated(EnumType.STRING)
+    Access access;
 
-    int totalOrder;
+    double value;
 
-    @OneToMany(mappedBy = "client")
-    Set<Promo> promos;
+    @ManyToOne
+    @JoinColumn(name = "client")
+    Client client;
 
 
 
 
+}
+
+enum Access
+{
+    PRIVATE, PUBLIC
 }
