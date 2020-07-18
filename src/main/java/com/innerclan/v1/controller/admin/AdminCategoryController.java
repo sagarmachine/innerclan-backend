@@ -1,6 +1,7 @@
 package com.innerclan.v1.controller.admin;
 
 
+import com.innerclan.v1.dto.AddCategoryDto;
 import com.innerclan.v1.dto.AddProductDto;
 import com.innerclan.v1.entity.Category;
 import com.innerclan.v1.service.IBindingErrorService;
@@ -29,7 +30,7 @@ public class AdminCategoryController {
 
 
     @PostMapping(value="/")
-    public ResponseEntity<?> addCategory(@Valid @RequestBody Category category,BindingResult bindingResult){
+    public ResponseEntity<?> addCategory(@Valid @RequestBody AddCategoryDto category, BindingResult bindingResult){
 
         if(bindingResult.hasErrors()){
             return bindingErrorService.getErrorResponse(bindingResult);
