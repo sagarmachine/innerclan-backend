@@ -64,5 +64,5 @@ public class AdminProductController {
         return new ResponseEntity<>("SUCCESSFULLY Deleted",HttpStatus.OK);
     }
 
-    
+
 }
