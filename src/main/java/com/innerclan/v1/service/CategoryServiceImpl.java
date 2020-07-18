@@ -1,21 +1,16 @@
 package com.innerclan.v1.service;
 
 import com.innerclan.v1.dto.AddCategoryDto;
-import com.innerclan.v1.dto.AddProductDto;
 import com.innerclan.v1.entity.Category;
 import com.innerclan.v1.entity.Gender;
-import com.innerclan.v1.entity.Product;
-import com.innerclan.v1.exception.CategoryNotSavedException;
-import com.innerclan.v1.exception.CategoryNotUpdatedException;
-import com.innerclan.v1.exception.ProductNotSavedException;
+import com.innerclan.v1.exception.CategoryAlreadyExistException;
+import com.innerclan.v1.exception.CategoryNotFoundException;
 import com.innerclan.v1.repository.CategoryRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.Optional;
 
 
@@ -33,14 +28,14 @@ public class CategoryServiceImpl implements ICategoryService {
         Category category1 = mapper.map(category, Category.class);
 
 
-        if(category.getGendername().equals("M")) category1.setGender(Gender.MALE);
-        else if(category.getGendername().equals("F")) category1.setGender(Gender.FEMALE);
+        if(category.getGender().equals("M")) category1.setGender(Gender.MALE);
+        else if(category.getGender().equals("F")) category1.setGender(Gender.FEMALE);
         else category1.setGender(Gender.UNISEX);
 
         try {
             categoryRepo.save(category1);
         } catch (DataIntegrityViolationException ex) {
-            throw new CategoryNotSavedException("Same Category Name Already Exist Try With Some Other Name");
+            throw new CategoryAlreadyExistException("Same Category Name Already Exist Try A Different Name");
         }
 
 
@@ -48,29 +43,28 @@ public class CategoryServiceImpl implements ICategoryService {
 
 
     @Override
-    public void updateCategory(Category c) {
+    public void updateCategory(AddCategoryDto c) {
 
-        Optional<Category> value = categoryRepo.findById((int)c.getId());
-        if (value.isPresent()) {
+        ModelMapper mapper= new ModelMapper();
+        Category category = mapper.map(c,Category.class);
 
-            try {
-                categoryRepo.save(c);
-            } catch (DataIntegrityViolationException ex) {
+        Optional<Category> value = categoryRepo.findById(c.getId());
+        if (value.isPresent())
+          categoryRepo.save(category);
 
-                throw new CategoryNotUpdatedException("Same Category Name Already Exists ");
-            }
+        else
+            throw new CategoryNotFoundException("no category with id "+c.getId()+" found");
 
 
-        }
     }
 
     @Override
     public void deleteCategory(int id) {
 
         try {
-            categoryRepo.deleteById(id);
+            categoryRepo.deleteById((long)id);
         }catch(Exception ex) {
-            throw new RuntimeException("Category Not deleted");
+            throw new CategoryNotFoundException("no category with id "+id+" found");
         }
 
 

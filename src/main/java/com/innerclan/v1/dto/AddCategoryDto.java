@@ -15,11 +15,13 @@ import java.util.List;
 @AllArgsConstructor
 public class AddCategoryDto {
 
+    long id;
+
     @NotNull
     String name;
 
     @NotNull
-    String gendername;
+    String gender;
 
 
     List<String> information;

@@ -7,7 +7,7 @@ public interface ICategoryService {
 
     void addCategory( AddCategoryDto category);
 
-    void updateCategory(Category c);
+    void updateCategory(AddCategoryDto c);
 
     void deleteCategory(int id);
 }
