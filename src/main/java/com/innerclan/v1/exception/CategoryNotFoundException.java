@@ -1,10 +1,10 @@
 package com.innerclan.v1.exception;
 
-public class CategoryNotUpdatedException extends  RuntimeException{
+public class CategoryNotFoundException extends  RuntimeException{
 
     String message;
 
-    public CategoryNotUpdatedException(String message){
+    public CategoryNotFoundException(String message){
         this.message=message;
     }
 

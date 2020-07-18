@@ -15,7 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 
 @RestController
-        @RequestMapping(value = "api/v1/admin/product")
+@RequestMapping(value = "/api/v1/admin/product")
 public class AdminProductController {
 
 

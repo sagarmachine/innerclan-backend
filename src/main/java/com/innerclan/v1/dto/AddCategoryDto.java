@@ -15,6 +15,8 @@ import java.util.List;
 @AllArgsConstructor
 public class AddCategoryDto {
 
+    long id;
+
     @NotNull
     String name;
 

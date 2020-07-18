@@ -1,22 +1,15 @@
 package com.innerclan.v1.service;
 
 import com.innerclan.v1.dto.AddProductDto;
-import com.innerclan.v1.entity.Category;
 import com.innerclan.v1.entity.Product;
-import com.innerclan.v1.exception.CategoryNotSavedException;
-import com.innerclan.v1.exception.CategoryNotUpdatedException;
 import com.innerclan.v1.exception.ProductNotSavedException;
 import com.innerclan.v1.repository.CategoryRepository;
-import lombok.val;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Optional;
 
 
 @Service
