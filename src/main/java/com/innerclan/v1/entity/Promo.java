@@ -4,10 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
 
 @Entity
 @Getter
@@ -34,16 +36,15 @@ public class Promo {
 
     double value;
 
-    @ManyToOne
-    @JoinColumn(name = "client")
+    @ManyToOne(cascade =CascadeType.PERSIST)
+    @JoinColumn(name = "client_id")
     Client client;
 
 
 
 
+
+
 }
 
-enum Access
-{
-    PRIVATE, PUBLIC
-}
+
