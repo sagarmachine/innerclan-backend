@@ -10,6 +10,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -40,11 +41,18 @@ public class Promo {
     @JoinColumn(name = "client_id")
     Client client;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Promo)) return false;
+        Promo promo = (Promo) o;
+        return getId() == promo.getId();
+    }
 
-
-
-
-
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
+    }
 }
 
 

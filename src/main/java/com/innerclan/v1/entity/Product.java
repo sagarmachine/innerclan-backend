@@ -8,10 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Slf4j
 @Entity
@@ -19,7 +16,6 @@ import java.util.Set;
  @NoArgsConstructor
 @AllArgsConstructor
 public class Product {
-
 
 
     @Id
@@ -35,13 +31,6 @@ public class Product {
     @Column(nullable = false)
     double actualPrice;
 
-
-
-    @ManyToOne(fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST,CascadeType.DETACH,CascadeType.MERGE,CascadeType.REFRESH})
-    @JoinColumn(name="category_id")
-    Category category;
-
-
     @CreationTimestamp
     Date createdOn;
 
@@ -51,8 +40,34 @@ public class Product {
 
     int view;
 
+    @ManyToOne(fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST,CascadeType.DETACH,CascadeType.MERGE,CascadeType.REFRESH})
+    @JoinColumn(name="category_id")
+    Category category;
+
     @OneToMany(mappedBy = "product",cascade = {CascadeType.PERSIST,CascadeType.REMOVE})
     Set<Color> colors;
+
+
+
+
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Product)) return false;
+        Product product = (Product) o;
+        return getId() == product.getId();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
+    }
+
+
+
+
 
     public void addColors(Color color){
         if(colors==null){
@@ -61,6 +76,5 @@ public class Product {
         colors.add(color);
         color.setProduct(this);
     }
-
 
 }

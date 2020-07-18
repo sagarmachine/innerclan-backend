@@ -9,6 +9,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Getter @Setter
@@ -29,6 +30,26 @@ public class Color {
     @OneToMany(mappedBy = "color",cascade = {CascadeType.PERSIST,CascadeType.REMOVE})
     List<Image> images;
 
+
+
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Color)) return false;
+        Color color = (Color) o;
+        return getId() == color.getId();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
+    }
+
+
+
+
     public void addImages(Image image){
         if(images==null){
             images= new ArrayList<Image>();
@@ -36,9 +57,4 @@ public class Color {
         images.add(image);
         image.setColor(this);
     }
-
-
-
-
-
 }
