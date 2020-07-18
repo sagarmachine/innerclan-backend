@@ -22,15 +22,15 @@ public class AdminProductController {
 
     @Autowired
     IBindingErrorService bindingErrorService;
-
-    @PostMapping(value = "/addProduct")
-    ResponseEntity<?> addAProject(@Valid @RequestBody AddProductDto addProductDto, @RequestParam MultipartFile file, BindingResult bindingResult){
-
-        if(bindingResult.hasErrors()){
-     return bindingErrorService.getErrorResponse(bindingResult);
-        }
-        //Service
-      //  return new ResponseEntity<>("SUCC", HttpStatus.OK);
-    }
+//
+//    @PostMapping(value = "/addProduct")
+//    ResponseEntity<?> addAProject(@Valid @RequestBody AddProductDto addProductDto, @RequestParam MultipartFile file, BindingResult bindingResult){
+//
+//        if(bindingResult.hasErrors()){
+//     return bindingErrorService.getErrorResponse(bindingResult);
+//        }
+//        //Service
+//      //  return new ResponseEntity<>("SUCC", HttpStatus.OK);
+//  //  }
 
 }
