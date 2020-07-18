@@ -1,6 +1,8 @@
 package com.innerclan.v1.exceptionhandler;
 
 
+import com.innerclan.v1.exception.CategoryNotSavedException;
+import com.innerclan.v1.exception.CategoryNotUpdatedException;
 import com.innerclan.v1.exception.ProductNotSavedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,4 +18,23 @@ public class ExceptionHandlerController {
        return    new ResponseEntity<>(new String[]{ex.getMessage()}, HttpStatus.BAD_REQUEST);
 
       }
+
+      @ExceptionHandler(value= CategoryNotSavedException.class)
+
+      public ResponseEntity<String[]> productNotSavedExceptionHandler(CategoryNotSavedException ex){
+
+          return    new ResponseEntity<>(new String[]{ex.getMessage()}, HttpStatus.BAD_REQUEST);
+
+      }
+
+
+      @ExceptionHandler(value= CategoryNotUpdatedException.class)
+      public ResponseEntity<String[]> productNotUpdatedExceptionHandler(CategoryNotUpdatedException ex){
+
+        return    new ResponseEntity<>(new String[]{ex.getMessage()}, HttpStatus.BAD_REQUEST);
+
+      }
+
+
+
 }

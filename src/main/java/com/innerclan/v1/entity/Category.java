@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -23,8 +24,11 @@ public class Category {
     @Enumerated(EnumType.STRING)
     Gender gender;
 
+    @NotNull(message = "Category name cannot be blank")
     @Column(nullable = false)
     String name;
+
+
 
     @ElementCollection
     @CollectionTable(name="category_information", joinColumns = @JoinColumn(name="category_id") )
