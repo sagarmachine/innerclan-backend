@@ -40,6 +40,9 @@ public class Product {
 
     int view;
 
+    @Lob
+    byte[] image;
+
     @ManyToOne(fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST,CascadeType.DETACH,CascadeType.MERGE,CascadeType.REFRESH})
     @JoinColumn(name="category_id")
     Category category;
