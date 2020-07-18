@@ -1,6 +1,6 @@
 package com.innerclan.v1.entity;
 
-enum Gender
+public enum Gender
 {
     MALE,FEMALE,UNISEX;
 }

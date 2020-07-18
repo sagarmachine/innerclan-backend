@@ -39,53 +39,5 @@ public class ProductServiceImpl implements IProductService {
 
     }
 
-    @Override
-    public void addCategory(Category category) {
-        category.ge
-
-        // if(((String)category.getGender()).equals("M")) category.setGender(Gender.MALE);
-        //else if(((String)category.getGender()).equals("F")) category.setGender(Gender.FEMALE);
-        //else category.setGender(Gender.UNISEX);
-        ModelMapper mapper = new ModelMapper();
-        Category category1 = mapper.map(category, Category.class);
-
-        try {
-            categoryRepo.save(category1);
-        } catch (DataIntegrityViolationException ex) {
-            throw new CategoryNotSavedException("Same Category Name Already Exist Try With Some Other Name");
-        }
-
-
-    }
-
-
-    @Override
-    public void updateCategory(int id, Category c) {
-
-        Optional<Category> value = categoryRepo.findById(id);
-        if (value.isPresent()) {
-            c.setId(id);
-            try {
-                categoryRepo.save(c);
-            } catch (DataIntegrityViolationException ex) {
-
-                throw new CategoryNotUpdatedException("Same Category Name Already Exists ");
-            }
-
-
-        }
-    }
-
-    @Override
-    public void deleteCategory(int id) {
-
-            try {
-                categoryRepo.deleteById(id);
-            }catch(Exception ex) {
-                throw new RuntimeException("Category Not deleted");
-            }
-
-
-        }
-    }
+}
 
