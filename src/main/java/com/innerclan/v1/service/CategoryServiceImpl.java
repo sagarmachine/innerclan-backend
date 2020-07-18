@@ -33,8 +33,8 @@ public class CategoryServiceImpl implements ICategoryService {
         Category category1 = mapper.map(category, Category.class);
 
 
-        if(category.getGendername().equals("M")) category1.setGender(Gender.MALE);
-        else if(category.getGendername().equals("F")) category1.setGender(Gender.FEMALE);
+        if(category.getGender().equals("M")) category1.setGender(Gender.MALE);
+        else if(category.getGender().equals("F")) category1.setGender(Gender.FEMALE);
         else category1.setGender(Gender.UNISEX);
 
         try {
@@ -48,7 +48,10 @@ public class CategoryServiceImpl implements ICategoryService {
 
 
     @Override
-    public void updateCategory(Category c) {
+    public void updateCategory(AddCategoryDto c) {
+
+        ModelMapper mapper= new ModelMapper();
+        Category category = mapper.map(c,Category.class);
 
         Optional<Category> value = categoryRepo.findById((int)c.getId());
         if (value.isPresent()) {

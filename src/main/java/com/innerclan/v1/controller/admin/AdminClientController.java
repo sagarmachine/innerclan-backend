@@ -8,11 +8,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@RestController(value = "/api/v1/admin")
+@RestController
+@RequestMapping(value = "/api/v1/admin/client")
 public class AdminClientController {
 
 
@@ -23,7 +25,7 @@ public class AdminClientController {
     public List<Client> getClients(@PathVariable("page") int page){
 
         Pageable pageable = PageRequest.of(page, 20);
-      return   clientRepository.findAllOrderdByCreatedOn(pageable);
+      return   clientRepository.findAllByOrderByCreatedOn(pageable);
 
     }
 

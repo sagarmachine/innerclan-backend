@@ -19,7 +19,7 @@ public class AddCategoryDto {
     String name;
 
     @NotNull
-    String gendername;
+    String gender;
 
 
     List<String> information;

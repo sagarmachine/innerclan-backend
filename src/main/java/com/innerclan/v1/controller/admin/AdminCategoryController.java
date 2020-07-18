@@ -1,6 +1,7 @@
 package com.innerclan.v1.controller.admin;
 
 
+import com.innerclan.v1.dto.AddCategoryDto;
 import com.innerclan.v1.dto.AddProductDto;
 import com.innerclan.v1.entity.Category;
 import com.innerclan.v1.service.IBindingErrorService;
@@ -15,7 +16,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 
-@RestController("api/v1/admin/product")
+@RestController
+@RequestMapping(value = "/api/v1/admin/category")
 public class AdminCategoryController {
 
 
@@ -28,7 +30,7 @@ public class AdminCategoryController {
 
 
     @PostMapping(value="/")
-    public ResponseEntity<?> addCategory(@Valid @RequestBody Category category,BindingResult bindingResult){
+    public ResponseEntity<?> addCategory(@Valid @RequestBody AddCategoryDto category, BindingResult bindingResult){
 
         if(bindingResult.hasErrors()){
             return bindingErrorService.getErrorResponse(bindingResult);
@@ -40,7 +42,7 @@ public class AdminCategoryController {
 
     }
     @PutMapping(value="/")
-    public ResponseEntity<?> updateCategory(@RequestBody Category category) {
+    public ResponseEntity<?> updateCategory(@RequestBody AddCategoryDto category) {
 
          categoryService.updateCategory(category);
 
