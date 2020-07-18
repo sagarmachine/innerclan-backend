@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Getter
@@ -14,9 +15,12 @@ import java.util.List;
 @AllArgsConstructor
 public class AddCategoryDto {
 
+    @NotNull
     String name;
 
+    @NotNull
     String gendername;
+
 
     List<String> information;
 }

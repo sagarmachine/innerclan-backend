@@ -1,6 +1,6 @@
 package com.innerclan.v1.entity;
 
-enum Access
+public enum Access
 {
     PRIVATE, PUBLIC;
 }
