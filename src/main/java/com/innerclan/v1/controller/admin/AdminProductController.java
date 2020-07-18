@@ -23,13 +23,10 @@ public class AdminProductController {
     IBindingErrorService bindingErrorService;
 
 
-    @Autowired
-    ICategoryService productService;
 
 
-
-    @PostMapping(value = "/addProduct")
-    public  ResponseEntity<?> addProduct(@Valid @RequestBody AddProductDto addProductDto, @RequestParam MultipartFile file, BindingResult bindingResult){
+    @PostMapping(value = "/addProduct/{id}")
+    public  ResponseEntity<?> addProduct(@PathVariable long categoryId, @Valid @RequestBody AddProductDto addProductDto, @RequestParam MultipartFile file, BindingResult bindingResult){
 
         if(bindingResult.hasErrors()){
      return bindingErrorService.getErrorResponse(bindingResult);

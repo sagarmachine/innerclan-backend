@@ -35,7 +35,7 @@ public class Category {
     @Column(name = "information")
     List<String> information;
 
-    @OneToMany(mappedBy = "category",cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "category",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     Set<Product> products;
 
     public void addProducts(Product product){
