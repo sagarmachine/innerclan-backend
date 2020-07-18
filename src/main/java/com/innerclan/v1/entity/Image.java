@@ -5,15 +5,29 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
+import javax.persistence.*;
 
-@Embeddable
+@Entity
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
+@Table(name="product_image")
 public class Image {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    long id;
+
+
+    @Lob
     @Column(nullable = false)
     byte[] image;
+
+    @ManyToOne(cascade = {CascadeType.PERSIST})
+    @JoinColumn(name="color_id")
+    Color color;
+
+
+
+
 }
 

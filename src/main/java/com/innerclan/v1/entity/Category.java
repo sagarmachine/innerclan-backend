@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -26,13 +27,20 @@ public class Category {
     String name;
 
     @ElementCollection
-    @CollectionTable(name="product_information", joinColumns = @JoinColumn(name="category_id") )
+    @CollectionTable(name="category_information", joinColumns = @JoinColumn(name="category_id") )
     @Column(name = "information")
     List<String> information;
 
     @OneToMany(mappedBy = "category",cascade = CascadeType.PERSIST)
-
     Set<Product> products;
+
+    public void addProducts(Product product){
+        if(products==null){
+            products= new HashSet<Product>();
+        }
+        products.add(product);
+        product.setCategory(this);
+    }
 
 }
 

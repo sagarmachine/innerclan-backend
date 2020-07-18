@@ -8,6 +8,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -16,6 +17,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Client {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
@@ -52,6 +54,14 @@ public class Client {
 
     @OneToMany(mappedBy = "client")
     Set<Promo> promos;
+
+    public void addPromos(Promo promo){
+        if(promos==null){
+            promos= new HashSet<Promo>();
+        }
+        promos.add(promo);
+        promo.setClient(this);
+    }
 
 
 

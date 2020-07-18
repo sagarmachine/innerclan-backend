@@ -9,13 +9,18 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 
 @Slf4j
 @Entity
 @Getter @Setter
- @AllArgsConstructor
+ @NoArgsConstructor
+@AllArgsConstructor
 public class Product {
+
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,9 +35,7 @@ public class Product {
     @Column(nullable = false)
     double actualPrice;
 
-    @ElementCollection
-    @CollectionTable(name="product_color",joinColumns = @JoinColumn(name="product_id"))
-    Set<Color> colors;
+
 
     @ManyToOne(fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST,CascadeType.DETACH,CascadeType.MERGE,CascadeType.REFRESH})
     @JoinColumn(name="category_id")
@@ -48,7 +51,16 @@ public class Product {
 
     int view;
 
-    public Product() {
-        log.info("SSSS");
+    @OneToMany(mappedBy = "product",cascade = {CascadeType.PERSIST,CascadeType.REMOVE})
+    Set<Color> colors;
+
+    public void addColors(Color color){
+        if(colors==null){
+            colors= new HashSet<Color>();
+        }
+        colors.add(color);
+        color.setProduct(this);
     }
+
+
 }
