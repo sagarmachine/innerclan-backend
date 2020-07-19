@@ -45,7 +45,7 @@ public class AdminCategoryController {
         }
 
         categoryService.addCategory(category);
-        return new ResponseEntity<>(category,HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
 
 
     }
@@ -54,7 +54,7 @@ public class AdminCategoryController {
 
          categoryService.updateCategory(category);
 
-        return new ResponseEntity<>(category,HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping(value="/{id}")
