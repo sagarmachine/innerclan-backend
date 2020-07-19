@@ -27,5 +27,6 @@ public class AddProductDto {
     @NotNull
     String comment;
 
+    byte[] defaultImage;
 
 }

@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.util.*;
@@ -34,9 +35,11 @@ public class Product {
     @CreationTimestamp
     Date createdOn;
 
+    @UpdateTimestamp
     Date updatedOn;
 
     String comment;
+
 
     long view;
 
@@ -45,7 +48,7 @@ public class Product {
 
     long sale;
 
-    @ManyToOne(fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST,CascadeType.DETACH,CascadeType.MERGE,CascadeType.REFRESH})
+    @ManyToOne(fetch = FetchType.EAGER,cascade = {CascadeType.PERSIST,CascadeType.DETACH,CascadeType.MERGE,CascadeType.REFRESH})
     @JoinColumn
     Category category;
 
