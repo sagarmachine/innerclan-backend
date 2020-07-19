@@ -93,6 +93,18 @@ public class ClientProductController {
         return new ResponseEntity<>(products, HttpStatus.OK);
 
     }
+
+    @GetMapping(value="/getProductsBySearch")
+    public ResponseEntity<?> getProductBySearch(@RequestParam("search") String search){
+
+
+
+        List<ClientProductView> products= productService.getProductBySearch(search);
+
+        return new ResponseEntity<>(products, HttpStatus.OK);
+
+    }
+
 //--------- Client Full Product View------------
     @GetMapping(value="/getProduct/{id}")
     public ResponseEntity<?> getFullProduct(@PathVariable("id") long id){

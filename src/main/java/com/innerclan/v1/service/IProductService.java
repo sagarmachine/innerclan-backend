@@ -46,4 +46,6 @@ public interface IProductService {
     AdminProductView addProduct(AddProductDto addProductDto, MultipartFile file, long categoryId);
 
     AdminProductView updateProduct(UpdateProductDto updateProductDto,MultipartFile file );
+
+    List<ClientProductView> getProductBySearch(String search);
 }

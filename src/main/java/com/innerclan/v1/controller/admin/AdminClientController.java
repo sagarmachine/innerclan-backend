@@ -18,13 +18,26 @@ public class AdminClientController {
 
     @Autowired
     ClientRepository clientRepository;
+    @GetMapping("/")
+    public List<Client> getClients(){
 
+        return  clientRepository.findAllOrderByCreatedOn();
+
+    }
+
+
+
+/*
     @GetMapping("/{page}")
     public List<Client> getClients(@PathVariable("page") int page){
 
         Pageable pageable = PageRequest.of(page, 20);
-      return   clientRepository.findAllByOrderByCreatedOn(pageable);
+      return  clientRepository.findAllOrderByCreatedOn(pageable);
 
     }
+
+ */
+
+
 
 }

@@ -47,70 +47,65 @@ public class ProductServiceImpl implements IProductService {
     @Autowired
     ColorRepository colorRepository;
 
-    @Autowired
-    ProductRepository productRepo;
-
-    @Autowired
-    CategoryRepository categoryRepo;
-
+    
 
     @Override
 
     public List<ClientProductView>  getProductByCategoryId(long id, Pageable pageable) {
-           Optional<Category> value =  categoryRepo.findById(id);
+           Optional<Category> value =  categoryRepository.findById(id);
 
                if(!value.isPresent())
 
                    throw new CategoryNotFoundException("CATEGORY ID "+id+ " IS INVALID INPUT ");
 
 
-        List<Product> products = productRepo.findByCategoryId(id, pageable);
+        List<Product> products = productRepository.findByCategoryId(id, pageable);
         return getClientProductViews(id, products);
     }
 
     @Override
     public List<ClientProductView> getProductByCategoryIdOrderByView(long id, Pageable pageable) {
 
-        Optional<Category> value =  categoryRepo.findById(id);
+        Optional<Category> value =  categoryRepository.findById(id);
         if (!value.isPresent()) throw new CategoryNotFoundException("CATEGORY ID "+id+ " IS INVALID INPUT ");
 
-        List<Product> products = productRepo.findByCategoryIdOrderByViewDesc(id, pageable);
+        List<Product> products = productRepository.findByCategoryIdOrderByViewDesc(id, pageable);
         return getClientProductViews(id,  products);
     }
 
     @Override
     public List<ClientProductView> getProductByCategoryIdOrderBySale(long id, Pageable pageable) {
-        Optional<Category> value =  categoryRepo.findById(id);
+        Optional<Category> value =  categoryRepository.findById(id);
         if (!value.isPresent()) throw new CategoryNotFoundException("CATEGORY ID "+id+ " IS INVALID INPUT ");
 
-        List<Product> products = productRepo.findByCategoryIdOrderBySaleDesc(id, pageable);
+        List<Product> products = productRepository.findByCategoryIdOrderBySaleDesc(id, pageable);
         return getClientProductViews(id, products);
     }
 
     @Override
     public List<ClientProductView> getProductByCategoryIdOrderByPriceAsc(long id, Pageable pageable) {
 
-        Optional<Category> value =  categoryRepo.findById(id);
+        Optional<Category> value =  categoryRepository.findById(id);
         if (!value.isPresent()) throw new CategoryNotFoundException("CATEGORY ID "+id+ " IS INVALID INPUT ");
 
-        List<Product> products = productRepo.findByCategoryIdOrderByActualPriceAsc(id, pageable);
+        List<Product> products = productRepository.findByCategoryIdOrderByActualPriceAsc(id, pageable);
         return getClientProductViews(id, products);
     }
 
     @Override
     public List<ClientProductView> getProductByCategoryIdOrderByPriceDesc(long id, Pageable pageable) {
 
-        Optional<Category> value =  categoryRepo.findById(id);
+        Optional<Category> value =  categoryRepository.findById(id);
         if (!value.isPresent()) throw new CategoryNotFoundException("CATEGORY ID "+id+ " IS INVALID INPUT ");
 
-        List<Product> products = productRepo.findByCategoryIdOrderByActualPriceDesc(id, pageable);
+        List<Product> products = productRepository.findByCategoryIdOrderByActualPriceDesc(id, pageable);
         return getClientProductViews(id, products);
     }
 
 
     private List<ClientProductView> getClientProductViews(long id,  List<Product> products) {
         List<ClientProductView> result = new ArrayList<>();
-        long size = productRepo.countByCategoryId(id);
+        long size = productRepository.countByCategoryId(id);
         ModelMapper mapper = new ModelMapper();
         for (Product p : products) {
             ClientProductView product = mapper.map(p, ClientProductView.class);
@@ -123,7 +118,21 @@ public class ProductServiceImpl implements IProductService {
 
     }
 
+    @Override
+    public List<ClientProductView> getProductBySearch(String search) {
+        List<Product> products= productRepository.findByNameContainingIgnoreCaseOrCategoryNameContainingIgnoreCase(search);
 
+        List<ClientProductView> result=new ArrayList<>();
+        ModelMapper mapper=new ModelMapper();
+        for(Product p:products){
+
+            ClientProductView product= mapper.map(p,ClientProductView.class);
+            result.add(product);
+        }
+        return result;
+
+    }
+    
 
     @Override
     public AdminProductView addProduct(AddProductDto addProductDto, MultipartFile file, long categoryId) {
@@ -149,6 +158,8 @@ public class ProductServiceImpl implements IProductService {
     public AdminProductView updateProduct(UpdateProductDto updateProductDto, MultipartFile file) {
 return null;
     }
+
+
 
 
     @Override
