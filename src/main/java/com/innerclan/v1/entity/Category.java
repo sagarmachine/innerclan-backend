@@ -1,5 +1,6 @@
 package com.innerclan.v1.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,10 +33,10 @@ public class Category {
 
     @ElementCollection
     @CollectionTable(name="category_information", joinColumns = @JoinColumn(name="category_id") )
-    @Column(name = "information")
     List<String> information;
 
-    @OneToMany(mappedBy = "category",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @JsonIgnore
+    @OneToMany(mappedBy ="category",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     Set<Product> products;
 
     public void addProducts(Product product){

@@ -1,4 +1,4 @@
-package com.personalprojecttracker.demo;
+package com.innerclan.v1;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -9,6 +9,6 @@ public class MvcConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**").allowedMethods("*").exposedHeaders("Authentication");
+        registry.addMapping("/**").allowedMethods("*").exposedHeaders("Authorization");
     }
 }

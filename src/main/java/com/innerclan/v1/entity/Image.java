@@ -1,5 +1,6 @@
 package com.innerclan.v1.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +12,6 @@ import java.util.Objects;
 @Entity
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
-@Table(name="product_image")
 public class Image {
 
     @Id
@@ -22,8 +22,9 @@ public class Image {
     @Column(nullable = false)
     byte[] image;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST})
-    @JoinColumn(name="color_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn
+     @JsonIgnore
     Color color;
 
 

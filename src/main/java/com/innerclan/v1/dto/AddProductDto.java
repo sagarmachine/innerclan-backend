@@ -16,17 +16,15 @@ import javax.validation.constraints.NotNull;
 public class AddProductDto {
 
     @NotNull(message = "name should not be null")
-    String name;
+    String productName;
 
     @NotNull
-    double price;
+  double productPrice;
 
     @NotNull
-    double actualPrice;
+   double actualPrice;
 
-    @NotNull
     String comment;
 
-    byte[] defaultImage;
 
 }

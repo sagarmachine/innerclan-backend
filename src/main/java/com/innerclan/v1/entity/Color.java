@@ -1,20 +1,17 @@
 package com.innerclan.v1.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Entity
-@Getter @Setter
-@NoArgsConstructor @AllArgsConstructor
-@Table(name="product_color")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
 public class Color {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,11 +21,11 @@ public class Color {
     String colorName;
 
     @ManyToOne(cascade = {CascadeType.PERSIST})
-    @JoinColumn(name="Product_id")
+    @JsonIgnore
     Product product;
 
-    @OneToMany(mappedBy = "color",cascade = {CascadeType.PERSIST,CascadeType.REMOVE})
-    List<Image> images;
+    @OneToMany(mappedBy = "color",cascade = {CascadeType.ALL},fetch = FetchType.EAGER)
+    List<Image> images= new ArrayList<>();
 
 
 
@@ -48,12 +45,7 @@ public class Color {
     }
 
 
-
-
     public void addImages(Image image){
-        if(images==null){
-            images= new ArrayList<Image>();
-        }
         images.add(image);
         image.setColor(this);
     }

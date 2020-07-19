@@ -23,7 +23,7 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false,unique = true)
     String productName;
 
     @Column(nullable = false)
@@ -47,11 +47,11 @@ public class Product {
     @Lob
     byte[] defaultImage;
 
-    @ManyToOne(fetch = FetchType.EAGER,cascade = {CascadeType.PERSIST,CascadeType.DETACH,CascadeType.MERGE,CascadeType.REFRESH})
-    @JoinColumn(name="category_id")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn
     Category category;
 
-    @OneToMany(mappedBy = "product",cascade = {CascadeType.PERSIST,CascadeType.REMOVE})
+    @OneToMany(mappedBy = "product",cascade = {CascadeType.ALL})
     Set<Color> colors;
 
 

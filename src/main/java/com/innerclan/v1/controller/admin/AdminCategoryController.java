@@ -22,6 +22,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/api/v1/admin/category")
+@CrossOrigin(value = "http://localhost:3001")
 public class AdminCategoryController {
 
 
@@ -36,7 +37,7 @@ public class AdminCategoryController {
     CategoryRepository categoryRepository;
 
 
-    @PostMapping(value="/")
+    @PostMapping(value="")
     public ResponseEntity<?> addCategory(@Valid @RequestBody AddCategoryDto category, BindingResult bindingResult){
 
         if(bindingResult.hasErrors()){
@@ -48,7 +49,7 @@ public class AdminCategoryController {
 
 
     }
-    @PutMapping(value="/")
+    @PutMapping(value="")
     public ResponseEntity<?> updateCategory(@RequestBody AddCategoryDto category) {
 
          categoryService.updateCategory(category);
@@ -65,7 +66,7 @@ public class AdminCategoryController {
     }
 
 
-    @GetMapping(value = "/")
+    @GetMapping(value = "")
     public ResponseEntity<List<Category>> getAllCategories(){
         return ResponseEntity.ok().body(categoryRepository.findAll());
     }
