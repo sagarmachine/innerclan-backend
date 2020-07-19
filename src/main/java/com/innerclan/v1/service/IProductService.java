@@ -33,15 +33,15 @@ public interface IProductService {
 
     Set<Color> addColors(long id, HashSet<String> colors);
 
-    List<ClientProductView> getProductByCategoryId(long id, Pageable pageable);
+    List<Product> getProductByCategoryId(long id, Pageable pageable);
 
-    List<ClientProductView> getProductByCategoryIdOrderByView(long id, Pageable pageable);
+    List<Product> getProductByCategoryIdOrderByView(long id, Pageable pageable);
 
-    List<ClientProductView> getProductByCategoryIdOrderBySale(long id, Pageable pageable);
+    List<Product> getProductByCategoryIdOrderBySale(long id, Pageable pageable);
 
-    List<ClientProductView> getProductByCategoryIdOrderByPriceAsc(long id, Pageable pageable);
+    List<Product> getProductByCategoryIdOrderByPriceAsc(long id, Pageable pageable);
 
-    List<ClientProductView> getProductByCategoryIdOrderByPriceDesc(long id, Pageable pageable);
+    List<Product> getProductByCategoryIdOrderByPriceDesc(long id, Pageable pageable);
 
     AdminProductView addProduct(AddProductDto addProductDto, MultipartFile file, long categoryId);
 

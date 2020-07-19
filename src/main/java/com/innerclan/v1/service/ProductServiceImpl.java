@@ -51,72 +51,55 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
 
-    public List<ClientProductView>  getProductByCategoryId(long id, Pageable pageable) {
+    public List<Product> getProductByCategoryId(long id, Pageable pageable) {
            Optional<Category> value =  categoryRepository.findById(id);
+           if(!value.isPresent())
+               throw new CategoryNotFoundException("CATEGORY ID "+id+ " IS INVALID INPUT ");
 
-               if(!value.isPresent())
+        return productRepository.findByCategoryId(id, pageable);
 
-                   throw new CategoryNotFoundException("CATEGORY ID "+id+ " IS INVALID INPUT ");
-
-
-        List<Product> products = productRepository.findByCategoryId(id, pageable);
-        return getClientProductViews(id, products);
     }
 
     @Override
-    public List<ClientProductView> getProductByCategoryIdOrderByView(long id, Pageable pageable) {
+    public List<Product>getProductByCategoryIdOrderByView(long id, Pageable pageable) {
+
+        Optional<Category> value =  categoryRepository.findById(id);
+        if (!value.isPresent())
+            throw new CategoryNotFoundException("CATEGORY ID "+id+ " IS INVALID INPUT ");
+
+        return productRepository.findByCategoryIdOrderByViewDesc(id, pageable);
+
+    }
+
+    @Override
+    public List<Product> getProductByCategoryIdOrderBySale(long id, Pageable pageable) {
+        Optional<Category> value =  categoryRepository.findById(id);
+        if (!value.isPresent()) throw new CategoryNotFoundException("CATEGORY ID "+id+ " IS INVALID INPUT ");
+
+        return productRepository.findByCategoryIdOrderBySaleDesc(id, pageable);
+
+    }
+
+    @Override
+    public List<Product>getProductByCategoryIdOrderByPriceAsc(long id, Pageable pageable) {
 
         Optional<Category> value =  categoryRepository.findById(id);
         if (!value.isPresent()) throw new CategoryNotFoundException("CATEGORY ID "+id+ " IS INVALID INPUT ");
 
-        List<Product> products = productRepository.findByCategoryIdOrderByViewDesc(id, pageable);
-        return getClientProductViews(id,  products);
+        return productRepository.findByCategoryIdOrderByActualPriceAsc(id, pageable);
+
     }
 
     @Override
-    public List<ClientProductView> getProductByCategoryIdOrderBySale(long id, Pageable pageable) {
-        Optional<Category> value =  categoryRepository.findById(id);
-        if (!value.isPresent()) throw new CategoryNotFoundException("CATEGORY ID "+id+ " IS INVALID INPUT ");
-
-        List<Product> products = productRepository.findByCategoryIdOrderBySaleDesc(id, pageable);
-        return getClientProductViews(id, products);
-    }
-
-    @Override
-    public List<ClientProductView> getProductByCategoryIdOrderByPriceAsc(long id, Pageable pageable) {
+    public List<Product> getProductByCategoryIdOrderByPriceDesc(long id, Pageable pageable) {
 
         Optional<Category> value =  categoryRepository.findById(id);
         if (!value.isPresent()) throw new CategoryNotFoundException("CATEGORY ID "+id+ " IS INVALID INPUT ");
 
-        List<Product> products = productRepository.findByCategoryIdOrderByActualPriceAsc(id, pageable);
-        return getClientProductViews(id, products);
-    }
-
-    @Override
-    public List<ClientProductView> getProductByCategoryIdOrderByPriceDesc(long id, Pageable pageable) {
-
-        Optional<Category> value =  categoryRepository.findById(id);
-        if (!value.isPresent()) throw new CategoryNotFoundException("CATEGORY ID "+id+ " IS INVALID INPUT ");
-
-        List<Product> products = productRepository.findByCategoryIdOrderByActualPriceDesc(id, pageable);
-        return getClientProductViews(id, products);
-    }
-
-
-    private List<ClientProductView> getClientProductViews(long id,  List<Product> products) {
-        List<ClientProductView> result = new ArrayList<>();
-        long size = productRepository.countByCategoryId(id);
-        ModelMapper mapper = new ModelMapper();
-        for (Product p : products) {
-            ClientProductView product = mapper.map(p, ClientProductView.class);
-            product.setSize(size);
-            result.add(product);
-        }
-
-        return result;
-
+        return productRepository.findByCategoryIdOrderByActualPriceDesc(id, pageable);
 
     }
+
 
     @Override
     public List<ClientProductView> getProductBySearch(String search) {
