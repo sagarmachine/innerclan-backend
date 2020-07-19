@@ -34,7 +34,7 @@ public class AdminProductController {
                                          @RequestParam("comment")String comment,
                                          @RequestBody MultipartFile file){
 AddProductDto addProductDto= new AddProductDto(productName,productPrice,actualPrice,comment);
-      return new ResponseEntity<>(productService.addProduct(addProductDto,file,categoryId), HttpStatus.OK);
+      return new ResponseEntity<>( productService.addProduct(addProductDto,file,categoryId), HttpStatus.OK);
     }
 
     @PostMapping(value = "/addColors/{id}")

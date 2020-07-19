@@ -114,14 +114,17 @@ public class ProductServiceImpl implements IProductService {
 
         ModelMapper mapper = new ModelMapper();
         Product product = mapper.map(addProductDto, Product.class);
+
         try {
             log.info("uploading "+file.getOriginalFilename());
             product.setDefaultImage(file.getBytes());
         } catch (IOException ex) {
             throw new ProductNotSavedException("Try Different Image or Different Image Format");
         }
+          product.setProductName(product.getProductName().toUpperCase());
+        productRepository.save(product);
 
-        product=productRepository.findByProductName(addProductDto.getProductName());
+        product=productRepository.findByProductName(addProductDto.getProductName().toUpperCase());
          return mapper.map(product,AdminProductView.class);
 
     }
@@ -162,7 +165,7 @@ public class ProductServiceImpl implements IProductService {
         HashSet<Color> productColors= new HashSet<>();
         for (String color :colors){
             Color productColor= new Color();
-            productColor.setColorName(color);
+            productColor.setColorName(color.toUpperCase());
             productColor.setProduct(product);
             productColors.add(productColor);
         }
