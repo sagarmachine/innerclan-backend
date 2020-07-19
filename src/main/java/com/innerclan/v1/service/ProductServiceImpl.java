@@ -137,8 +137,17 @@ public class ProductServiceImpl implements IProductService {
     @Override
     public AdminProductView addProduct(AddProductDto addProductDto, MultipartFile file, long categoryId) {
 
+        Optional<Category> categoryOptional = categoryRepository.findById(categoryId);
+        if(!categoryOptional.isPresent())
+            throw new CategoryNotFoundException("no category found with id "+categoryId);
+
+
+        Category category = categoryOptional.get();
+
         ModelMapper mapper = new ModelMapper();
         Product product = mapper.map(addProductDto, Product.class);
+
+
 
         try {
             log.info("uploading "+file.getOriginalFilename());
@@ -147,7 +156,8 @@ public class ProductServiceImpl implements IProductService {
             throw new ProductNotSavedException("Try Different Image or Different Image Format");
         }
           product.setProductName(product.getProductName().toUpperCase());
-        productRepository.save(product);
+        category.addProducts(product);
+        categoryRepository.save(category);
 
         product=productRepository.findByProductName(addProductDto.getProductName().toUpperCase());
          return mapper.map(product,AdminProductView.class);
@@ -156,7 +166,27 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     public AdminProductView updateProduct(UpdateProductDto updateProductDto, MultipartFile file) {
-return null;
+
+        Optional<Product> productOptional = productRepository.findById(updateProductDto.getId());
+
+        if(!productOptional.isPresent())
+            throw  new ProductNotFoundException("no product with id"+updateProductDto.getId());
+
+        ModelMapper mapper = new ModelMapper();
+        Product product = mapper.map(updateProductDto, Product.class);
+
+        try {
+            log.info("uploading "+file.getOriginalFilename());
+            product.setDefaultImage(file.getBytes());
+        } catch (IOException ex) {
+            throw new ProductNotSavedException("Try Different Image or Different Image Format");
+        }
+        product.setProductName(product.getProductName().toUpperCase());
+        productRepository.save(product);
+
+        product=productRepository.findById(updateProductDto.getId()).get();
+        return mapper.map(product,AdminProductView.class);
+
     }
 
 
@@ -194,10 +224,12 @@ return null;
         Product product= productOptional.get();
         HashSet<Color> productColors= new HashSet<>();
         for (String color :colors){
+
             Color productColor= new Color();
             productColor.setColorName(color.toUpperCase());
-            productColor.setProduct(product);
             productColors.add(productColor);
+            product.addColors(productColor);
+            colorRepository.save(productColor);
         }
         product.setColors(productColors);
         productRepository.save(product);
