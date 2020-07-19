@@ -26,20 +26,6 @@ public class ProductServiceImpl implements IProductService {
     @Autowired
     ProductRepository productRepo;
 
-    @Override
-    public void addProduct(AddProductDto addProductDto, MultipartFile file) {
-
-
-        ModelMapper mapper = new ModelMapper();
-        Product product = mapper.map(addProductDto, Product.class);
-        try {
-            file.getBytes();
-        } catch (IOException ex) {
-            throw new ProductNotSavedException("Try Different Image or Different Image Format");
-        }
-
-
-    }
 
     @Override
     public List<ClientProductView>  getProductByCategoryId(long id, Pageable pageable) {

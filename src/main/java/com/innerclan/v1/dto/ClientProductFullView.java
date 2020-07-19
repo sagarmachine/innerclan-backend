@@ -1,6 +1,7 @@
 package com.innerclan.v1.dto;
 
 import com.innerclan.v1.entity.Category;
+import com.innerclan.v1.entity.Color;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -37,7 +38,7 @@ public class ClientProductFullView {
 
     Category category;
 
-    List<String> color;
+    List<Color> colors;
 
 
 

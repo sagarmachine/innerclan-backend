@@ -18,10 +18,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
+
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -105,12 +105,6 @@ public class ClientProductController {
              ModelMapper mapper = new ModelMapper();
              p.setView(p.getView()+1);
              ClientProductFullView product  = mapper.map(p,  ClientProductFullView .class);
-
-             List<String> temp= new ArrayList<>();
-             for(Color c: p.getColors()){
-                 temp.add(c.getColorName());
-             }
-             product.setColor(temp);
 
              return new ResponseEntity<>(product, HttpStatus.OK);
          }

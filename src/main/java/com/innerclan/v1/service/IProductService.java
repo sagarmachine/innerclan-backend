@@ -13,8 +13,6 @@ import java.util.List;
 
 public interface IProductService {
 
-    void addProduct(AddProductDto addProductDto, MultipartFile file);
-
 
     List<ClientProductView> getProductByCategoryId(long id, Pageable pageable);
 

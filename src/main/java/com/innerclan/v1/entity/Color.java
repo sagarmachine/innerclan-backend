@@ -14,7 +14,7 @@ import java.util.Objects;
 @Entity
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
-@Table(name="product_color")
+
 public class Color {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,7 +24,7 @@ public class Color {
     String colorName;
 
     @ManyToOne(cascade = {CascadeType.PERSIST})
-    @JoinColumn(name="Product_id")
+    @JoinColumn
     Product product;
 
     @OneToMany(mappedBy = "color",cascade = {CascadeType.PERSIST,CascadeType.REMOVE})

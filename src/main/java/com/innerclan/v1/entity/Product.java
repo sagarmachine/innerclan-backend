@@ -46,7 +46,7 @@ public class Product {
     long sale;
 
     @ManyToOne(fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST,CascadeType.DETACH,CascadeType.MERGE,CascadeType.REFRESH})
-    @JoinColumn(name="category_id")
+    @JoinColumn
     Category category;
 
     @OneToMany(mappedBy = "product",cascade = {CascadeType.PERSIST,CascadeType.REMOVE})
