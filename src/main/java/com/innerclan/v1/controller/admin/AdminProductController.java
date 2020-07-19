@@ -6,6 +6,7 @@ import com.innerclan.v1.dto.UpdateProductDto;
 import com.innerclan.v1.entity.Color;
 import com.innerclan.v1.service.IBindingErrorService;
 import com.innerclan.v1.service.IProductService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -15,6 +16,7 @@ import java.util.HashSet;
 import java.util.*;
 
 @RestController
+@Slf4j
 @RequestMapping(value = "/api/v1/admin/product")
 @CrossOrigin(value = {"http://localhost:3001","http://localhost:3000"})
 public class AdminProductController {

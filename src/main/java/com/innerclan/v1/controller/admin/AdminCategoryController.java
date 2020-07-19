@@ -45,7 +45,7 @@ public class AdminCategoryController {
         }
 
         categoryService.addCategory(category);
-        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(category,HttpStatus.ACCEPTED);
 
 
     }
