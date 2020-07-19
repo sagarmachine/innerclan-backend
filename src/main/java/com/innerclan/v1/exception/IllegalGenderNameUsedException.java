@@ -1,10 +1,10 @@
 package com.innerclan.v1.exception;
 
-public class IllegalGenderNameUsed  extends  RuntimeException{
+public class IllegalGenderNameUsedException  extends  RuntimeException{
 
     String message;
 
-    public IllegalGenderNameUsed(String message){
+    public IllegalGenderNameUsedException(String message){
         this.message=message;
     }
 

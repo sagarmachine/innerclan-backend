@@ -5,7 +5,7 @@ import com.innerclan.v1.entity.Category;
 import com.innerclan.v1.entity.Gender;
 import com.innerclan.v1.exception.CategoryAlreadyExistException;
 import com.innerclan.v1.exception.CategoryNotFoundException;
-import com.innerclan.v1.exception.IllegalGenderNameUsed;
+import com.innerclan.v1.exception.IllegalGenderNameUsedException;
 import com.innerclan.v1.repository.CategoryRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +36,7 @@ public class CategoryServiceImpl implements ICategoryService {
         else if(category.getGender().equals("U"))
             category1.setGender(Gender.UNISEX);
         else
-            throw  new IllegalGenderNameUsed("only 'M' 'F' 'U' as a gender allowed");
+            throw  new IllegalGenderNameUsedException("only 'M' 'F' 'U' as a gender allowed");
 
         try {
             categoryRepo.save(category1);
@@ -60,7 +60,7 @@ public class CategoryServiceImpl implements ICategoryService {
         else if(category.getGender().equals("U"))
             category.setGender(Gender.UNISEX);
         else
-            throw  new IllegalGenderNameUsed("only 'M' 'F' 'U' as a gender allowed");
+            throw  new IllegalGenderNameUsedException("only 'M' 'F' 'U' as a gender allowed");
 
 
 

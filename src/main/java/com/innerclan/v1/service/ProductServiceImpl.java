@@ -6,6 +6,7 @@ import com.innerclan.v1.dto.ClientProductView;
 
 import com.innerclan.v1.dto.AdminProductView;
 import com.innerclan.v1.dto.UpdateProductDto;
+import com.innerclan.v1.entity.Category;
 import com.innerclan.v1.entity.Color;
 import com.innerclan.v1.entity.Image;
 import com.innerclan.v1.entity.Product;
@@ -113,8 +114,17 @@ public class ProductServiceImpl implements IProductService {
     @Override
     public AdminProductView addProduct(AddProductDto addProductDto, MultipartFile file, long categoryId) {
 
+        Optional<Category> categoryOptional = categoryRepository.findById(categoryId);
+        if(!categoryOptional.isPresent())
+            throw new CategoryNotFoundException("no category found with id "+categoryId);
+
+
+        Category category = categoryOptional.get();
+
         ModelMapper mapper = new ModelMapper();
         Product product = mapper.map(addProductDto, Product.class);
+
+
 
         try {
             log.info("uploading "+file.getOriginalFilename());
@@ -123,7 +133,8 @@ public class ProductServiceImpl implements IProductService {
             throw new ProductNotSavedException("Try Different Image or Different Image Format");
         }
           product.setProductName(product.getProductName().toUpperCase());
-        productRepository.save(product);
+        category.addProducts(product);
+        categoryRepository.save(category);
 
         product=productRepository.findByProductName(addProductDto.getProductName().toUpperCase());
          return mapper.map(product,AdminProductView.class);
