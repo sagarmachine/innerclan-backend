@@ -40,12 +40,13 @@ public class Product {
 
     String comment;
 
-    int views;
 
-    int sale;
+    long view;
 
     @Lob
     byte[] defaultImage;
+
+    long sale;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn
@@ -53,9 +54,6 @@ public class Product {
 
     @OneToMany(mappedBy = "product",cascade = {CascadeType.ALL})
     Set<Color> colors;
-
-
-
 
 
 

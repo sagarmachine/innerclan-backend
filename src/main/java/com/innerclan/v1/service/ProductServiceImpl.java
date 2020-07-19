@@ -1,8 +1,10 @@
 package com.innerclan.v1.service;
 
 import com.innerclan.v1.dto.AddProductDto;
+
+import com.innerclan.v1.dto.ClientProductView;
+
 import com.innerclan.v1.dto.AdminProductView;
-import com.innerclan.v1.entity.Category;
 import com.innerclan.v1.entity.Color;
 import com.innerclan.v1.entity.Image;
 import com.innerclan.v1.entity.Product;
@@ -13,7 +15,7 @@ import com.innerclan.v1.repository.ProductRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,8 +23,17 @@ import java.io.IOException;
 import java.util.*;
 
 
-@Slf4j
+
+import java.util.ArrayList;
+import java.util.List;
+
+import java.util.Optional;
+
+
+
 @Service
+@Slf4j
+
 public class ProductServiceImpl implements IProductService {
 
     @Autowired
@@ -34,44 +45,89 @@ public class ProductServiceImpl implements IProductService {
     @Autowired
     ColorRepository colorRepository;
 
+    @Autowired
+    ProductRepository productRepo;
+
+
     @Override
-    public AdminProductView addProduct(AddProductDto addProductDto, MultipartFile file,long categoryId) {
+
+    public List<ClientProductView>  getProductByCategoryId(long id, Pageable pageable) {
 
 
-        Optional<Category> categoryOptional = categoryRepository.findById(categoryId);
+        List<Product> products = productRepo.findByCategoryId(id, pageable);
+        return getClientProductViews(id, products);
+    }
 
-        Category category=null;
+    @Override
+    public List<ClientProductView> getProductByCategoryIdOrderByView(long id, Pageable pageable) {
 
-        if(categoryOptional.isPresent())
-               category=categoryOptional.get();
-        else
-           throw  new CategoryNotFoundException("no category with id "+categoryId+" found");
 
+
+        List<Product> products = productRepo.findByCategoryIdOrderByViewDesc(id, pageable);
+        return getClientProductViews(id,  products);
+    }
+
+    @Override
+    public List<ClientProductView> getProductByCategoryIdOrderBySale(long id, Pageable pageable) {
+        List<ClientProductView> result = new ArrayList<>();
+
+        List<Product> products = productRepo.findByCategoryIdOrderBySaleDesc(id, pageable);
+        return getClientProductViews(id, products);
+    }
+
+    @Override
+    public List<ClientProductView> getProductByCategoryIdOrderByPriceAsc(long id, Pageable pageable) {
+        List<ClientProductView> result = new ArrayList<>();
+
+        List<Product> products = productRepo.findByCategoryIdOrderByActualPriceAsc(id, pageable);
+        return getClientProductViews(id, products);
+    }
+
+    @Override
+    public List<ClientProductView> getProductByCategoryIdOrderByPriceDesc(long id, Pageable pageable) {
+        List<ClientProductView> result = new ArrayList<>();
+
+        List<Product> products = productRepo.findByCategoryIdOrderByActualPriceDesc(id, pageable);
+        return getClientProductViews(id, products);
+    }
+
+
+    private List<ClientProductView> getClientProductViews(long id,  List<Product> products) {
+        List<ClientProductView> result = new ArrayList<>();
+        long size = productRepo.countByCategoryId(id);
+        ModelMapper mapper = new ModelMapper();
+        for (Product p : products) {
+            ClientProductView product = mapper.map(p, ClientProductView.class);
+            product.setSize(size);
+            result.add(product);
+        }
+
+        return result;
+
+
+    }
+
+
+
+    @Override
+    public AdminProductView addProduct(AddProductDto addProductDto, MultipartFile file, long categoryId) {
 
         ModelMapper mapper = new ModelMapper();
         Product product = mapper.map(addProductDto, Product.class);
         try {
             log.info("uploading "+file.getOriginalFilename());
-           product.setDefaultImage(file.getBytes());
+            product.setDefaultImage(file.getBytes());
         } catch (IOException ex) {
             throw new ProductNotSavedException("Try Different Image or Different Image Format");
         }
 
-          category.addProducts(product);
-
-        try {
-           categoryRepository.save(category);
-        }catch(DataIntegrityViolationException ex){
-            throw new ProductAlreadyExistException("product with same name already exist");
-        }
-
         product=productRepository.findByProductName(addProductDto.getProductName());
-
-        AdminProductView adminProductView= mapper.map(product,AdminProductView.class);
-
-        return adminProductView;
+         return mapper.map(product,AdminProductView.class);
 
     }
+
+
+
 
     @Override
     public Color addImage(long colorId, MultipartFile file) {
