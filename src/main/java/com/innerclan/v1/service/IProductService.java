@@ -6,8 +6,10 @@ import com.innerclan.v1.dto.ClientProductView;
 
 import com.innerclan.v1.dto.AdminProductView;
 
+import com.innerclan.v1.dto.UpdateProductDto;
 import com.innerclan.v1.entity.Category;
 import com.innerclan.v1.entity.Color;
+import com.innerclan.v1.entity.Product;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -42,4 +44,6 @@ public interface IProductService {
     List<ClientProductView> getProductByCategoryIdOrderByPriceDesc(long id, Pageable pageable);
 
     AdminProductView addProduct(AddProductDto addProductDto, MultipartFile file, long categoryId);
+
+    AdminProductView updateProduct(UpdateProductDto updateProductDto,MultipartFile file );
 }

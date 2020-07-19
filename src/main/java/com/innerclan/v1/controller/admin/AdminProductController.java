@@ -2,6 +2,7 @@ package com.innerclan.v1.controller.admin;
 
 
 import com.innerclan.v1.dto.AddProductDto;
+import com.innerclan.v1.dto.UpdateProductDto;
 import com.innerclan.v1.entity.Color;
 import com.innerclan.v1.service.IBindingErrorService;
 import com.innerclan.v1.service.IProductService;
@@ -15,7 +16,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping(value = "/api/v1/admin/product")
-@CrossOrigin(value = "http://localhost:3001")
+@CrossOrigin(value = {"http://localhost:3001","http://localhost:3000"})
 public class AdminProductController {
 
 
@@ -35,6 +36,19 @@ public class AdminProductController {
                                          @RequestBody MultipartFile file){
 AddProductDto addProductDto= new AddProductDto(productName,productPrice,actualPrice,comment);
       return new ResponseEntity<>( productService.addProduct(addProductDto,file,categoryId), HttpStatus.OK);
+    }
+
+
+    @PostMapping(value = "/updateProduct/{id}",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public  ResponseEntity<?> updateProduct(
+                                            @RequestParam("id")long id,
+                                           @RequestParam("productName")String productName,
+                                           @RequestParam("productPrice")double productPrice,
+                                            @RequestParam("actualPrice")double actualPrice,
+                                            @RequestParam("comment")String comment,
+                                            @RequestBody MultipartFile file){
+        UpdateProductDto productDto= new UpdateProductDto(productName,productPrice,actualPrice,comment,id);
+        return new ResponseEntity<>( productService.updateProduct(productDto,file), HttpStatus.OK);
     }
 
     @PostMapping(value = "/addColors/{id}")

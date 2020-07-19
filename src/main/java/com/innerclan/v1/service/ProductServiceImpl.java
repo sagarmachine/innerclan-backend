@@ -5,6 +5,7 @@ import com.innerclan.v1.dto.AddProductDto;
 import com.innerclan.v1.dto.ClientProductView;
 
 import com.innerclan.v1.dto.AdminProductView;
+import com.innerclan.v1.dto.UpdateProductDto;
 import com.innerclan.v1.entity.Color;
 import com.innerclan.v1.entity.Image;
 import com.innerclan.v1.entity.Product;
@@ -129,7 +130,10 @@ public class ProductServiceImpl implements IProductService {
 
     }
 
-
+    @Override
+    public AdminProductView updateProduct(UpdateProductDto updateProductDto, MultipartFile file) {
+return null;
+    }
 
 
     @Override
