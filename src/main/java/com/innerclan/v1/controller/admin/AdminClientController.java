@@ -21,7 +21,7 @@ public class AdminClientController {
     @GetMapping("/")
     public List<Client> getClients(){
 
-        return  clientRepository.findAllOrderByCreatedOn();
+        return  clientRepository.findAllByOrderByCreatedOn();
 
     }
 

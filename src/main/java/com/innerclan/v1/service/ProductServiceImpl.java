@@ -103,7 +103,7 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     public List<ClientProductView> getProductBySearch(String search) {
-        List<Product> products= productRepository.findByNameContainingIgnoreCaseOrCategoryNameContainingIgnoreCase(search);
+        List<Product> products= productRepository.findByProductNameContainingIgnoreCaseOrCategoryNameContainingIgnoreCase(search,search);
 
         List<ClientProductView> result=new ArrayList<>();
         ModelMapper mapper=new ModelMapper();

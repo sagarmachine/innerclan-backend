@@ -3,7 +3,6 @@ package com.innerclan.v1.controller.admin;
 
 import com.innerclan.v1.dto.AddProductDto;
 import com.innerclan.v1.dto.AdminProductView;
-import com.innerclan.v1.dto.ClientProductView;
 import com.innerclan.v1.dto.UpdateProductDto;
 import com.innerclan.v1.entity.Color;
 import com.innerclan.v1.entity.Product;

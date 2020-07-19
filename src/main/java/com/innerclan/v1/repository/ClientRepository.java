@@ -9,9 +9,9 @@ import java.util.List;
 public interface ClientRepository extends JpaRepository <Client,Long> {
 
 
-    List<Client> findAllOrderByCreatedOn(Pageable pageable);
+    //List<Client> findAllByOrderByCreatedOn(Pageable pageable);
 
-    List<Client> findAllOrderByCreatedOn();
+    List<Client> findAllByOrderByCreatedOn();
 
 
 
