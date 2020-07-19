@@ -25,7 +25,7 @@ public class Design {
     String comment;
 
     @Lob
-    //@Column(nullable=false)
+    @Column(nullable=false)
     byte[] image;
 
     @CreationTimestamp

@@ -1,6 +1,7 @@
 package com.innerclan.v1.exceptionhandler;
 
 
+import com.innerclan.v1.exception.DesignNotSentException;
 import com.innerclan.v1.exception.ProductNotSavedException;
 import com.innerclan.v1.exception.SubsciberAlreadyExistException;
 import org.springframework.http.HttpStatus;
@@ -36,6 +37,13 @@ public class ExceptionHandlerController {
 
     @ExceptionHandler(value = SubsciberAlreadyExistException.class)
     public ResponseEntity<String[]> SubscriberAlreadyExistExceptionHandler(SubsciberAlreadyExistException ex){
+
+        return    new ResponseEntity<>(new String[]{ex.getMessage()}, HttpStatus.BAD_REQUEST);
+
+    }
+
+    @ExceptionHandler(value = DesignNotSentException.class)
+    public ResponseEntity<String[]> DesignNotSentExceptionHandler(DesignNotSentException ex){
 
         return    new ResponseEntity<>(new String[]{ex.getMessage()}, HttpStatus.BAD_REQUEST);
 
