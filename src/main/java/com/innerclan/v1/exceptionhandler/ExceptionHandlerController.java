@@ -2,6 +2,7 @@ package com.innerclan.v1.exceptionhandler;
 
 
 import com.innerclan.v1.exception.ProductNotSavedException;
+import com.innerclan.v1.exception.SubsciberAlreadyExistException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -33,6 +34,12 @@ public class ExceptionHandlerController {
 //
 //      }
 
+    @ExceptionHandler(value = SubsciberAlreadyExistException.class)
+    public ResponseEntity<String[]> SubscriberAlreadyExistExceptionHandler(SubsciberAlreadyExistException ex){
+
+        return    new ResponseEntity<>(new String[]{ex.getMessage()}, HttpStatus.BAD_REQUEST);
+
+    }
 
 
 }
