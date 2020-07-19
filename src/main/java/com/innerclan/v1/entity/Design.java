@@ -7,29 +7,33 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-public class Subscription {
-
+@Getter@Setter
+@NoArgsConstructor@AllArgsConstructor
+public class Design {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     long id;
 
-    @Column(nullable = false,unique = true)
+    @Column(nullable=false)
     String email;
+
+    @Column(nullable=false)
+    String comment;
+
+    @Lob
+    //@Column(nullable=false)
+    byte[] image;
 
     @CreationTimestamp
     @JsonFormat(pattern = "yyyy-mm-dd")
     Date createdOn;
 
+    public Design(String email, String comment) {
+        this.email=email;
+        this.comment=comment;
+    }
 }
