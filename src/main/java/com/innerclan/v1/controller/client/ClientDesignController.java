@@ -12,6 +12,7 @@ import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 
 import com.innerclan.v1.entity.Design;
+import com.innerclan.v1.exception.DesignNotSentException;
 import com.innerclan.v1.exception.ProductNotSavedException;
 import com.innerclan.v1.repository.DesignRepository;
 import lombok.AllArgsConstructor;
@@ -50,14 +51,14 @@ public class ClientDesignController {
         try {
             design.setImage(file.getBytes());
         } catch (IOException ex) {
-            throw new ProductNotSavedException("Try Different Image or Different Image Format");
+            throw new DesignNotSentException("Try Different Image or Different Image Format");
         }
         designRepo.save(design);
-        return new ResponseEntity<>(design.getImage(), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>("SUBMITTED", HttpStatus.ACCEPTED);
 
 
     }
-   //--- Decompressing algorithm
+   //--- compressing algorithm
 /*
     public static byte[] compressBytes(byte[] data) {
 
