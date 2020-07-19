@@ -4,17 +4,12 @@ package com.innerclan.v1.controller.admin;
 import com.innerclan.v1.dto.AddProductDto;
 import com.innerclan.v1.entity.Color;
 import com.innerclan.v1.service.IBindingErrorService;
-import com.innerclan.v1.service.ICategoryService;
 import com.innerclan.v1.service.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.validation.Valid;
 import java.util.HashSet;
 import java.util.*;
 
