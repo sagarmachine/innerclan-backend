@@ -6,6 +6,7 @@ import com.innerclan.v1.dto.ClientProductView;
 
 import com.innerclan.v1.dto.AdminProductView;
 import com.innerclan.v1.dto.UpdateProductDto;
+import com.innerclan.v1.entity.Category;
 import com.innerclan.v1.entity.Color;
 import com.innerclan.v1.entity.Image;
 import com.innerclan.v1.entity.Product;
@@ -49,10 +50,18 @@ public class ProductServiceImpl implements IProductService {
     @Autowired
     ProductRepository productRepo;
 
+    @Autowired
+    CategoryRepository categoryRepo;
+
 
     @Override
 
     public List<ClientProductView>  getProductByCategoryId(long id, Pageable pageable) {
+           Optional<Category> value =  categoryRepo.findById(id);
+
+               if(!value.isPresent())
+
+                   throw new CategoryNotFoundException("CATEGORY ID "+id+ " IS INVALID INPUT ");
 
 
         List<Product> products = productRepo.findByCategoryId(id, pageable);
@@ -62,7 +71,8 @@ public class ProductServiceImpl implements IProductService {
     @Override
     public List<ClientProductView> getProductByCategoryIdOrderByView(long id, Pageable pageable) {
 
-
+        Optional<Category> value =  categoryRepo.findById(id);
+        if (!value.isPresent()) throw new CategoryNotFoundException("CATEGORY ID "+id+ " IS INVALID INPUT ");
 
         List<Product> products = productRepo.findByCategoryIdOrderByViewDesc(id, pageable);
         return getClientProductViews(id,  products);
@@ -70,7 +80,8 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     public List<ClientProductView> getProductByCategoryIdOrderBySale(long id, Pageable pageable) {
-        List<ClientProductView> result = new ArrayList<>();
+        Optional<Category> value =  categoryRepo.findById(id);
+        if (!value.isPresent()) throw new CategoryNotFoundException("CATEGORY ID "+id+ " IS INVALID INPUT ");
 
         List<Product> products = productRepo.findByCategoryIdOrderBySaleDesc(id, pageable);
         return getClientProductViews(id, products);
@@ -78,7 +89,9 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     public List<ClientProductView> getProductByCategoryIdOrderByPriceAsc(long id, Pageable pageable) {
-        List<ClientProductView> result = new ArrayList<>();
+
+        Optional<Category> value =  categoryRepo.findById(id);
+        if (!value.isPresent()) throw new CategoryNotFoundException("CATEGORY ID "+id+ " IS INVALID INPUT ");
 
         List<Product> products = productRepo.findByCategoryIdOrderByActualPriceAsc(id, pageable);
         return getClientProductViews(id, products);
@@ -86,7 +99,9 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     public List<ClientProductView> getProductByCategoryIdOrderByPriceDesc(long id, Pageable pageable) {
-        List<ClientProductView> result = new ArrayList<>();
+
+        Optional<Category> value =  categoryRepo.findById(id);
+        if (!value.isPresent()) throw new CategoryNotFoundException("CATEGORY ID "+id+ " IS INVALID INPUT ");
 
         List<Product> products = productRepo.findByCategoryIdOrderByActualPriceDesc(id, pageable);
         return getClientProductViews(id, products);
