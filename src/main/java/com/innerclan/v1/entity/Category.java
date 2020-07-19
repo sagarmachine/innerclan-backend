@@ -1,5 +1,6 @@
 package com.innerclan.v1.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,6 +17,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIgnoreProperties(value = { "products"})
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

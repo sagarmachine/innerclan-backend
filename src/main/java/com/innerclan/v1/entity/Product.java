@@ -38,10 +38,12 @@ public class Product {
 
     String comment;
 
-    int view;
+    long view;
 
     @Lob
-    byte[] image;
+    byte[] defaultImage;
+
+    long sale;
 
     @ManyToOne(fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST,CascadeType.DETACH,CascadeType.MERGE,CascadeType.REFRESH})
     @JoinColumn(name="category_id")
@@ -49,9 +51,6 @@ public class Product {
 
     @OneToMany(mappedBy = "product",cascade = {CascadeType.PERSIST,CascadeType.REMOVE})
     Set<Color> colors;
-
-
-
 
 
 
