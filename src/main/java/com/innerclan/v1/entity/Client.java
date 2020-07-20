@@ -52,7 +52,8 @@ public class Client {
 
     int totalOrder;
 
-    @OneToMany(mappedBy = "client")
+    @ManyToMany (cascade ={CascadeType.PERSIST})
+    @JoinTable
     Set<Promo> promos;
 
     public void addPromos(Promo promo) {
@@ -60,6 +61,6 @@ public class Client {
             promos = new HashSet<Promo>();
         }
         promos.add(promo);
-        promo.setClient(this);
+        promo.getClients().add(this);
     }
 }
