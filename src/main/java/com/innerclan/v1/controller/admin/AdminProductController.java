@@ -2,12 +2,18 @@ package com.innerclan.v1.controller.admin;
 
 
 import com.innerclan.v1.dto.AddProductDto;
+import com.innerclan.v1.dto.AdminProductView;
 import com.innerclan.v1.dto.UpdateProductDto;
 import com.innerclan.v1.entity.Color;
+import com.innerclan.v1.entity.Product;
+import com.innerclan.v1.repository.ProductRepository;
 import com.innerclan.v1.service.IBindingErrorService;
 import com.innerclan.v1.service.IProductService;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;import org.springframework.web.bind.annotation.*;
@@ -28,6 +34,8 @@ public class AdminProductController {
     @Autowired
     IProductService productService;
 
+    @Autowired
+    ProductRepository productRepository;
 
     @PostMapping(value = "/addProduct/{id}",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public  ResponseEntity<?> addProduct(@PathVariable("id") long categoryId,
@@ -61,11 +69,94 @@ AddProductDto addProductDto= new AddProductDto(productName,productPrice,actualPr
 
 
     @PostMapping(value="addColorImage/{id}",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<Color> addImage( @PathVariable("id")long colorId,@RequestBody  MultipartFile file){
+    public ResponseEntity<Color> addImage( @PathVariable("id")long colorId,@RequestBody  MultipartFile file) {
 
-    return   new ResponseEntity<>(productService.addImage(colorId,file),HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(productService.addImage(colorId, file), HttpStatus.ACCEPTED);
 
-}
+    }
+ //-------------------- Getting Products
+
+        @GetMapping(value="/getProducts/{id}/{page}")
+        public ResponseEntity<?> getProductByCategory(@PathVariable("id") long id,@PathVariable("page") long page){
+
+            Pageable pageable = PageRequest.of((int) page, 20);
+
+            List<Product> products= productService.getProductByCategoryId(id, pageable);
+
+            List<AdminProductView> adminProductViews = getAdminProductViews(id,products);
+
+            return new ResponseEntity<>(adminProductViews, HttpStatus.OK);
+
+        }
+
+        @GetMapping(value="/getProductByView/{id}/{page}")
+        public ResponseEntity<?> getProductByView(@PathVariable("id") long id,@PathVariable("page") long page){
+
+            Pageable pageable = PageRequest.of((int) page, 20);
+
+            List<Product> products= productService.getProductByCategoryIdOrderByView(id, pageable);
+            List<AdminProductView> adminProductViews = getAdminProductViews(id,products);
+
+            return new ResponseEntity<>(adminProductViews, HttpStatus.OK);
+
+        }
+
+        @GetMapping(value="/getProductByBestSelling/{id}/{page}")
+        public ResponseEntity<?> getProductBySale(@PathVariable("id") long id,@PathVariable("page") long page){
+
+            Pageable pageable = PageRequest.of((int) page, 20);
+
+            List<Product> products= productService.getProductByCategoryIdOrderBySale(id, pageable);
+            List<AdminProductView> adminProductViews = getAdminProductViews(id,products);
+
+            return new ResponseEntity<>(adminProductViews, HttpStatus.OK);
+
+        }
+
+        @GetMapping(value="/getProductByPriceAsc/{id}/{page}")
+        public ResponseEntity<?> getProductByPriceAsc(@PathVariable("id") long id,@PathVariable("page") long page){
+
+            Pageable pageable = PageRequest.of((int) page, 20);
+
+            List<Product>products= productService.getProductByCategoryIdOrderByPriceAsc(id, pageable);
+
+            List<AdminProductView> adminProductViews = getAdminProductViews(id,products);
+
+            return new ResponseEntity<>(adminProductViews, HttpStatus.OK);
+
+        }
+
+        @GetMapping(value="/getProductByPriceDesc/{id}/{page}")
+        public ResponseEntity<?> getProductByPriceDesc(@PathVariable("id") long id,@PathVariable("page") long page){
+
+            Pageable pageable = PageRequest.of((int) page, 20);
+
+            List<Product> products= productService.getProductByCategoryIdOrderByPriceDesc(id, pageable);
+
+
+            List<AdminProductView> adminProductViews = getAdminProductViews(id,products);
+
+            return new ResponseEntity<>(adminProductViews, HttpStatus.OK);
+
+        }
+
+        private List<AdminProductView> getAdminProductViews(long id, List<Product> products) {
+            List<AdminProductView> result = new ArrayList<>();
+            long size = productRepository.countByCategoryId(id);
+            ModelMapper mapper = new ModelMapper();
+            for (Product p : products) {
+                AdminProductView product = mapper.map(p, AdminProductView.class);
+                product.setSize(size);
+                result.add(product);
+            }
+
+            return result;
+
+        }
+
+
+
+    }
 
 
 
@@ -93,4 +184,4 @@ AddProductDto addProductDto= new AddProductDto(productName,productPrice,actualPr
 
 
 
-}
+

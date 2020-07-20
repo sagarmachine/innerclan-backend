@@ -39,5 +39,6 @@ public class AdminProductView {
 
     byte[] defaultImage;
 
+    long size;
 
 }

@@ -36,7 +36,7 @@ public class ClientProductController {
     IProductService productService;
 
     @Autowired
-    ProductRepository productRepo;
+    ProductRepository productRepository;
 
 
     @GetMapping(value="/getProducts/{id}/{page}")
@@ -44,7 +44,9 @@ public class ClientProductController {
 
         Pageable pageable = PageRequest.of((int) page, 20);
 
-        List<ClientProductView> products= productService.getProductByCategoryId(id, pageable);
+        List<Product> products= productService.getProductByCategoryId(id, pageable);
+
+        List<ClientProductView> clientProductViews = getClientProductViews(id,products);
 
         return new ResponseEntity<>(products, HttpStatus.OK);
 
@@ -55,7 +57,8 @@ public class ClientProductController {
 
         Pageable pageable = PageRequest.of((int) page, 20);
 
-        List<ClientProductView> products= productService.getProductByCategoryIdOrderByView(id, pageable);
+        List<Product> products= productService.getProductByCategoryIdOrderByView(id, pageable);
+        List<ClientProductView> clientProductViews = getClientProductViews(id,products);
 
         return new ResponseEntity<>(products, HttpStatus.OK);
 
@@ -66,7 +69,8 @@ public class ClientProductController {
 
         Pageable pageable = PageRequest.of((int) page, 20);
 
-        List<ClientProductView> products= productService.getProductByCategoryIdOrderBySale(id, pageable);
+        List<Product> products= productService.getProductByCategoryIdOrderBySale(id, pageable);
+        List<ClientProductView> clientProductViews = getClientProductViews(id,products);
 
         return new ResponseEntity<>(products, HttpStatus.OK);
 
@@ -77,7 +81,9 @@ public class ClientProductController {
 
         Pageable pageable = PageRequest.of((int) page, 20);
 
-        List<ClientProductView> products= productService.getProductByCategoryIdOrderByPriceAsc(id, pageable);
+        List<Product>products= productService.getProductByCategoryIdOrderByPriceAsc(id, pageable);
+
+        List<ClientProductView> clientProductViews = getClientProductViews(id,products);
 
         return new ResponseEntity<>(products, HttpStatus.OK);
 
@@ -88,18 +94,48 @@ public class ClientProductController {
 
         Pageable pageable = PageRequest.of((int) page, 20);
 
-        List<ClientProductView> products= productService.getProductByCategoryIdOrderByPriceDesc(id, pageable);
+        List<Product> products= productService.getProductByCategoryIdOrderByPriceDesc(id, pageable);
+
+
+        List<ClientProductView> clientProductViews = getClientProductViews(id,products);
+
+        return new ResponseEntity<>(clientProductViews, HttpStatus.OK);
+
+    }
+
+    private List<ClientProductView> getClientProductViews(long id,  List<Product> products) {
+        List<ClientProductView> result = new ArrayList<>();
+        long size = productRepository.countByCategoryId(id);
+        ModelMapper mapper = new ModelMapper();
+        for (Product p : products) {
+            ClientProductView product = mapper.map(p, ClientProductView.class);
+            product.setSize(size);
+            result.add(product);
+        }
+
+        return result;
+
+    }
+
+
+    @GetMapping(value="/getProductsBySearch")
+    public ResponseEntity<?> getProductBySearch(@RequestParam("search") String search){
+
+        List<ClientProductView> products= productService.getProductBySearch(search);
 
         return new ResponseEntity<>(products, HttpStatus.OK);
 
     }
+
+
+
 //--------- Client Full Product View------------
     @GetMapping(value="/getProduct/{id}")
     public ResponseEntity<?> getFullProduct(@PathVariable("id") long id){
 
 
 
-         Optional<Product> value= productRepo.findById(id);
+         Optional<Product> value= productRepository.findById(id);
          if(value.isPresent()) {
              Product p = value.get();
              ModelMapper mapper = new ModelMapper();
@@ -113,6 +149,9 @@ public class ClientProductController {
 
 
     }
+
+
+
 
 
 
