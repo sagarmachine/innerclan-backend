@@ -143,6 +143,7 @@ AddProductDto addProductDto= new AddProductDto(productName,productPrice,actualPr
         private List<AdminProductView> getAdminProductViews(long id, List<Product> products) {
             List<AdminProductView> result = new ArrayList<>();
             long size = productRepository.countByCategoryId(id);
+            if(id==-1) size=productRepository.count();
             ModelMapper mapper = new ModelMapper();
             for (Product p : products) {
                 AdminProductView product = mapper.map(p, AdminProductView.class);

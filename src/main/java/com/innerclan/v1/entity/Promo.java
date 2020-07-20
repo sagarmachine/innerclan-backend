@@ -1,5 +1,6 @@
 package com.innerclan.v1.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,13 +24,14 @@ public class Promo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false,unique = true)
     String name;
 
     @CreationTimestamp
+    @JsonFormat(pattern = "yyyy-mm-dd")
     Date createdOn;
 
-
+    @JsonFormat(pattern = "yyyy-mm-dd")
     Date expiryDate;
 
     @Enumerated(EnumType.STRING)
@@ -46,13 +48,15 @@ public class Promo {
         if (this == o) return true;
         if (!(o instanceof Promo)) return false;
         Promo promo = (Promo) o;
-        return getId() == promo.getId();
+        return Objects.equals(getName(), promo.getName());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId());
+        return Objects.hash(getName());
     }
 }
+
+
 
 
