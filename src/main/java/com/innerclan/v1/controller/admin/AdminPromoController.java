@@ -10,6 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 
 @RestController
 @RequestMapping(value="/api/v1/admin/promo")
@@ -20,13 +21,42 @@ public class AdminPromoController {
 
     @Autowired
     IBindingErrorService bindingErrorService;
+
     @PostMapping(value="/")
     public ResponseEntity<?> addPromo(@Valid @RequestBody Promo promo, BindingResult bindingResult){
-        if (bindingResult.hasErrors());
+        if (bindingResult.hasErrors())
+            bindingErrorService.getErrorResponse(bindingResult);
 
+        promoService.addPromo(promo);
         
         
-        return new ResponseEntity<>("hgb", HttpStatus.ACCEPTED); 
+        return new ResponseEntity<>("Promo Successfully Added", HttpStatus.ACCEPTED);
     }
+
+    @GetMapping(value="/")
+    public ResponseEntity<?> getPromos(){
+
+        return new ResponseEntity<>(promoService.getPromosOrderByDate(), HttpStatus.OK);
+
+    }
+
+    @DeleteMapping(value="/{id}")
+    public ResponseEntity<?> deletePromo(@PathVariable("id") long id){
+
+        promoService.deletePromo(id);
+        return new ResponseEntity<>("Promo Successfully Deleted", HttpStatus.OK);
+    }
+
+
+    @GetMapping(value="/isValid/{promo}")
+    public ResponseEntity<?> isPromoValid(Principal principal,@PathVariable("promo") String promo){
+        String email=principal.getName();
+       boolean result = promoService.isPromoValid(promo,email);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+
+    }
+
+
 
 }
