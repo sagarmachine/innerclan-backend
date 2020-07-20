@@ -12,6 +12,7 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -39,9 +40,8 @@ public class Promo {
 
     double value;
 
-    @ManyToOne(cascade =CascadeType.PERSIST)
-    @JoinColumn(name = "client_id")
-    Client client;
+    @ManyToMany(mappedBy = "promos")
+    Set<Client> clients;
 
     @Override
     public boolean equals(Object o) {
