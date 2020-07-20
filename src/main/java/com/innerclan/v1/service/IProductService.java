@@ -33,7 +33,6 @@ public interface IProductService {
 
     Set<Color> addColors(long id, HashSet<String> colors);
 
-    List<Product> getProductByCategoryId(long id, Pageable pageable);
 
     List<Product> getProductByCategoryIdOrderByView(long id, Pageable pageable);
 
@@ -48,4 +47,6 @@ public interface IProductService {
     AdminProductView updateProduct(UpdateProductDto updateProductDto,MultipartFile file );
 
     List<ClientProductView> getProductBySearch(String search);
+
+    List<Product> getProductByCategoryIdOrderByDate(long id, Pageable pageable);
 }

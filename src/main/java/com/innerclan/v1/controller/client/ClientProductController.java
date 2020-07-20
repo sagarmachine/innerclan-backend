@@ -39,12 +39,12 @@ public class ClientProductController {
     ProductRepository productRepository;
 
 
-    @GetMapping(value="/getProducts/{id}/{page}")
+    @GetMapping(value="/getProductsOrderByDate/{id}/{page}")
     public ResponseEntity<?> getProductByCategory(@PathVariable("id") long id,@PathVariable("page") long page){
 
         Pageable pageable = PageRequest.of((int) page, 20);
 
-        List<Product> products= productService.getProductByCategoryId(id, pageable);
+        List<Product> products= productService.getProductByCategoryIdOrderByDate(id, pageable);
 
         List<ClientProductView> clientProductViews = getClientProductViews(id,products);
 

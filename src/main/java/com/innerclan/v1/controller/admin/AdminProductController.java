@@ -76,12 +76,12 @@ AddProductDto addProductDto= new AddProductDto(productName,productPrice,actualPr
     }
  //-------------------- Getting Products
 
-        @GetMapping(value="/getProducts/{id}/{page}")
-        public ResponseEntity<?> getProductByCategory(@PathVariable("id") long id,@PathVariable("page") long page){
+        @GetMapping(value="/getProductsOrderByDate/{id}/{page}")
+        public ResponseEntity<?> getProductByCategoryOrderByDate(@PathVariable("id") long id,@PathVariable("page") long page){
 
             Pageable pageable = PageRequest.of((int) page, 20);
 
-            List<Product> products= productService.getProductByCategoryId(id, pageable);
+            List<Product> products= productService.getProductByCategoryIdOrderByDate(id, pageable);
 
             List<AdminProductView> adminProductViews = getAdminProductViews(id,products);
 

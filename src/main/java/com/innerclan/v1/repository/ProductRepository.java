@@ -10,7 +10,6 @@ import java.util.List;
 
 public interface ProductRepository extends JpaRepository<Product,Long> {
 
-    List<Product> findByCategoryId(long id, Pageable pageable);
 
     long countByCategoryId(long id);
 
@@ -25,4 +24,8 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
     List<Product> findByCategoryIdOrderByActualPriceDesc(long id, Pageable pageable);
 
     List<Product> findByProductNameContainingIgnoreCaseOrCategoryNameContainingIgnoreCase(String search1,String search2);
+
+    List<Product> findByCategoryIdOrderByCreatedOnDesc(long id, Pageable pageable);
+
+    List<Product> findAllByOrderByCreatedOnDesc(long id, Pageable pageable);
 }
