@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.HashMap;
 
 @RestController
 @RequestMapping(value="/api/v1/admin/promo")
@@ -51,7 +52,7 @@ public class AdminPromoController {
     @GetMapping(value="/isValid/{promo}")
     public ResponseEntity<?> isPromoValid(Principal principal,@PathVariable("promo") String promo){
         String email=principal.getName();
-       boolean result = promoService.isPromoValid(promo,email);
+       HashMap<Double,String> result = promoService.isPromoValid(promo,email);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
 

@@ -3,6 +3,7 @@ package com.innerclan.v1.service;
 
 import com.innerclan.v1.entity.Promo;
 
+import java.util.HashMap;
 import java.util.List;
 
 public interface IPromoService {
@@ -12,5 +13,5 @@ public interface IPromoService {
 
     void deletePromo(long id);
 
-    boolean isPromoValid(String promo, String email);
+    HashMap<Double,String> isPromoValid(String promo, String email);
 }

@@ -106,6 +106,7 @@ public class ClientProductController {
     private List<ClientProductView> getClientProductViews(long id,  List<Product> products) {
         List<ClientProductView> result = new ArrayList<>();
         long size = productRepository.countByCategoryId(id);
+        if(id==-1) size=productRepository.count();
         ModelMapper mapper = new ModelMapper();
         for (Product p : products) {
             ClientProductView product = mapper.map(p, ClientProductView.class);
