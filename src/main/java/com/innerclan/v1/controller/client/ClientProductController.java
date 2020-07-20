@@ -42,7 +42,7 @@ public class ClientProductController {
     @GetMapping(value="/getProductsOrderByDate/{id}/{page}")
     public ResponseEntity<?> getProductByCategory(@PathVariable("id") long id,@PathVariable("page") long page){
 
-        Pageable pageable = PageRequest.of((int) page, 20);
+        Pageable pageable = PageRequest.of((int) page, 8);
 
         List<Product> products= productService.getProductByCategoryIdOrderByDate(id, pageable);
 
@@ -55,7 +55,7 @@ public class ClientProductController {
     @GetMapping(value="/getProductByView/{id}/{page}")
     public ResponseEntity<?> getProductByView(@PathVariable("id") long id,@PathVariable("page") long page){
 
-        Pageable pageable = PageRequest.of((int) page, 20);
+        Pageable pageable = PageRequest.of((int) page, 8);
 
         List<Product> products= productService.getProductByCategoryIdOrderByView(id, pageable);
         List<ClientProductView> clientProductViews = getClientProductViews(id,products);
@@ -67,7 +67,7 @@ public class ClientProductController {
     @GetMapping(value="/getProductByBestSelling/{id}/{page}")
     public ResponseEntity<?> getProductBySale(@PathVariable("id") long id,@PathVariable("page") long page){
 
-        Pageable pageable = PageRequest.of((int) page, 20);
+        Pageable pageable = PageRequest.of((int) page, 8);
 
         List<Product> products= productService.getProductByCategoryIdOrderBySale(id, pageable);
         List<ClientProductView> clientProductViews = getClientProductViews(id,products);
@@ -79,7 +79,7 @@ public class ClientProductController {
     @GetMapping(value="/getProductByPriceAsc/{id}/{page}")
     public ResponseEntity<?> getProductByPriceAsc(@PathVariable("id") long id,@PathVariable("page") long page){
 
-        Pageable pageable = PageRequest.of((int) page, 20);
+        Pageable pageable = PageRequest.of((int) page, 8);
 
         List<Product>products= productService.getProductByCategoryIdOrderByPriceAsc(id, pageable);
 
@@ -92,7 +92,7 @@ public class ClientProductController {
     @GetMapping(value="/getProductByPriceDesc/{id}/{page}")
     public ResponseEntity<?> getProductByPriceDesc(@PathVariable("id") long id,@PathVariable("page") long page){
 
-        Pageable pageable = PageRequest.of((int) page, 20);
+        Pageable pageable = PageRequest.of((int) page, 8);
 
         List<Product> products= productService.getProductByCategoryIdOrderByPriceDesc(id, pageable);
 
