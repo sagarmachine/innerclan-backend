@@ -22,8 +22,7 @@ public class Color {
 
     @ManyToOne(cascade = {CascadeType.PERSIST})
     @JsonIgnore
-
-    Product product;
+       Product product;
 
     @OneToMany(mappedBy = "color",cascade = {CascadeType.ALL},fetch = FetchType.EAGER)
     List<Image> images= new ArrayList<>();

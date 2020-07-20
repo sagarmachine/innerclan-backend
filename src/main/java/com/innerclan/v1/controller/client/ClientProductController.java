@@ -2,10 +2,10 @@ package com.innerclan.v1.controller.client;
 
 
 import com.innerclan.v1.dto.AddCategoryDto;
-import com.innerclan.v1.dto.ClientProductFullView;
 import com.innerclan.v1.dto.ClientProductView;
 import com.innerclan.v1.entity.Color;
 import com.innerclan.v1.entity.Product;
+import com.innerclan.v1.exception.ProductNotFoundException;
 import com.innerclan.v1.repository.ProductRepository;
 import com.innerclan.v1.service.IProductService;
 import lombok.AllArgsConstructor;
@@ -138,14 +138,16 @@ public class ClientProductController {
          Optional<Product> value= productRepository.findById(id);
          if(value.isPresent()) {
              Product p = value.get();
-             ModelMapper mapper = new ModelMapper();
              p.setView(p.getView()+1);
-             ClientProductFullView product  = mapper.map(p,  ClientProductFullView .class);
-
-             return new ResponseEntity<>(product, HttpStatus.OK);
+             productRepository.save(p);
+         }
+         else{
+             throw  new ProductNotFoundException("no product found with id "+id);
          }
 
-         return null;
+        return new ResponseEntity<>(productRepository.findById(id).get(), HttpStatus.OK);
+
+      //   return null;
 
 
     }

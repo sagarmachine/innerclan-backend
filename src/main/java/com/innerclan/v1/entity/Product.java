@@ -1,5 +1,6 @@
 package com.innerclan.v1.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,9 +34,11 @@ public class Product {
     double actualPrice;
 
     @CreationTimestamp
+    @JsonFormat(pattern = "yyyy-mm-dd")
     Date createdOn;
 
     @UpdateTimestamp
+    @JsonFormat(pattern = "yyyy-mm-dd")
     Date updatedOn;
 
     String comment;
