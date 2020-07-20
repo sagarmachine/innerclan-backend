@@ -14,4 +14,6 @@ public interface IPromoService {
     void deletePromo(long id);
 
     HashMap<Double,String> isPromoValid(String promo, String email);
+
+    List<Promo> getPublicPromos();
 }

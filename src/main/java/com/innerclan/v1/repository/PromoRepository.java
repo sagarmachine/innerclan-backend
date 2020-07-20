@@ -1,5 +1,6 @@
 package com.innerclan.v1.repository;
 
+import com.innerclan.v1.entity.Access;
 import com.innerclan.v1.entity.Promo;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -9,4 +10,6 @@ public interface PromoRepository extends JpaRepository<Promo,Long> {
 
 
     List<Promo> findAllByOrderByCreatedOnDesc();
+
+    List<Promo> findByAccess(Access access);
 }

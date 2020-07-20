@@ -41,6 +41,13 @@ public class AdminPromoController {
 
     }
 
+    @GetMapping(value="/getPublicPromos")
+    public ResponseEntity<?> getPublicPromos(){
+
+        return new ResponseEntity<>(promoService.getPublicPromos(), HttpStatus.OK);
+
+    }
+
     @DeleteMapping(value="/{id}")
     public ResponseEntity<?> deletePromo(@PathVariable("id") long id){
 
@@ -52,11 +59,13 @@ public class AdminPromoController {
     @GetMapping(value="/isValid/{promo}")
     public ResponseEntity<?> isPromoValid(Principal principal,@PathVariable("promo") String promo){
         String email=principal.getName();
+        //String email="nikhilkhari0047@gmail.com";
        HashMap<Double,String> result = promoService.isPromoValid(promo,email);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
 
     }
+
 
 
 

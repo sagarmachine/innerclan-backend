@@ -1,5 +1,6 @@
 package com.innerclan.v1.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,9 +28,10 @@ public class Promo {
     String name;
 
     @CreationTimestamp
+    @JsonFormat(pattern = "yyyy-mm-dd")
     Date createdOn;
 
-
+    @JsonFormat(pattern = "yyyy-mm-dd")
     Date expiryDate;
 
     @Enumerated(EnumType.STRING)
@@ -54,5 +56,7 @@ public class Promo {
         return Objects.hash(getName());
     }
 }
+
+
 
 
