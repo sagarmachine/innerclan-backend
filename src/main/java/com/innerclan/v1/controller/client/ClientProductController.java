@@ -48,7 +48,7 @@ public class ClientProductController {
 
         List<ClientProductView> clientProductViews = getClientProductViews(id,products);
 
-        return new ResponseEntity<>(products, HttpStatus.OK);
+        return new ResponseEntity<>(clientProductViews, HttpStatus.OK);
 
     }
 
@@ -60,7 +60,7 @@ public class ClientProductController {
         List<Product> products= productService.getProductByCategoryIdOrderByView(id, pageable);
         List<ClientProductView> clientProductViews = getClientProductViews(id,products);
 
-        return new ResponseEntity<>(products, HttpStatus.OK);
+        return new ResponseEntity<>(clientProductViews, HttpStatus.OK);
 
     }
 
@@ -72,7 +72,7 @@ public class ClientProductController {
         List<Product> products= productService.getProductByCategoryIdOrderBySale(id, pageable);
         List<ClientProductView> clientProductViews = getClientProductViews(id,products);
 
-        return new ResponseEntity<>(products, HttpStatus.OK);
+        return new ResponseEntity<>(clientProductViews, HttpStatus.OK);
 
     }
 
@@ -85,7 +85,7 @@ public class ClientProductController {
 
         List<ClientProductView> clientProductViews = getClientProductViews(id,products);
 
-        return new ResponseEntity<>(products, HttpStatus.OK);
+        return new ResponseEntity<>(clientProductViews, HttpStatus.OK);
 
     }
 

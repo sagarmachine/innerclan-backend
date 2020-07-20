@@ -52,7 +52,7 @@ public class ProductServiceImpl implements IProductService {
     @Override
 
     public List<Product> getProductByCategoryIdOrderByDate(long id, Pageable pageable) {
-        if(id==-1) return productRepository.findAllByOrderByCreatedOnDesc(id,pageable);
+        if(id==-1) return productRepository.findAllByOrderByCreatedOnDesc(pageable);
            Optional<Category> value =  categoryRepository.findById(id);
            if(!value.isPresent())
                throw new CategoryNotFoundException("CATEGORY ID "+id+ " IS INVALID INPUT ");
