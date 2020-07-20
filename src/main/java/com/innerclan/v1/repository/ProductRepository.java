@@ -27,5 +27,5 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
 
     List<Product> findByCategoryIdOrderByCreatedOnDesc(long id, Pageable pageable);
 
-    List<Product> findAllByOrderByCreatedOnDesc(long id, Pageable pageable);
+    List<Product> findAllByOrderByCreatedOnDesc(Pageable pageable);
 }
