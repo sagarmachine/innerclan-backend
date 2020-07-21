@@ -1,5 +1,8 @@
 package com.innerclan.v1.exception;
 
+import lombok.Getter;
+
+@Getter
 public class SubsciberAlreadyExistException extends  RuntimeException{
 
     String message;
@@ -8,8 +11,5 @@ public class SubsciberAlreadyExistException extends  RuntimeException{
         this.message=message;
     }
 
-    @Override
-    public String getMessage() {
-        return super.getMessage();
-    }
+
 }

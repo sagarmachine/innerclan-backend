@@ -1,5 +1,9 @@
 package com.innerclan.v1.exception;
 
+
+import lombok.Getter;
+
+@Getter
 public class ClientNotFoundException extends  RuntimeException{
 
     String message;
@@ -8,8 +12,5 @@ public class ClientNotFoundException extends  RuntimeException{
         this.message=message;
     }
 
-    @Override
-    public String getMessage() {
-        return super.getMessage();
-    }
+
 }
