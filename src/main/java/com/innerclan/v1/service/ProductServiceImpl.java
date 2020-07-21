@@ -111,6 +111,7 @@ public class ProductServiceImpl implements IProductService {
         for(Product p:products){
 
             ClientProductView product= mapper.map(p,ClientProductView.class);
+            product.setSize(products.size());
             result.add(product);
         }
         return result;
