@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -15,27 +16,26 @@ import javax.persistence.Embeddable;
 @AllArgsConstructor
 public class Address {
 
-    @Column(nullable = false)
+
     String houseNumber;
 
     String landmark;
 
-    @Column(length=6,nullable = false)
-    int pincode;
+    @Column(length = 6)
+    String pincode;
 
-    @Column(nullable = false)
     String location;
 
-    @Column(nullable = false)
+
     String city;
 
-    @Column(nullable = false)
+
     String state;
 
-    @Column(nullable = false)
+
     String customerPhone;
 
-    @Column(nullable = false)
+
     String customerName;
 
 

@@ -29,7 +29,7 @@ public class Subscription {
     String email;
 
     @CreationTimestamp
-    @JsonFormat(pattern = "yyyy-mm-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     Date createdOn;
 
 }

@@ -32,10 +32,10 @@ public class Design {
     byte[] image;
 
     @CreationTimestamp
-    @JsonFormat(pattern = "yyyy-mm-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     Date createdOn;
 
-    @ColumnDefault("FALSE")
+    @Column(columnDefinition="bit default 0")
     boolean seen;
 
     public Design(String email, String comment) {

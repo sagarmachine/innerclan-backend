@@ -23,7 +23,7 @@ public class AdminPromoController {
     @Autowired
     IBindingErrorService bindingErrorService;
 
-    @PostMapping(value="/")
+    @PostMapping(value="")
     public ResponseEntity<?> addPromo(@Valid @RequestBody Promo promo, BindingResult bindingResult){
         if (bindingResult.hasErrors())
             bindingErrorService.getErrorResponse(bindingResult);
@@ -34,7 +34,7 @@ public class AdminPromoController {
         return new ResponseEntity<>("Promo Successfully Added", HttpStatus.ACCEPTED);
     }
 
-    @GetMapping(value="/")
+    @GetMapping(value="")
     public ResponseEntity<?> getPromos(){
 
         return new ResponseEntity<>(promoService.getPromosOrderByDate(), HttpStatus.OK);

@@ -19,13 +19,13 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
 
     List<Product> findByCategoryIdOrderBySaleDesc(long id, Pageable pageable);
 
-    List<Product> findByCategoryIdOrderByActualPriceAsc(long id, Pageable pageable);
-
-    List<Product> findByCategoryIdOrderByActualPriceDesc(long id, Pageable pageable);
-
     List<Product> findByProductNameContainingIgnoreCaseOrCategoryNameContainingIgnoreCase(String search1,String search2);
 
     List<Product> findByCategoryIdOrderByCreatedOnDesc(long id, Pageable pageable);
 
     List<Product> findAllByOrderByCreatedOnDesc(Pageable pageable);
+
+    List<Product> findByCategoryIdOrderByProductPriceAsc(long id, Pageable pageable);
+
+    List<Product> findByCategoryIdOrderByProductPriceDesc(long id, Pageable pageable);
 }

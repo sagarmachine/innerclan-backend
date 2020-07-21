@@ -87,7 +87,7 @@ public class ProductServiceImpl implements IProductService {
         Optional<Category> value =  categoryRepository.findById(id);
         if (!value.isPresent()) throw new CategoryNotFoundException("CATEGORY ID "+id+ " IS INVALID INPUT ");
 
-        return productRepository.findByCategoryIdOrderByActualPriceAsc(id, pageable);
+        return productRepository.findByCategoryIdOrderByProductPriceAsc(id, pageable);
 
     }
 
@@ -97,7 +97,7 @@ public class ProductServiceImpl implements IProductService {
         Optional<Category> value =  categoryRepository.findById(id);
         if (!value.isPresent()) throw new CategoryNotFoundException("CATEGORY ID "+id+ " IS INVALID INPUT ");
 
-        return productRepository.findByCategoryIdOrderByActualPriceDesc(id, pageable);
+        return productRepository.findByCategoryIdOrderByProductPriceDesc(id, pageable);
 
     }
 
@@ -111,6 +111,7 @@ public class ProductServiceImpl implements IProductService {
         for(Product p:products){
 
             ClientProductView product= mapper.map(p,ClientProductView.class);
+            product.setSize(products.size());
             result.add(product);
         }
         return result;

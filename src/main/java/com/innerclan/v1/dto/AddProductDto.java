@@ -15,13 +15,13 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class AddProductDto {
 
-    @NotNull(message = "name should not be null")
+    @NotNull(message = "name should not be empty")
     String productName;
 
-    @NotNull
+    @NotNull(message = "product's price should not be empty")
   double productPrice;
 
-    @NotNull
+    @NotNull(message = "product's actual price should not be empty")
    double actualPrice;
 
     String comment;

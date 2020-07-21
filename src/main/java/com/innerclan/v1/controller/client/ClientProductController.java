@@ -146,16 +146,11 @@ public class ClientProductController {
              throw  new ProductNotFoundException("no product found with id "+id);
          }
 
-        return new ResponseEntity<>(productRepository.findById(id).get(), HttpStatus.OK);
 
-      //   return null;
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
 
 
     }
-
-
-
-
 
 
 
