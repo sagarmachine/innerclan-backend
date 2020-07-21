@@ -17,10 +17,10 @@ public class AddCategoryDto {
 
     long id;
 
-    @NotNull
+    @NotNull(message = "category name can't be empty")
     String name;
 
-    @NotNull
+    @NotNull(message = "choose a category gender")
     String gender;
 
 

@@ -1,13 +1,20 @@
 package com.innerclan.v1.controller.admin;
 
 
+import com.innerclan.v1.dto.AddClientDto;
 import com.innerclan.v1.entity.Client;
 import com.innerclan.v1.repository.ClientRepository;
+import com.innerclan.v1.service.IBindingErrorService;
+import com.innerclan.v1.service.IClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -18,10 +25,13 @@ public class AdminClientController {
 
     @Autowired
     ClientRepository clientRepository;
-    @GetMapping("/")
-    public List<Client> getClients(){
 
-        return  clientRepository.findAllByOrderByCreatedOn();
+
+
+    @GetMapping("")
+    public ResponseEntity<?> getClients() {
+
+        return new ResponseEntity<>(clientRepository.findAllByOrderByCreatedOn(), HttpStatus.OK);
 
     }
 

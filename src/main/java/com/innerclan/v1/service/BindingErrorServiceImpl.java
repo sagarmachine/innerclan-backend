@@ -18,7 +18,7 @@ public class BindingErrorServiceImpl implements IBindingErrorService {
 
 
          List<ObjectError>errosList= bindingResult.getAllErrors();
-        String []errorArray= new String[errosList.size()];
+        String [] errorArray= new String[errosList.size()];
          int c=0;
          for (ObjectError error:errosList){
            errorArray[c++]= error.getDefaultMessage();

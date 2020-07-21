@@ -1,10 +1,13 @@
 package com.innerclan.v1.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.ColumnTransformer;
 import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.*;
 import java.util.Date;
@@ -22,6 +25,7 @@ public class Client {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
+    @Column(unique = true)
     String uuid;
 
     @Column(nullable = false)
@@ -30,27 +34,33 @@ public class Client {
     @Column(nullable = false)
     String lastName;
 
-    @Column(nullable = false)
+    @Column(nullable = false,unique = true)
     String email;
 
     @Column(nullable = false)
     String password;
 
+    @Column(unique=true,length=10)
     String phone;
 
     @Embedded
     Address address;
 
     @CreationTimestamp
+    @JsonFormat(pattern = "yyyy-MM-dd")
     Date createdOn;
 
+    @JsonFormat(pattern = "yyyy-MM-dd")
     Date lastLoggedIn;
 
-    int visit;
+
+    long visit;
+
 
     boolean newUser;
 
-    int totalOrder;
+
+    long totalOrder;
 
     @ManyToMany (cascade ={CascadeType.PERSIST})
     @JoinTable

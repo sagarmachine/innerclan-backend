@@ -146,14 +146,11 @@ public class ClientProductController {
              return new ResponseEntity<>(product, HttpStatus.OK);
          }
 
-         return null;
+
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
 
 
     }
-
-
-
-
 
 
 

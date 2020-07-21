@@ -1,6 +1,7 @@
 package com.innerclan.v1.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,10 +30,10 @@ public class Promo {
     String name;
 
     @CreationTimestamp
-    @JsonFormat(pattern = "yyyy-mm-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     Date createdOn;
 
-    @JsonFormat(pattern = "yyyy-mm-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     Date expiryDate;
 
     @Enumerated(EnumType.STRING)
@@ -41,7 +42,11 @@ public class Promo {
     double value;
 
     @ManyToMany(mappedBy = "promos")
+    @JsonIgnore
     Set<Client> clients;
+
+    @Transient
+    long usedBy;
 
     @Override
     public boolean equals(Object o) {

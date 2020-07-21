@@ -90,7 +90,15 @@ public class PromoServiceImpl implements IPromoService {
     public List<Promo> getPublicPromos() {
 
         Access access = Access.PUBLIC;
-        return promoRepository.findByAccess(access);
-
+         List<Promo> result= promoRepository.findByAccess(access);
+         setUsedBy(result);
+        return result;
     }
+
+    private void setUsedBy(List<Promo> promoList){
+        for(Promo p:promoList){
+            p.setUsedBy(p.getClients().size());
+        }
+    }
+
 }

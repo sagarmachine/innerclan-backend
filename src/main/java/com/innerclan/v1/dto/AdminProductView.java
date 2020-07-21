@@ -25,10 +25,10 @@ public class AdminProductView {
 
     double actualPrice;
 
-    @JsonFormat(pattern = "yyyy-mm-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     Date createdOn;
 
-    @JsonFormat(pattern = "yyyy-mm-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     Date updatedOn;
 
     String comment;
