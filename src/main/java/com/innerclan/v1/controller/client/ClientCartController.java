@@ -45,7 +45,7 @@ public class ClientCartController {
      public ResponseEntity<?> getCartItems( ){
 // Principal principal
 // String email=principal.getName();
-        String email= "sagarpanwar2122@gmail.com";
+        String email= "sagarpanwar2122@gmail.cox m";
 
 
         List<CartItemDto> result=cartItemService.getCartItems(email);
