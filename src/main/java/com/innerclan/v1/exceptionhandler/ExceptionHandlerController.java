@@ -82,6 +82,13 @@ public class ExceptionHandlerController {
 
     }
 
+    @ExceptionHandler(value = CartItemNotFoundException.class)
+    public ResponseEntity<String[]> CartItemNotFoundException(CartItemNotFoundException ex){
+
+        return    new ResponseEntity<>(new String[]{ex.getMessage()}, HttpStatus.BAD_REQUEST);
+
+    }
+
 
 
 

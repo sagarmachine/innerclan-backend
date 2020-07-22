@@ -5,6 +5,7 @@ import com.innerclan.v1.dto.ClientProductView;
 import com.innerclan.v1.entity.CartItem;
 import com.innerclan.v1.entity.Client;
 import com.innerclan.v1.entity.Product;
+import com.innerclan.v1.exception.CartItemNotFoundException;
 import com.innerclan.v1.exception.ClientNotFoundException;
 import com.innerclan.v1.exception.ProductNotFoundException;
 import com.innerclan.v1.repository.CartItemRepository;
@@ -80,12 +81,37 @@ public class CartItemServiceImpl implements ICartItemService {
 
         ModelMapper mapper = new ModelMapper();
         for(CartItem cartItem:cartItems) {
-            Optional<Product> productOptional =productRepository.findById(cartItem.getId());
+            Optional<Product> productOptional =productRepository.findById(cartItem.getProductId());
             ClientProductView clientProductView= mapper.map(productOptional.get(), ClientProductView.class);
 
             CartItemDto cartItemDto =new CartItemDto(clientProductView,cartItem.getQuantity(),cartItem.getQuantity()*productOptional.get().getProductPrice());
-           result.add(cartItemDto);
+            result.add(cartItemDto);
         }
         return result;
     }
+
+    @Override
+    public void deleteCartItem(String email, long productId) {
+
+        Optional<Client> clientValue= clientRepository.findByEmail(email);
+        if(!clientValue.isPresent()) throw new ClientNotFoundException("Client with email "+email +"does not exist");
+
+
+        Optional<Product> productValue= productRepository.findById(productId);
+        if(!productValue.isPresent()) throw new ProductNotFoundException("product with id "+productId +"not found");
+
+        Client client=clientValue.get();
+
+        Optional<CartItem> cartItemValue= cartItemRepository.findByClientAndProductId(client,productId);
+        if(!cartItemValue.isPresent()) throw new CartItemNotFoundException("Product Not found in the Cart");
+        CartItem cartItem = cartItemValue.get();
+        //client.getCartItems().remove(cartItem);
+        cartItemRepository.deleteById(cartItem.getId());
+
+
+
+
+    }
+
+
 }

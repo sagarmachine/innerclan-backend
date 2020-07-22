@@ -9,4 +9,6 @@ public interface ICartItemService {
     void addCartItem(String email, long productId);
 
     List<CartItemDto> getCartItems(String email);
+
+    void deleteCartItem(String email, long productId);
 }
