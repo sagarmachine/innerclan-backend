@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -30,6 +31,7 @@ import java.util.Optional;
 @NoArgsConstructor@AllArgsConstructor
 @RestController
 @RequestMapping(value="/api/v1/product")
+@Slf4j
 public class ClientProductController {
 
     @Autowired
@@ -140,6 +142,7 @@ public class ClientProductController {
          if(value.isPresent()) {
              Product p = value.get();
              p.setView(p.getView()+1);
+             log.info("VIEWS "+p.getView() );
              productRepository.save(p);
          }
          else{
@@ -147,7 +150,7 @@ public class ClientProductController {
          }
 
 
-        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+        return new ResponseEntity<>(value.get(), HttpStatus.OK);
 
 
     }

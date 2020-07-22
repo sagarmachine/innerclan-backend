@@ -17,6 +17,7 @@ import com.innerclan.v1.repository.ProductRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -142,8 +143,11 @@ public class ProductServiceImpl implements IProductService {
         }
           product.setProductName(product.getProductName().toUpperCase());
         category.addProducts(product);
-        categoryRepository.save(category);
-
+        try {
+            categoryRepository.save(category);
+        }catch(DataIntegrityViolationException ex){
+            throw  new ProductAlreadyExistException("product with name: "+product.getProductName()+" already exist");
+        }
         product=productRepository.findByProductName(addProductDto.getProductName().toUpperCase());
          return mapper.map(product,AdminProductView.class);
 
@@ -157,6 +161,7 @@ public class ProductServiceImpl implements IProductService {
         if(!productOptional.isPresent())
             throw  new ProductNotFoundException("no product with id"+updateProductDto.getId());
 
+
         ModelMapper mapper = new ModelMapper();
         Product product = mapper.map(updateProductDto, Product.class);
 
@@ -166,6 +171,9 @@ public class ProductServiceImpl implements IProductService {
         } catch (IOException ex) {
             throw new ProductNotSavedException("Try Different Image or Different Image Format");
         }
+        product.setView(productOptional.get().getView());
+        product.setSale(productOptional.get().getSale());
+        product.setCreatedOn(productOptional.get().getCreatedOn());
         product.setProductName(product.getProductName().toUpperCase());
         productRepository.save(product);
 

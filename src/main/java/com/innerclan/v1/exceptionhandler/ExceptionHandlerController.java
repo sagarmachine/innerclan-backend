@@ -63,7 +63,7 @@ public class ExceptionHandlerController {
     }
 
     @ExceptionHandler(value = ProductAlreadyExistException.class)
-    public ResponseEntity<String[]> productAlreadyExistExceptionHandler(ImageNotSavedException ex){
+    public ResponseEntity<String[]> productAlreadyExistExceptionHandler(ProductAlreadyExistException ex){
 
         return    new ResponseEntity<>(new String[]{ex.getMessage()}, HttpStatus.BAD_REQUEST);
 

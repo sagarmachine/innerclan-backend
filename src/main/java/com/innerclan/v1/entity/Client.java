@@ -37,7 +37,7 @@ public class Client {
     @Column(nullable = false,unique = true)
     String email;
 
-    @Column(nullable = false)
+   // @Column(nullable = false)
     String password;
 
     @Column(unique=true,length=10)
@@ -55,9 +55,6 @@ public class Client {
 
 
     long visit;
-
-
-    boolean newUser;
 
 
     long totalOrder;

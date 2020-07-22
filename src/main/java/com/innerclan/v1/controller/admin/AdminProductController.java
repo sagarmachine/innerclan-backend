@@ -6,12 +6,16 @@ import com.innerclan.v1.dto.AdminProductView;
 import com.innerclan.v1.dto.UpdateProductDto;
 import com.innerclan.v1.entity.Color;
 import com.innerclan.v1.entity.Product;
+import com.innerclan.v1.exception.ImageNotFoundException;
+import com.innerclan.v1.exception.ImageNotSavedException;
+import com.innerclan.v1.repository.ImageRepository;
 import com.innerclan.v1.repository.ProductRepository;
 import com.innerclan.v1.service.IBindingErrorService;
 import com.innerclan.v1.service.IProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -37,6 +41,9 @@ public class AdminProductController {
     @Autowired
     ProductRepository productRepository;
 
+    @Autowired
+    ImageRepository imageRepository;
+
     @PostMapping(value = "/addProduct/{id}",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public  ResponseEntity<?> addProduct(@PathVariable("id") long categoryId,
                                          @RequestParam("productName")String productName,
@@ -49,7 +56,7 @@ AddProductDto addProductDto= new AddProductDto(productName,productPrice,actualPr
     }
 
 
-    @PostMapping(value = "/updateProduct/{id}",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PutMapping(value = "/updateProduct",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public  ResponseEntity<?> updateProduct(
                                             @RequestParam("id")long id,
                                            @RequestParam("productName")String productName,
@@ -59,6 +66,14 @@ AddProductDto addProductDto= new AddProductDto(productName,productPrice,actualPr
                                             @RequestBody MultipartFile file){
         UpdateProductDto productDto= new UpdateProductDto(productName,productPrice,actualPrice,comment,id);
         return new ResponseEntity<>( productService.updateProduct(productDto,file), HttpStatus.OK);
+    }
+
+    @DeleteMapping(value = "/deleteImage/{id}")
+    public void deleteImage(@PathVariable("id") long id){
+      try{  imageRepository.deleteById(id);
+    }catch(EmptyResultDataAccessException ex){
+          throw new ImageNotFoundException("no image found with id "+ id);
+    }
     }
 
     @PostMapping(value = "/addColors/{id}")

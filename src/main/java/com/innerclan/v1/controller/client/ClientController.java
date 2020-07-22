@@ -24,14 +24,14 @@ public class ClientController {
     @Autowired
     IBindingErrorService bindingErrorService;
 
-    @PostMapping("")
-    public ResponseEntity<?> addClient(@Valid @RequestBody AddClientDto clientDto, BindingResult bindingResult){
+    @PostMapping("/register")
+    public ResponseEntity<?> registerUser(@Valid @RequestBody AddClientDto clientDto, BindingResult bindingResult){
 
         if(bindingResult.hasErrors()){
             bindingErrorService.getErrorResponse(bindingResult);
         }
-        clientService.addClient(clientDto);
-        return new ResponseEntity<>("CLIENT ADDED SUCCESSFULLY", HttpStatus.OK);
+
+        return clientService.addClient(clientDto);
     }
 
 

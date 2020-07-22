@@ -1,5 +1,9 @@
 package com.innerclan.v1.exception;
 
+
+import lombok.Getter;
+
+@Getter
 public class ProductNotFoundException extends  RuntimeException{
 
     String message;
@@ -10,6 +14,6 @@ public class ProductNotFoundException extends  RuntimeException{
 
     @Override
     public String getMessage() {
-        return super.getMessage();
+        return this.message;
     }
 }
