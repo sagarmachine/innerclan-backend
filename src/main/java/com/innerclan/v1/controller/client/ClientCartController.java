@@ -41,12 +41,19 @@ public class ClientCartController {
 
     @GetMapping("")
      public ResponseEntity<?> getCartItems(Principal principal ){
-// Principal principal
+
       String email=principal.getName();
-
-
-        List<CartItemDto> result=cartItemService.getCartItems(email);
+   List<CartItemDto> result=cartItemService.getCartItems(email);
         return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{productId}")
+    public ResponseEntity<?> deleteCartItem( @PathVariable("productId") long productId){
+// Principal principal
+// String email=principal.getName();
+        String email= "sagarpanwar2122@gmail.com";
+        cartItemService.deleteCartItem(email,productId);
+        return new ResponseEntity<>("ITEM DELETED SUCCESSFULLY TO THE CART", HttpStatus.OK);
     }
 
 
