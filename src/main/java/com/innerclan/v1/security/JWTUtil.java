@@ -15,10 +15,10 @@ import java.util.function.Function;
 
 @Component
 public class JWTUtil implements Serializable {
-    private static final long serialVersionUID = -2550185165626007488L;
+  //  private static final long serialVersionUID = -2550185165626007488L;
     public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60;
     //@Value("${jwt.secret}")
-    private String secret="jwtsecret";
+    private String secret="JWTINNERCLAN";
     //retrieve username from jwt token
     public String getUsernameFromToken(String token) {
         return getClaimFromToken(token, Claims::getSubject);

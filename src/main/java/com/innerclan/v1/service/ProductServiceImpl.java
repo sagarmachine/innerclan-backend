@@ -175,8 +175,13 @@ public class ProductServiceImpl implements IProductService {
         product.setSale(productOptional.get().getSale());
         product.setCreatedOn(productOptional.get().getCreatedOn());
         product.setProductName(product.getProductName().toUpperCase());
-        productRepository.save(product);
+        product.setCategory(productOptional.get().getCategory());
 
+       try {
+           productRepository.save(product);
+       }catch(DataIntegrityViolationException ex){
+           throw new ProductAlreadyExistException("product with same name already exist");
+       }
         product=productRepository.findById(updateProductDto.getId()).get();
         return mapper.map(product,AdminProductView.class);
 
