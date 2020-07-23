@@ -22,7 +22,7 @@ import java.io.PrintWriter;
 public class UserNotLoginAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException, ServletException {
-        log.info("Login Exception");
+        log.info("Login Exception "+e.getMessage());
 
         httpServletResponse.setHeader("Message","please login ");
         httpServletResponse.setStatus(7571);

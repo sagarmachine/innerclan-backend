@@ -63,6 +63,25 @@ public class Client {
     @JoinTable
     Set<Promo> promos;
 
+
+   @OneToMany(mappedBy = "client",cascade = {CascadeType.ALL})
+   Set<CartItem> cartItems;
+
+    public void addCartItem(CartItem cartItem) {
+        if (cartItems == null) {
+            cartItems = new HashSet<CartItem>();
+        }
+        if(cartItems.contains(cartItem)){
+            cartItem.setQuantity(cartItem.getQuantity()+1);
+        }
+        else {
+            cartItem.setQuantity(1);
+            cartItems.add(cartItem);
+            cartItem.setClient(this);
+        }
+
+    }
+
     public void addPromos(Promo promo) {
         if (promos == null) {
             promos = new HashSet<Promo>();

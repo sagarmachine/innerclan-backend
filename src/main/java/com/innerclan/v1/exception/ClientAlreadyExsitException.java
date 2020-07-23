@@ -1,5 +1,8 @@
 package com.innerclan.v1.exception;
 
+import lombok.Getter;
+
+@Getter
 public class ClientAlreadyExsitException extends  RuntimeException{
 
     String message;
@@ -8,8 +11,5 @@ public class ClientAlreadyExsitException extends  RuntimeException{
         this.message=message;
     }
 
-    @Override
-    public String getMessage() {
-        return super.getMessage();
-    }
+
 }

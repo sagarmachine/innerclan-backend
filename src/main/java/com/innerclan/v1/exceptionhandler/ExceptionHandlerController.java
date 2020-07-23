@@ -7,6 +7,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 @ControllerAdvice
 public class ExceptionHandlerController {
 
@@ -28,6 +32,7 @@ public class ExceptionHandlerController {
 
       @ExceptionHandler(value= CategoryNotFoundException.class)
       public ResponseEntity<String[]> categoryNotFoundExceptionHandler(CategoryNotFoundException ex){
+
 
         return    new ResponseEntity<>(new String[]{ex.getMessage()}, HttpStatus.BAD_REQUEST);
 

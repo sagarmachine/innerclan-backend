@@ -30,7 +30,7 @@ public class PromoServiceImpl implements IPromoService {
 
     @Override
     public void addPromo(Promo promo) {
-
+           promo.setName(promo.getName().toUpperCase());
         try {
             Calendar calendar= Calendar.getInstance();
             calendar.add(Calendar.MONTH,3);

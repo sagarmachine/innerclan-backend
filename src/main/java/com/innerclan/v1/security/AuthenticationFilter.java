@@ -45,11 +45,14 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
                 Object userDetails;
                 Object principal;
-                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(user.getUsername(),user.getPassword());
+                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(user.getUsername(),null,new ArrayList<>() );
                 usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
-             SecurityContext context = SecurityContextHolder.createEmptyContext();
+               SecurityContext context = SecurityContextHolder.createEmptyContext();
                 context.setAuthentication(usernamePasswordAuthenticationToken);
                 SecurityContextHolder.setContext(context);
+                SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+
+                log.info("SUCCESS "+ SecurityContextHolder.getContext().getAuthentication().isAuthenticated() );
             }
         }
 
