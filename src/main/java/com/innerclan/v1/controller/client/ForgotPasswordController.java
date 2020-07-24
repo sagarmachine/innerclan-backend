@@ -15,11 +15,20 @@ public class ForgotPasswordController {
 
         @Autowired
     IForgotPasswordService forgotPasswordService;
+
     @GetMapping("")
     public ResponseEntity<?> changePassword(@RequestParam("email") String email) {
         forgotPasswordService.changePassword(email);
 
           return new ResponseEntity<>("PASSWORD RESET LINK SENT SUCCESSFULLY", HttpStatus.ACCEPTED);
+    }
+
+    @PostMapping("")
+    public ResponseEntity<?> updatePassword(@RequestParam("email") String email,@RequestParam("password") String password,@RequestParam("uuid") String uuid) {
+        forgotPasswordService.updatePassword(email,password,uuid);
+
+        return new ResponseEntity<>("PASSWORD CHANGED SUCCESSFULLY", HttpStatus.OK);
+
     }
 
 
