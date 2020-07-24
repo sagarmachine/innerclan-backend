@@ -33,10 +33,10 @@ public class ClientCartController {
 
 
     @PostMapping(value="/{productId}")
-    public ResponseEntity<?> addCartItem(Principal principal, @PathVariable("productId") long productId){
+    public ResponseEntity<?> addCartItem(Principal principal, @PathVariable("productId") List<CartItem> cartItemList){
         String email=principal.getName();
-      cartItemService.addCartItem(email,productId);
-        return new ResponseEntity<>("ITEM ADDED SUCCESSFULLY TO THE CART", HttpStatus.OK);
+      cartItemService.addCartItems(email,cartItemList);
+        return new ResponseEntity<>("ITEMs ADDED SUCCESSFULLY AND UPDATED", HttpStatus.OK);
     }
 
     @GetMapping("")
@@ -45,6 +45,13 @@ public class ClientCartController {
       String email=principal.getName();
    List<CartItemDto> result=cartItemService.getCartItems(email);
         return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @PostMapping(value="")
+    public ResponseEntity<?> addCartItems(Principal principal, @ResponseBody productId){
+        String email=principal.getName();
+        cartItemService.addCartItem(email,productId);
+        return new ResponseEntity<>("ITEM ADDED SUCCESSFULLY TO THE CART", HttpStatus.OK);
     }
 
     @DeleteMapping("/{productId}")
