@@ -2,6 +2,7 @@ package com.innerclan.v1.controller.client;
 
 
 import com.innerclan.v1.service.IEmailService;
+import com.innerclan.v1.service.IForgotPasswordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,11 +14,10 @@ import org.springframework.web.bind.annotation.*;
 public class ForgotPasswordController {
 
         @Autowired
-        IEmailService emailService;
-
+    IForgotPasswordService forgotPasswordService;
     @GetMapping("")
     public ResponseEntity<?> changePassword(@RequestParam("email") String email) {
-          emailService.changePassword(email);
+        forgotPasswordService.changePassword(email);
 
           return new ResponseEntity<>("PASSWORD RESET LINK SENT SUCCESSFULLY", HttpStatus.ACCEPTED);
     }

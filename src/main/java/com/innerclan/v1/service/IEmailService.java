@@ -4,5 +4,6 @@ public interface IEmailService {
 
     public void sendSimpleMessage(String to,String link, String subject, String body);
 
-    void changePassword(String email);
+    public void sendPasswordResetMessage(String to, String uuid, String subject);
+
 }
