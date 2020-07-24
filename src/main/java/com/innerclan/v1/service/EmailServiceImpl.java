@@ -62,6 +62,7 @@ public class EmailServiceImpl implements IEmailService {
     public void sendPasswordResetMessage(String to, String uuid, String subject) {
 
         MimeMessage message = emailSender.createMimeMessage();
+
         MimeMessageHelper helper = null;
         try {
             helper = new MimeMessageHelper(message,
