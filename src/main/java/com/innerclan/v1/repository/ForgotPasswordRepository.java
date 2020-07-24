@@ -10,4 +10,7 @@ import java.util.Optional;
 public interface ForgotPasswordRepository extends JpaRepository<ForgotPassword,Long> {
 
 
+    Optional<ForgotPassword> findByEmail(String email);
+
+    Optional<ForgotPassword> findByEmailAndUuid(String email, String uuid);
 }
