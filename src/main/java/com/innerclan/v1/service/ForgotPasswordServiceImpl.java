@@ -36,10 +36,11 @@ public class ForgotPasswordServiceImpl implements IForgotPasswordService {
         Optional<Client> clientOptional = clientRepository.findByEmail(email);
         if(!clientOptional.isPresent()) throw new ClientNotFoundException("EMAIL ID NOT REGISTERED ");
 
+
         Optional<ForgotPassword> forgotPasswordOptional = forgotPasswordRepository.findByEmail(email);
         if(!forgotPasswordOptional.isPresent()) {
             String uuid = UUID.randomUUID().toString();
-            ForgotPassword forgotPassword = new ForgotPassword(email, uuid);
+            ForgotPassword forgotPassword = new ForgotPassword(uuid,email);
 
             forgotPasswordRepository.save(forgotPassword);
             String subject = "PASSWORD RESET LINK";
