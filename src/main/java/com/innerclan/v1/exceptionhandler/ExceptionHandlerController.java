@@ -76,7 +76,14 @@ public class ExceptionHandlerController {
 
 
     @ExceptionHandler(value = ProductNotFoundException.class)
-    public ResponseEntity<String[]> ProductNotFoundExceptionHandler(ProductNotFoundException ex){
+    public ResponseEntity<String[]> productNotFoundExceptionHandler(ProductNotFoundException ex){
+
+        return    new ResponseEntity<>(new String[]{ex.getMessage()}, HttpStatus.BAD_REQUEST);
+
+    }
+
+    @ExceptionHandler(value = ColorNotFoundException.class)
+    public ResponseEntity<String[]> colorNotFoundExceptionHandler(ColorNotFoundException ex){
 
         return    new ResponseEntity<>(new String[]{ex.getMessage()}, HttpStatus.BAD_REQUEST);
 

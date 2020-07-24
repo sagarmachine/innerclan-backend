@@ -33,7 +33,7 @@ public class AdminProductView {
 
     String comment;
 
-    int views;
+    int view;
 
     int sale;
 
