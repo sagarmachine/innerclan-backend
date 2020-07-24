@@ -20,6 +20,6 @@ public class AdminLoginKey {
     int id;
 
     @Column(nullable = false)
-    String key;
+    String loginKey;
 
 }

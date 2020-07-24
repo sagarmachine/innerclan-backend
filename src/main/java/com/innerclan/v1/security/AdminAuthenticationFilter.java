@@ -45,7 +45,7 @@ public class AdminAuthenticationFilter extends OncePerRequestFilter {
         String key= httpServletRequest.getHeader("Key");
         if(key==null || authorization==null)
             filterChain.doFilter(httpServletRequest,httpServletResponse);
-        if(!adminLoginKeyRepository.findByKey(key).isPresent())
+        if(!adminLoginKeyRepository.findByLoginKey(key).isPresent())
             filterChain.doFilter(httpServletRequest,httpServletResponse);
 
         if(authorization!=null && authorization.length()>7){

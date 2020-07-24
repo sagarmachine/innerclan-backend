@@ -7,5 +7,5 @@ import java.util.Optional;
 
 public interface AdminLoginKeyRepository extends JpaRepository<AdminLoginKey,Integer> {
 
-    Optional<AdminLoginKeyRepository> findByKey(String key);
+    Optional<AdminLoginKeyRepository> findByLoginKey(String key);
 }

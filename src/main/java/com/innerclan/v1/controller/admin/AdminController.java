@@ -42,14 +42,14 @@ public class AdminController {
 
         if(this.id.equals(id) && this.secret.equals(secret)){
             AdminLoginKey adminLoginKey = new AdminLoginKey();
-            adminLoginKey.setKey(UUID.randomUUID().toString());
+            adminLoginKey.setLoginKey(UUID.randomUUID().toString());
             adminLoginKeyRepository.save(adminLoginKey);
 
             User user = new User(id, secret, new ArrayList<>());
             String jwtToken = jwtUtil.generateToken(user);
             HttpHeaders headers= new HttpHeaders();
             headers.add("Authorization","Bearer "+jwtToken);
-            headers.add("Key",adminLoginKey.getKey());
+            headers.add("Key",adminLoginKey.getLoginKey());
 
             return new ResponseEntity<>(headers, HttpStatus.OK);
         }else{
