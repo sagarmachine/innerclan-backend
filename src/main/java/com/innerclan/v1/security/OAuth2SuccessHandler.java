@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -17,6 +18,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 
 @Component
@@ -31,6 +33,9 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
     @Autowired
     IClientService clientService;
+
+//    @Autowired
+//    BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException, ServletException {
@@ -53,10 +58,13 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
                }
                else{
+                   BCryptPasswordEncoder bCryptPasswordEncoder= new BCryptPasswordEncoder();
                    Client client= new Client();
                    client.setFirstName(map.get("given_name").toString());
                    client.setLastName(map.get("family_name").toString());
                    client.setEmail(map.get("email").toString());
+                   client.setUuid(UUID.randomUUID().toString());
+                   client.setPassword(bCryptPasswordEncoder.encode(UUID.randomUUID().toString()));
                    clientRepository.save(client);
 
                }
