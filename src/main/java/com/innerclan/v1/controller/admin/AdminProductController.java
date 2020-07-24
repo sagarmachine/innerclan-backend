@@ -6,8 +6,11 @@ import com.innerclan.v1.dto.AdminProductView;
 import com.innerclan.v1.dto.UpdateProductDto;
 import com.innerclan.v1.entity.Color;
 import com.innerclan.v1.entity.Product;
+import com.innerclan.v1.exception.ColorNotFoundException;
 import com.innerclan.v1.exception.ImageNotFoundException;
 import com.innerclan.v1.exception.ImageNotSavedException;
+import com.innerclan.v1.exception.ProductNotFoundException;
+import com.innerclan.v1.repository.ColorRepository;
 import com.innerclan.v1.repository.ImageRepository;
 import com.innerclan.v1.repository.ProductRepository;
 import com.innerclan.v1.service.IBindingErrorService;
@@ -44,6 +47,9 @@ public class AdminProductController {
     @Autowired
     ImageRepository imageRepository;
 
+    @Autowired
+    ColorRepository colorRepository;
+
     @PostMapping(value = "/addProduct/{id}",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public  ResponseEntity<?> addProduct(@PathVariable("id") long categoryId,
                                          @RequestParam("productName")String productName,
@@ -68,6 +74,18 @@ AddProductDto addProductDto= new AddProductDto(productName,productPrice,actualPr
         return new ResponseEntity<>( productService.updateProduct(productDto,file), HttpStatus.OK);
     }
 
+
+    @DeleteMapping(value = "/deleteProduct/{id}")
+    public void deleteProduct(@PathVariable("id") long id){
+
+        Optional<Product> productOptional = productRepository.findById(id);
+        if(!productOptional.isPresent())
+            throw  new ProductNotFoundException("no product found with id "+ id);
+
+        productRepository.deleteById(id);
+    }
+
+
     @DeleteMapping(value = "/deleteImage/{id}")
     public void deleteImage(@PathVariable("id") long id){
       try{  imageRepository.deleteById(id);
@@ -80,6 +98,16 @@ AddProductDto addProductDto= new AddProductDto(productName,productPrice,actualPr
     public ResponseEntity<Set<Color>>  addColors(@PathVariable("id") long productId, @RequestBody List<String> colorList){
         HashSet<String> colors= new HashSet<>(colorList);
        return  ResponseEntity.ok().body(productService.addColors(productId,colors));
+    }
+
+    @DeleteMapping(value = "/deleteColor/{id}")
+    public void deleteColor(@PathVariable("id") long id){
+
+        Optional<Color> colorOptional = colorRepository.findById(id);
+        if(!colorOptional.isPresent())
+            throw  new ColorNotFoundException("no color found with id "+ id);
+
+        colorRepository.deleteById(id);
     }
 
 
