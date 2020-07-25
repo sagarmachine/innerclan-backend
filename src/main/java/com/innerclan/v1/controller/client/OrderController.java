@@ -56,14 +56,13 @@ public class OrderController {
         double cartTotal=cartItemService.addCartItems(email,checkOutDto.getCartItemList());
         double netTotal=0;
 
-if(!checkOutDto.getPromo().equals("NULL")) {
-    HashMap<String, Double> promoValid = promoService.isPromoValid(checkOutDto.getPromo(), email);
-    if (!promoValid.containsKey("Valid Promo Code")) throw new PromoNotFoundException("INVALID PROMO CODE");
-       netTotal = cartTotal - promoValid.get("Valid Promo Code");
-}
-else netTotal = cartTotal;
+          if(!checkOutDto.getPromo().equals("-1")) {
+                  HashMap<String, Double> promoValid = promoService.isPromoValid(checkOutDto.getPromo(), email);
+                 if (!promoValid.containsKey("Valid Promo Code")) throw new PromoNotFoundException("INVALID PROMO CODE");
+                netTotal = cartTotal - promoValid.get("Valid Promo Code");
+           }
+        else netTotal = cartTotal;
         return paytmService.checkOut(email,netTotal);
-
 
     }
 
