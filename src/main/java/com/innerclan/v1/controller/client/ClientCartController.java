@@ -95,10 +95,10 @@ public class ClientCartController {
         ArrayList list=new ArrayList();
         list.add(cartItem1); list.add(cartItem2);
         checkOutDto.setAddToCartDtoList(list);
-        checkOutDto.setPromo("WELCOME250");
 
 
-        HashMap<String,Double> promoValid= promoService.isPromoValid(checkOutDto.getPromo(),email);
+
+        HashMap<String,Double> promoValid= promoService.isPromoValid("WELCOME250",email);
         log.info("1------------"+promoValid.get("Valid Promo Code"));
         if(!promoValid.containsKey("Valid Promo Code")) throw new PromoNotFoundException("INVALID PROMO CODE");
         log.info("2------------");

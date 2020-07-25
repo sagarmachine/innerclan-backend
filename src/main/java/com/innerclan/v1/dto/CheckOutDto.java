@@ -16,6 +16,5 @@ public class CheckOutDto {
 
     List<AddToCartDto> addToCartDtoList;
 
-    String promo;
 
 }
