@@ -61,7 +61,7 @@ public class CartItemServiceImpl implements ICartItemService {
         }
         else {
 
-            cartItem.setQuantity((cartItem.getQuantity()!=0)?cartItem.getQuantity():1);
+            cartItem.setQuantity(1);
             cartItemRepository.save(cartItem);
 //            cartItems.add(cartItem);
 
