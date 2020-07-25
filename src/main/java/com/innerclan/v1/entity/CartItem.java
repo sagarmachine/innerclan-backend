@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.transaction.Transactional;
 import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
@@ -19,9 +20,16 @@ public class CartItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
-    @Column(nullable=false)
-    long productId;
 
+    @NotNull
+    @ManyToOne
+    @JoinColumn
+    Color color;
+
+    @Column(nullable = false)
+    String size;
+
+    @Column(nullable = true)
     long quantity;
 
 
@@ -31,14 +39,17 @@ public class CartItem {
     @NotNull
     Client client;
 
-    public CartItem(Client client, long productId) {
+
+    public CartItem(Client client, Color color,String Size) {
         this.client=client;
-        this.productId=productId;
+        this.color=color;
+        this.size=size;
     }
 
-    public CartItem(Client client, long productId, long quantity) {
+    public CartItem(Client client,Color color, String size, long quantity) {
         this.client=client;
-        this.productId=productId;
+        this.color=color;
+        this.size=size;
         this.quantity=quantity;
 
     }
@@ -48,12 +59,13 @@ public class CartItem {
         if (this == o) return true;
         if (!(o instanceof CartItem)) return false;
         CartItem cartItem = (CartItem) o;
-        return getProductId() == cartItem.getProductId() &&
+        return Objects.equals(getColor(), cartItem.getColor()) &&
+                Objects.equals(getSize(), cartItem.getSize()) &&
                 Objects.equals(getClient(), cartItem.getClient());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getProductId(), getClient());
+        return Objects.hash(getColor(), getSize(), getClient());
     }
 }

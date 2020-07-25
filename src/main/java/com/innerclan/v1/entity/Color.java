@@ -28,6 +28,10 @@ public class Color {
     List<Image> images= new ArrayList<>();
 
 
+    @OneToMany(mappedBy = "color",cascade = {CascadeType.ALL})
+    @JsonIgnore
+    Set<CartItem> cartItems;
+
 
 
 

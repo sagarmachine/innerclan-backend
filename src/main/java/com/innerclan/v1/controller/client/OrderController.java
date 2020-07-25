@@ -53,17 +53,26 @@ public class OrderController {
 
         cartItemService.deleteAllCartItems(email);
 
-        double cartTotal=cartItemService.addCartItems(email,checkOutDto.getCartItemList());
-        double netTotal=0;
+        cartItemService.addCartItems(email,checkOutDto.getAddToCartDtoList());
 
-          if(!checkOutDto.getPromo().equals("-1")) {
-                  HashMap<String, Double> promoValid = promoService.isPromoValid(checkOutDto.getPromo(), email);
-                 if (!promoValid.containsKey("Valid Promo Code")) throw new PromoNotFoundException("INVALID PROMO CODE");
-                netTotal = cartTotal - promoValid.get("Valid Promo Code");
-           }
-        else netTotal = cartTotal;
+        return new ResponseEntity<>("CART ITEMS ADDEDD AND UPDATEDD SUCCESSFULLY",HttpStatus.OK);
+
+    }
+
+    @GetMapping (value="/placeOrder")
+    public ResponseEntity<?> placeOrder(Principal  principal, @RequestParam("promo") String promo){
+
+        String email=principal.getName();
+        double cartTotal=cartItemService.getCartTotal(email);
+        double netTotal=cartTotal;
+
+        if(!promo.equals("-1")) {
+            HashMap<String, Double> promoValid = promoService.isPromoValid(promo, email);
+            if (!promoValid.containsKey("Valid Promo Code")) throw new PromoNotFoundException("INVALID PROMO CODE");
+            netTotal = cartTotal - promoValid.get("Valid Promo Code");
+        }
+
         return paytmService.checkOut(email,netTotal);
-
     }
 
 //    @PostMapping(value = "/pgredirect")
