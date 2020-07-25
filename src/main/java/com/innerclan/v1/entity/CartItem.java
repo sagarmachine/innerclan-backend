@@ -36,6 +36,13 @@ public class CartItem {
         this.productId=productId;
     }
 
+    public CartItem(Client client, long productId, long quantity) {
+        this.client=client;
+        this.productId=productId;
+        this.quantity=quantity;
+
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

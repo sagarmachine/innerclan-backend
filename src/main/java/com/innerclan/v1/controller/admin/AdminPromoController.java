@@ -29,8 +29,7 @@ public class AdminPromoController {
             bindingErrorService.getErrorResponse(bindingResult);
 
         promoService.addPromo(promo);
-        
-        
+
         return new ResponseEntity<>("Promo Successfully Added", HttpStatus.ACCEPTED);
     }
 
@@ -60,7 +59,7 @@ public class AdminPromoController {
     public ResponseEntity<?> isPromoValid(Principal principal,@PathVariable("promo") String promo){
         String email=principal.getName();
         //String email="nikhilkhari0047@gmail.com";
-       HashMap<Double,String> result = promoService.isPromoValid(promo,email);
+       HashMap<String,Double> result = promoService.isPromoValid(promo,email);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
 

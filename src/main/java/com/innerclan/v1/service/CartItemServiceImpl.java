@@ -11,14 +11,18 @@ import com.innerclan.v1.exception.ProductNotFoundException;
 import com.innerclan.v1.repository.CartItemRepository;
 import com.innerclan.v1.repository.ClientRepository;
 import com.innerclan.v1.repository.ProductRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+@Slf4j
+
 @Service
 public class CartItemServiceImpl implements ICartItemService {
+
 
     @Autowired
     ClientRepository clientRepository;
@@ -56,13 +60,31 @@ public class CartItemServiceImpl implements ICartItemService {
             cartItemRepository.save(cartItem);
         }
         else {
-            cartItem.setQuantity(1);
+
+            cartItem.setQuantity((cartItem.getQuantity()!=0)?cartItem.getQuantity():1);
             cartItemRepository.save(cartItem);
-            cartItems.add(cartItem);
+//            cartItems.add(cartItem);
+
         }
 
         //client.addCartItem(cartItem);
 
+    }
+
+    @Override
+    public double addCartItems(String email, List<CartItem> cartItemList) {
+        double cartTotal = 0;
+        int i=1;
+        for (CartItem c : cartItemList) {
+
+            Optional<Product> productOptional = productRepository.findById(c.getProductId());
+            if(!productOptional.isPresent()) throw new ProductNotFoundException("PRODUCT WIT ID "+c.getProductId() +" NOT FOUND");
+            cartItemRepository.save(c);
+            log.info("price------------"+productOptional.get().getProductPrice()+"  quantity  "+ c.getQuantity());
+            cartTotal += (productOptional.get().getProductPrice() * c.getQuantity());
+            log.info(i+"------------"+cartTotal); i++;
+        }
+        return cartTotal;
     }
 
     @Override
@@ -112,6 +134,14 @@ public class CartItemServiceImpl implements ICartItemService {
 
 
     }
+
+    @Override
+    public void deleteAllCartItems(String email) {
+        cartItemRepository.deleteAllByClientEmail(email);
+
+    }
+
+
 
 
 }

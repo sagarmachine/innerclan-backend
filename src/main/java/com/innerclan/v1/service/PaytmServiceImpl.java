@@ -41,12 +41,11 @@ public class PaytmServiceImpl implements IPaytmService {
     }
 
     @Override
-    public  ResponseEntity<?>  checkOut(Principal principal) {
-        Optional<Client> clientOptional= clientRepository.findByEmail(principal.getName());
+    public  ResponseEntity<?>  checkOut(String email,double amount) {
+   Optional<Client> clientOptional= clientRepository.findByEmail(email);
         if(!clientOptional.isPresent())
-            throw  new ClientNotFoundException("no client found by id : "+principal.getName() );
+            throw  new ClientNotFoundException("no client found by id : "+ email );
 
-        double amount = calculateAmount(clientOptional.get());
         String orderId= createOrderId(clientOptional.get());
 
       return  makePayment(orderId, amount, clientOptional.get().getUuid());

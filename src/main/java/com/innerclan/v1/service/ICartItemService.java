@@ -8,7 +8,12 @@ import java.util.List;
 public interface ICartItemService {
     void addCartItem(String email, long productId);
 
+    double addCartItems(String email, List<CartItem> cartItemList);
     List<CartItemDto> getCartItems(String email);
 
     void deleteCartItem(String email, long productId);
+
+    void deleteAllCartItems(String email);
+
+
 }

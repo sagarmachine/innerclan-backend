@@ -1,7 +1,11 @@
 package com.innerclan.v1.controller.client;
 
-import com.innerclan.v1.service.IPaytmService;
-import com.innerclan.v1.service.PaytmClient;
+import com.innerclan.v1.dto.CheckOutDto;
+import com.innerclan.v1.entity.Client;
+import com.innerclan.v1.exception.ClientNotFoundException;
+import com.innerclan.v1.exception.PromoNotFoundException;
+import com.innerclan.v1.repository.ClientRepository;
+import com.innerclan.v1.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,7 +17,10 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.security.Principal;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.TreeMap;
 
 @RestController
@@ -28,7 +35,37 @@ public class OrderController {
     @Autowired
     PaytmClient paytmClient;
 
+    @Autowired
+    ICartItemService cartItemService;
 
+    @Autowired
+    IPromoService promoService;
+
+    @Autowired
+    ClientRepository clientRepository;
+
+
+    @GetMapping(value="")
+    public ResponseEntity<?> orderCheckOut(Principal principal, @RequestBody CheckOutDto checkOutDto){
+        String email=principal.getName();
+        Optional<Client> clientValue= clientRepository.findByEmail(email);
+        if(!clientValue.isPresent()) throw new ClientNotFoundException("Client with email "+email +"does not exist");
+
+        cartItemService.deleteAllCartItems(email);
+
+        double cartTotal=cartItemService.addCartItems(email,checkOutDto.getCartItemList());
+        double netTotal=0;
+
+if(!checkOutDto.getPromo().equals("NULL")) {
+    HashMap<String, Double> promoValid = promoService.isPromoValid(checkOutDto.getPromo(), email);
+    if (!promoValid.containsKey("Valid Promo Code")) throw new PromoNotFoundException("INVALID PROMO CODE");
+       netTotal = cartTotal - promoValid.get("Valid Promo Code");
+}
+else netTotal = cartTotal;
+        return paytmService.checkOut(email,netTotal);
+
+
+    }
 
 //    @PostMapping(value = "/pgredirect")
 //    public ResponseEntity<?>
