@@ -1,15 +1,19 @@
 package com.innerclan.v1.service;
 
+import com.innerclan.v1.dto.AddToCartDto;
 import com.innerclan.v1.dto.CartItemDto;
 import com.innerclan.v1.dto.ClientProductView;
 import com.innerclan.v1.entity.CartItem;
 import com.innerclan.v1.entity.Client;
+import com.innerclan.v1.entity.Color;
 import com.innerclan.v1.entity.Product;
 import com.innerclan.v1.exception.CartItemNotFoundException;
 import com.innerclan.v1.exception.ClientNotFoundException;
+import com.innerclan.v1.exception.ColorNotFoundException;
 import com.innerclan.v1.exception.ProductNotFoundException;
 import com.innerclan.v1.repository.CartItemRepository;
 import com.innerclan.v1.repository.ClientRepository;
+import com.innerclan.v1.repository.ColorRepository;
 import com.innerclan.v1.repository.ProductRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -19,7 +23,7 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 @Slf4j
-
+//8375823136
 @Service
 public class CartItemServiceImpl implements ICartItemService {
 
@@ -33,22 +37,30 @@ public class CartItemServiceImpl implements ICartItemService {
     @Autowired
     CartItemRepository cartItemRepository;
 
-    public void addCartItem(String email, long productId) {
+
+    @Autowired
+    ColorRepository colorRepository;
+
+    public void addCartItem(String email, AddToCartDto addToCartDto) {
        Optional<Client> clientValue= clientRepository.findByEmail(email);
        if(!clientValue.isPresent()) throw new ClientNotFoundException("Client with email "+email +"does not exist");
+        Client client=clientValue.get();
 
-
-        Optional<Product> productValue= productRepository.findById(productId);
-        if(!productValue.isPresent()) throw new ProductNotFoundException("product with id "+productId +"not found");
-
-       Client client=clientValue.get();
-       Optional<CartItem> cartItemValue= cartItemRepository.findByClientAndProductId(client,productId);
+        Optional<Color> colorRepositoryOptional=colorRepository.findById(addToCartDto.getColorId());
+        if(!colorRepositoryOptional.isPresent()) throw new ColorNotFoundException("NO PRODUCT FOUND WITH COLOR ID :"+addToCartDto.getColorId());
+         Color color=colorRepositoryOptional.get();
 
         CartItem cartItem;
-        if(!cartItemValue.isPresent())
-       cartItem=new CartItem(client,productId);
+       Optional<CartItem> cartItemValue= cartItemRepository.findByClientAndColorAndSize(client,color,addToCartDto.getSize());
 
-       else cartItem=cartItemValue.get();
+
+        if(!cartItemValue.isPresent()) {
+            cartItem = new CartItem(client, color,addToCartDto.getSize(), addToCartDto.getQuantity());
+
+        }
+       else {
+            cartItem = cartItemValue.get();
+        }
 
        Set<CartItem> cartItems= client.getCartItems();
 
@@ -56,35 +68,43 @@ public class CartItemServiceImpl implements ICartItemService {
             cartItems = new HashSet<CartItem>();
         }
         if(cartItems.contains(cartItem)){
-            cartItem.setQuantity(cartItem.getQuantity()+1);
+            cartItem.setQuantity(addToCartDto.getQuantity());
+
             cartItemRepository.save(cartItem);
         }
         else {
 
-            cartItem.setQuantity(1);
             cartItemRepository.save(cartItem);
-//            cartItems.add(cartItem);
 
         }
 
-        //client.addCartItem(cartItem);
+
 
     }
 
     @Override
-    public double addCartItems(String email, List<CartItem> cartItemList) {
+    public double addCartItems(String email, List<AddToCartDto> addToCartDtoList) {
+
+        Optional<Client> clientValue= clientRepository.findByEmail(email);
+        if(!clientValue.isPresent()) throw new ClientNotFoundException("Client with email "+email +"does not exist");
+        Client client=clientValue.get();
+
         double cartTotal = 0;
         int i=1;
-        for (CartItem c : cartItemList) {
+        for (AddToCartDto c : addToCartDtoList) {
+            Optional<Color> colorRepositoryOptional=colorRepository.findById(c.getColorId());
+            if(!colorRepositoryOptional.isPresent()) throw new ColorNotFoundException("NO PRODUCT FOUND WITH COLOR ID :"+c.getColorId());
+            Color color=colorRepositoryOptional.get();
 
-            Optional<Product> productOptional = productRepository.findById(c.getProductId());
-            if(!productOptional.isPresent()) throw new ProductNotFoundException("PRODUCT WIT ID "+c.getProductId() +" NOT FOUND");
-            cartItemRepository.save(c);
-            log.info("price------------"+productOptional.get().getProductPrice()+"  quantity  "+ c.getQuantity());
-            cartTotal += (productOptional.get().getProductPrice() * c.getQuantity());
-            log.info(i+"------------"+cartTotal); i++;
+            CartItem cartItem=new CartItem(client,color,c.getSize(),c.getQuantity());
+
+            cartItemRepository.save(cartItem);
+            log.info(i+"price------------"+color.getProduct().getProductPrice()+"  quantity  "+ c.getQuantity());
+            cartTotal += (color.getProduct().getProductPrice() * c.getQuantity());
+            log.info("------------"+cartTotal); i++;
         }
         return cartTotal;
+
     }
 
     @Override
@@ -92,7 +112,6 @@ public class CartItemServiceImpl implements ICartItemService {
 
         Optional<Client> value = clientRepository.findByEmail(email);
         if(!value.isPresent()) throw new ClientNotFoundException("client with email "+ " doesn't exist, not found");
-
         return getDtoCartItems(value.get().getCartItems());
 
     }
@@ -103,15 +122,21 @@ public class CartItemServiceImpl implements ICartItemService {
 
         ModelMapper mapper = new ModelMapper();
         for(CartItem cartItem:cartItems) {
-            Optional<Product> productOptional =productRepository.findById(cartItem.getProductId());
+            Optional<Product> productOptional =productRepository.findById(cartItem.getColor().getProduct().getId());
+            if(!productOptional.isPresent()) throw new ProductNotFoundException("Product not found with color id :"+cartItem.getColor().getId());
             ClientProductView clientProductView= mapper.map(productOptional.get(), ClientProductView.class);
 
             CartItemDto cartItemDto =new CartItemDto(clientProductView,cartItem.getQuantity(),cartItem.getQuantity()*productOptional.get().getProductPrice());
+            cartItemDto.setColor(cartItem.getColor().getColorName());
+            cartItemDto.setSize(cartItem.getSize());
             result.add(cartItemDto);
         }
         return result;
     }
 
+
+    public void deleteCartItem(String email, long productId) { }
+    /*
     @Override
     public void deleteCartItem(String email, long productId) {
 
@@ -132,8 +157,9 @@ public class CartItemServiceImpl implements ICartItemService {
 
 
 
-
     }
+
+     */
 
     @Override
     public void deleteAllCartItems(String email) {
@@ -141,7 +167,27 @@ public class CartItemServiceImpl implements ICartItemService {
 
     }
 
+    @Override
+    public double getCartTotal(String email) {
+        double cartTotal = 0;
+        int i=1;
 
+        Optional<Client> value = clientRepository.findByEmail(email);
+        if(!value.isPresent()) throw new ClientNotFoundException("client with email "+ " doesn't exist, not found");
+        Set<CartItem> cartItemList= value.get().getCartItems();
+        for (CartItem c : cartItemList){
+            Optional<Color> colorRepositoryOptional=colorRepository.findById(c.getColor().getId());
+            if(!colorRepositoryOptional.isPresent()) throw new ColorNotFoundException("NO PRODUCT FOUND WITH COLOR ID :"+c.getColor().getId());
+            Color color=colorRepositoryOptional.get();
+
+
+            log.info(i+"price------------"+color.getProduct().getProductPrice()+"  quantity  "+ c.getQuantity());
+            cartTotal += (color.getProduct().getProductPrice() * c.getQuantity());
+            log.info("------------"+cartTotal); i++;
+
+        }
+        return cartTotal;
+    }
 
 
 }

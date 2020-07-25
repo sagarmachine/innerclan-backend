@@ -1,6 +1,7 @@
 package com.innerclan.v1.controller.client;
 
 import com.innerclan.v1.dto.AddClientDto;
+import com.innerclan.v1.dto.AddToCartDto;
 import com.innerclan.v1.dto.CartItemDto;
 import com.innerclan.v1.dto.CheckOutDto;
 import com.innerclan.v1.entity.CartItem;
@@ -42,58 +43,75 @@ public class ClientCartController {
     ClientRepository clientRepository;
 
 
-    @PostMapping(value="/{productId}")
-    public ResponseEntity<?> addCartItem( Principal principal, @PathVariable("productId") long productId){
+    @PostMapping(value=" ")
+    public ResponseEntity<?> addCartItem(Principal principal, @RequestBody AddToCartDto addToCartDto){
         String email=principal.getName();
-      cartItemService.addCartItem(email,productId);
+      cartItemService.addCartItem(email,addToCartDto);
         return new ResponseEntity<>("ITEMs ADDED SUCCESSFULLY AND UPDATED", HttpStatus.OK);
     }
 
-//    @PostMapping(value="/{productId}")
-//    public ResponseEntity<?> addCartItem( @PathVariable("productId") long productId){
-//        String email="sagarpanwar2122@gmail.com";
-//        cartItemService.addCartItem(email,productId);
-//        return new ResponseEntity<>("ITEMs ADDED SUCCESSFULLY AND UPDATED", HttpStatus.OK);
-//    }
-
+    @PostMapping(value="/test")
+    public ResponseEntity<?> addCartItemTest( @RequestBody AddToCartDto addToCartDto){
+        String email="nikhilkhari47@gmail.com";
+        cartItemService.addCartItem(email,addToCartDto);
+        return new ResponseEntity<>("ITEMs ADDED SUCCESSFULLY AND UPDATED", HttpStatus.OK);
+    }
 
     @GetMapping("")
-     public ResponseEntity<?> getCartItems(Principal principal ){
+    public ResponseEntity<?> getCartItems(Principal principal ){
 
-      String email=principal.getName();
-   List<CartItemDto> result=cartItemService.getCartItems(email);
+        String email=principal.getName();
+        List<CartItemDto> result=cartItemService.getCartItems(email);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
- //only for testing purpose don't delete
 
     @GetMapping("/test")
     public ResponseEntity<?> getCartItems2( ){
-        String email="sagarpanwar2122@gmail.com";
+
+        String email="nikhilkhari47@gmail.com";
+        List<CartItemDto> result=cartItemService.getCartItems(email);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+
+
+
+
+
+
+
+    //only for testing purpose don't delete
+
+    @GetMapping("/test2")
+    public ResponseEntity<?> getCartItems3( ){
+        String email="nikhilkhari47@gmail.com";
 
 
         Optional<Client> clientOptional=clientRepository.findByEmail(email);
         if(!clientOptional.isPresent()) throw new ClientNotFoundException("Client not found with id : "+email);
         CheckOutDto checkOutDto =new CheckOutDto();
-        CartItem cartItem1=new CartItem(clientOptional.get(),1,1);
-        CartItem cartItem2=new CartItem(clientOptional.get(),2,1);
+        AddToCartDto cartItem1=new AddToCartDto(1,2,"SMALL");
+        AddToCartDto cartItem2=new AddToCartDto(2,4,"MEDIUM");
         ArrayList list=new ArrayList();
         list.add(cartItem1); list.add(cartItem2);
-        checkOutDto.setCartItemList(list);
-        checkOutDto.setPromo("WELCOME250");
+        checkOutDto.setAddToCartDtoList(list);
 
 
-        HashMap<String,Double> promoValid= promoService.isPromoValid(checkOutDto.getPromo(),email);
+
+        HashMap<String,Double> promoValid= promoService.isPromoValid("WELCOME250",email);
         log.info("1------------"+promoValid.get("Valid Promo Code"));
         if(!promoValid.containsKey("Valid Promo Code")) throw new PromoNotFoundException("INVALID PROMO CODE");
         log.info("2------------");
         cartItemService.deleteAllCartItems(email);
         log.info("3------------");
-        double cartTotal=cartItemService.addCartItems(email,checkOutDto.getCartItemList());
-
+        cartItemService.addCartItems(email,checkOutDto.getAddToCartDtoList());
+        double cartTotal= cartItemService.getCartTotal(email);
         double netTotal=cartTotal-promoValid.get("Valid Promo Code");
         String[] result=new String[]{cartTotal+"",netTotal+""};
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
+
 
 
 

@@ -13,9 +13,20 @@ public class CartItemDto {
 
     ClientProductView clientProductView;
 
+    String color ;
+
+    String size;
+
     long quantity;
 
     double totalPrice;
 
+
+    public CartItemDto(ClientProductView clientProductView, long quantity, double totalPrice) {
+
+        this.clientProductView=clientProductView;
+        this.quantity=quantity;
+        this.totalPrice=totalPrice;
+    }
 }
 
