@@ -11,6 +11,7 @@ import org.hibernate.annotations.ColumnTransformer;
 import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -63,8 +64,16 @@ public class Client {
     @JoinTable
     Set<Promo> promos;
 
+    public void addPromos(Promo promo) {
+        if (promos == null) {
+            promos = new HashSet<Promo>();
+        }
+        promos.add(promo);
+        promo.getClients().add(this);
+    }
 
-   @OneToMany(mappedBy = "client",cascade = {CascadeType.ALL})
+
+    @OneToMany(mappedBy = "client",cascade = {CascadeType.ALL})
    Set<CartItem> cartItems;
 
     public void addCartItem(CartItem cartItem) {
@@ -82,11 +91,24 @@ public class Client {
 
     }
 
-    public void addPromos(Promo promo) {
-        if (promos == null) {
-            promos = new HashSet<Promo>();
-        }
-        promos.add(promo);
-        promo.getClients().add(this);
+   @OneToMany(mappedBy = "client",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+   Set<Order> orders= new HashSet<>();
+
+    public  void addOrder(Order order){
+        orders.add(order);
+        order.setClient(this);
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

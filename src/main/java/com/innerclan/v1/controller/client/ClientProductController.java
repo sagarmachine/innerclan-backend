@@ -1,9 +1,7 @@
 package com.innerclan.v1.controller.client;
 
 
-import com.innerclan.v1.dto.AddCategoryDto;
 import com.innerclan.v1.dto.ClientProductView;
-import com.innerclan.v1.entity.Color;
 import com.innerclan.v1.entity.Product;
 import com.innerclan.v1.exception.ProductNotFoundException;
 import com.innerclan.v1.repository.ProductRepository;
