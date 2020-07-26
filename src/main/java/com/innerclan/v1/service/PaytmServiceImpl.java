@@ -5,11 +5,14 @@ import com.innerclan.v1.entity.Address;
 import com.innerclan.v1.entity.Client;
 import com.innerclan.v1.exception.ClientNotFoundException;
 import com.innerclan.v1.repository.ClientRepository;
+import com.innerclan.v1.repository.OrderRepository;
+import com.innerclan.v1.security.JWTUtil;
 import com.paytm.pg.merchant.CheckSumServiceHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,6 +35,15 @@ public class PaytmServiceImpl implements IPaytmService {
 
     @Autowired
     IOrderService orderService;
+
+    @Autowired
+    JWTUtil jwtUtil;
+
+    @Autowired
+    ClientServiceImpl clientService;
+
+    @Autowired
+    OrderRepository orderRepository;
 
     public  boolean validateCheckSum(TreeMap<String, String> parameters, String paytmChecksum) throws Exception {
         return CheckSumServiceHelper.getCheckSumServiceHelper().verifycheckSum(paytmClient.getMerchantKey(),
@@ -59,6 +71,8 @@ public class PaytmServiceImpl implements IPaytmService {
     @Override
     public void placeOrder(HttpServletRequest request, HttpServletResponse response) {
 
+
+
         Map<String, String[]> mapData = request.getParameterMap();
         TreeMap<String, String> parameters = new TreeMap<String, String>();
         mapData.forEach((key, val) -> parameters.put(key, val[0]));
@@ -78,9 +92,11 @@ public class PaytmServiceImpl implements IPaytmService {
                     result = "S";
                     log.info("PAYTM SUCCESSFUL--------------------------> ");
                     log.info(parameters.toString());
-
                     log.info("TXN_ID :"+parameters.get("TXNID"));
                     log.info("PAYMENTMODE :"+parameters.get("PAYMENTMODE"));
+                    log.info("PAYMENTMODE :"+parameters.get("ORDERID"));
+                    ;
+                 orderService.completeOrder(parameters.get("ORDERID"),parameters.get("TXNID"),parameters.get("PAYMENTMODE"));
 
                 } else {
                     result = "F";
@@ -97,17 +113,23 @@ public class PaytmServiceImpl implements IPaytmService {
             result = e.toString();
         }
 
+        Client client=orderRepository.findByOrderId(parameters.get("ORDERID")).get().getClient();
+
+        UserDetails user =clientService.loadUserByUsername(client.getEmail());
+        String jwtToken = jwtUtil.generateToken(user);
 
         try {
             if(result.equals("S"))
-                response.sendRedirect("http://localhost:3000/paytmS");
-            else
-                response.sendRedirect("http://localhost:3000/paytmF");
-
+                response.sendRedirect("http://localhost:3000/paymentSuccess/");
+            else {
+                orderService.orderFailed(parameters.get("ORDERID"));
+                response.sendRedirect("http://localhost:3000/pamentFailed/");
+            }
         } catch (IOException e) {
+            orderService.orderFailed(parameters.get("ORDERID"));
             log.info("PAYTM EXC 22-------------------------->");
 
-        }
+         }
 
 
         //return "report";

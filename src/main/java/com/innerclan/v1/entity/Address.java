@@ -17,26 +17,26 @@ import javax.persistence.Embeddable;
 public class Address {
 
 
-    String houseNumber;
+    String houseNumber="";
 
-    String landmark;
+    String landmark="";
 
     @Column(length = 6)
-    String pincode;
+    String pincode="";
 
-    String location;
-
-
-    String city;
+    String location="";
 
 
-    String state;
+    String city="";
 
 
-    String customerPhone;
+    String state="";
 
 
-    String customerName;
+    String customerPhone="";
+
+
+    String customerName="";
 
 
 
