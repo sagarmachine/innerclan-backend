@@ -74,6 +74,14 @@ public class ClientCartController {
     }
 
 
+    @DeleteMapping("")
+    public ResponseEntity<?> deleteCartItem(Principal principal,@RequestParam("colorId") long colorId,@RequestParam("size") String size){
+
+        String email=principal.getName();
+        cartItemService.deleteCartItem(email,colorId,size);
+        return new ResponseEntity<>("ITEM DELETED SUCCESSFULLY TO THE CART", HttpStatus.OK);
+    }
+
 
 
 
@@ -119,13 +127,6 @@ public class ClientCartController {
 
 
 
-    @DeleteMapping("")
-    public ResponseEntity<?> deleteCartItem(@RequestParam("colorId") long colorId,@RequestParam("size") String size){
-//d Principal principal
-// String email=principal.getName();
-        String email= "nikhilkhari47@gmail.com";
-        cartItemService.deleteCartItem(email,colorId,size);
-        return new ResponseEntity<>("ITEM DELETED SUCCESSFULLY TO THE CART", HttpStatus.OK);
-    }
+
 
 }

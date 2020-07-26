@@ -8,25 +8,25 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 public class CartItemDto {
 
-    ClientProductView clientProductView;
+    long selectedProductId;
 
-    String color ;
+    String productName;
 
-    String size;
+    double productPrice;
+
+    long selectedColorId;
+
+    String selectedColorName;
+
+    byte[] selectedColorImage;
 
     long quantity;
 
-    double totalPrice;
+    String size;
 
 
-    public CartItemDto(ClientProductView clientProductView, long quantity, double totalPrice) {
 
-        this.clientProductView=clientProductView;
-        this.quantity=quantity;
-        this.totalPrice=totalPrice;
-    }
 }
 

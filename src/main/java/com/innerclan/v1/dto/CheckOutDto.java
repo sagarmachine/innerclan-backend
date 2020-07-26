@@ -16,5 +16,4 @@ public class CheckOutDto {
 
     List<AddToCartDto> addToCartDtoList;
 
-
 }
