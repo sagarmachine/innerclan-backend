@@ -61,18 +61,54 @@ public class OrderController {
 
     }
 
+    /*
+    @GetMapping("/getAddress")
+    public ResponseEntity<?> placeOrder(Principal  principal){
+        String email=principal.getName();
+        Optional<Client> clientValue= clientRepository.findByEmail(email);
+        if(!clientValue.isPresent()) throw new ClientNotFoundException("Client with email "+email +"does not exist");
+
+        return new ResponseEntity<>(clientValue.get().getAddress(),HttpStatus.OK);
+
+    }
+
+     */
+
+    @GetMapping("/getAddress")
+    public ResponseEntity<?> placeOrder(){
+        String email="nikhilkhari47@gmail.com";
+        Optional<Client> clientValue= clientRepository.findByEmail(email);
+        if(!clientValue.isPresent()) throw new ClientNotFoundException("Client with email "+email +"does not exist");
+
+        return new ResponseEntity<>(clientValue.get().getAddress(),HttpStatus.OK);
+
+    }
+
     @GetMapping (value="/placeOrder")
     public ResponseEntity<?> placeOrder(Principal  principal, @RequestParam("promo") String promo, @RequestBody Address address){
 
+
         String email=principal.getName();
         double cartTotal=cartItemService.getCartTotal(email);
+
+
+        Optional<Client> clientValue= clientRepository.findByEmail(email);
+        if(!clientValue.isPresent()) throw new ClientNotFoundException("Client with email "+email +"does not exist");
+
+        Client client= clientValue.get();
+        client.setAddress(address);
+         clientRepository.save(client);
+
         double netTotal=cartTotal;
-            double promoDiscount=0;
+        double promoDiscount=0;
         if(!promo.equals("-1")) {
-            HashMap<String, Double> promoValid = promoService.isPromoValid(promo, email);
-            if (!promoValid.containsKey("Valid Promo Code")) throw new PromoNotFoundException("INVALID PROMO CODE");
-            netTotal = cartTotal - promoValid.get("Valid Promo Code");
-            promoDiscount=promoValid.get("Valid Promo Code");
+            HashMap<String,String> promoValid = promoService.isPromoValid(promo,email);
+            String promovalue = promoValid.get("value");
+            promoDiscount =Double.parseDouble(promovalue);
+            if (promoDiscount==-1) promoDiscount=0;
+           // if (promoDiscount==-1) throw new PromoNotFoundException(promoValid.get("message"));
+            netTotal = cartTotal-promoDiscount;
+
         }
         return paytmService.checkOut(email,netTotal,promoDiscount,address);
     }

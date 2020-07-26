@@ -59,7 +59,7 @@ public class AdminPromoController {
     public ResponseEntity<?> isPromoValid(Principal principal,@PathVariable("promo") String promo){
         String email=principal.getName();
         //String email="nikhilkhari0047@gmail.com";
-       HashMap<String,Double> result = promoService.isPromoValid(promo,email);
+       HashMap<String,String> result = promoService.isPromoValid(promo,email);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
 

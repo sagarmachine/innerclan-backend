@@ -69,7 +69,6 @@ public class CartItemServiceImpl implements ICartItemService {
         }
         if(cartItems.contains(cartItem)){
             cartItem.setQuantity(addToCartDto.getQuantity());
-
             cartItemRepository.save(cartItem);
         }
         else {
@@ -135,31 +134,30 @@ public class CartItemServiceImpl implements ICartItemService {
     }
 
 
-    public void deleteCartItem(String email, long productId) { }
-    /*
+
     @Override
-    public void deleteCartItem(String email, long productId) {
+    public void deleteCartItem(String email, long colorId, String size) {
 
         Optional<Client> clientValue= clientRepository.findByEmail(email);
         if(!clientValue.isPresent()) throw new ClientNotFoundException("Client with email "+email +"does not exist");
+        
+       Optional<Color> colorRepositoryOptional=colorRepository.findById(colorId);
+       if(!colorRepositoryOptional.isPresent()) throw new ColorNotFoundException("NO PRODUCT FOUND WITH COLOR ID :"+colorId);
+       Color color=colorRepositoryOptional.get();
 
-
-        Optional<Product> productValue= productRepository.findById(productId);
-        if(!productValue.isPresent()) throw new ProductNotFoundException("product with id "+productId +"not found");
 
         Client client=clientValue.get();
 
-        Optional<CartItem> cartItemValue= cartItemRepository.findByClientAndProductId(client,productId);
+        Optional<CartItem> cartItemValue= cartItemRepository.findByClientAndColorAndSize(client,color,size);
         if(!cartItemValue.isPresent()) throw new CartItemNotFoundException("Product Not found in the Cart");
         CartItem cartItem = cartItemValue.get();
         //client.getCartItems().remove(cartItem);
         cartItemRepository.deleteById(cartItem.getId());
 
 
-
     }
 
-     */
+
 
     @Override
     public void deleteAllCartItems(String email) {
