@@ -73,8 +73,9 @@ public class OrderController {
      */
 
     @GetMapping("/getAddress")
-    public ResponseEntity<?> placeOrder(){
-        String email="nikhilkhari47@gmail.com";
+    public ResponseEntity<?> placeOrder(Principal principal){
+        String email=principal.getName();
+
         Optional<Client> clientValue= clientRepository.findByEmail(email);
         if(!clientValue.isPresent()) throw new ClientNotFoundException("Client with email "+email +"does not exist");
 
