@@ -43,7 +43,7 @@ public class SpringWebSecurityConfiguration extends WebSecurityConfigurerAdapter
         .and().csrf().disable()
         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         .and().addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
-        .oauth2Login().successHandler(oAuth2SuccessHandler).failureHandler(oAuth2FailureHandler);
+        .oauth2Login().successHandler(oAuth2SuccessHandler).failureHandler(oAuth2FailureHandler);//.defaultSuccessUrl("/api/v1/client/oauthAuthorization");
     }
 
     @Override

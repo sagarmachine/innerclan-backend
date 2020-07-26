@@ -1,5 +1,6 @@
 package com.innerclan.v1.security;
 
+import com.innerclan.v1.controller.client.ClientController;
 import com.innerclan.v1.entity.Client;
 import com.innerclan.v1.repository.ClientRepository;
 import com.innerclan.v1.service.IClientService;
@@ -12,6 +13,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,7 +27,7 @@ import java.util.Map;
 import java.util.UUID;
 
 
-@Component
+@RestController
 @Slf4j
 public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
@@ -35,8 +40,11 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
     @Autowired
     IClientService clientService;
 
-    @Value(value = "${innerclan.frontend.client}")
-    String innerClanClientUrl;
+    @Value(value = "${innerclan.frontend.client.oauthRedirectUrl}")
+    String oauthRedirectUrl;
+
+    @Autowired
+    ClientController clientController;
 
 //    @Autowired
 //    BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -74,11 +82,18 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
                }
         UserDetails userDetails = clientService.loadUserByUsername(email);
         String jwtToken = jwtUtil.generateToken(userDetails);
-        httpServletResponse.addHeader("Authorization","Bearer "+jwtToken);
-        httpServletResponse.addHeader("firstName", map.get("given_name").toString().toUpperCase());
+       httpServletResponse.addHeader("Authorization","Bearer "+jwtToken);
+       httpServletResponse.addHeader("firstName", map.get("given_name").toString().toUpperCase());
 
+//       redirect(clientController.oauthAuthorizationLogin(authentication,map.get("email").toString()));
         //String jwt
-        httpServletResponse.sendRedirect(innerClanClientUrl);
+        httpServletResponse.sendRedirect("http://localhost:3001/auth/"+jwtToken);
 
     }
+
+//    @ResponseBody
+//    ModelAndView redirect(ModelAndView m){
+//        return m;
+//    }
+
 }
