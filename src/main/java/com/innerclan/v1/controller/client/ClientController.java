@@ -55,6 +55,17 @@ public class ClientController {
 
 
 
+    @PostMapping("/register")
+    public ResponseEntity<?> registerUser(@Valid @RequestBody AddClientDto clientDto, BindingResult bindingResult){
+
+        if(bindingResult.hasErrors()){
+            bindingErrorService.getErrorResponse(bindingResult);
+        }
+
+        return clientService.addClient(clientDto);
+    }
+
+
     @PostMapping("/authenticate")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginDto loginDto, BindingResult bindingResult)
     {
