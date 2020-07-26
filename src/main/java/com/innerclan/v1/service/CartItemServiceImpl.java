@@ -117,19 +117,27 @@ public class CartItemServiceImpl implements ICartItemService {
 
     private List<CartItemDto> getDtoCartItems(Set<CartItem> cartItems) {
 
-        List<CartItemDto> result= new ArrayList<CartItemDto>() ;
+        List<CartItemDto> result= new ArrayList<>() ;
 
-        ModelMapper mapper = new ModelMapper();
-        for(CartItem cartItem:cartItems) {
-            Optional<Product> productOptional =productRepository.findById(cartItem.getColor().getProduct().getId());
-            if(!productOptional.isPresent()) throw new ProductNotFoundException("Product not found with color id :"+cartItem.getColor().getId());
-            ClientProductView clientProductView= mapper.map(productOptional.get(), ClientProductView.class);
+        for(CartItem c: cartItems){
+            CartItemDto cartItemDto=new CartItemDto();
+            Product product=c.getColor().getProduct();
+            Color color=c.getColor();
 
-            CartItemDto cartItemDto =new CartItemDto(clientProductView,cartItem.getQuantity(),cartItem.getQuantity()*productOptional.get().getProductPrice());
-            cartItemDto.setColor(cartItem.getColor().getColorName());
-            cartItemDto.setSize(cartItem.getSize());
+            cartItemDto.setSelectedProductId(product.getId());
+            cartItemDto.setProductName(product.getProductName());
+            cartItemDto.setProductPrice(product.getProductPrice());
+            cartItemDto.setSelectedColorId(color.getId());
+            cartItemDto.setSelectedColorName(color.getColorName());
+            if(color.getImages().size()!=0)
+            cartItemDto.setSelectedColorImage(color.getImages().get(0).getImage());
+            cartItemDto.setQuantity(c.getQuantity());
+            cartItemDto.setSize(c.getSize());
+
+
             result.add(cartItemDto);
         }
+
         return result;
     }
 
@@ -151,7 +159,7 @@ public class CartItemServiceImpl implements ICartItemService {
         Optional<CartItem> cartItemValue= cartItemRepository.findByClientAndColorAndSize(client,color,size);
         if(!cartItemValue.isPresent()) throw new CartItemNotFoundException("Product Not found in the Cart");
         CartItem cartItem = cartItemValue.get();
-        //client.getCartItems().remove(cartItem);
+       // client.getCartItems().remove(cartItem);
         cartItemRepository.deleteById(cartItem.getId());
 
 
@@ -161,6 +169,11 @@ public class CartItemServiceImpl implements ICartItemService {
 
     @Override
     public void deleteAllCartItems(String email) {
+
+        Optional<Client> clientValue= clientRepository.findByEmail(email);
+        if(!clientValue.isPresent()) throw new ClientNotFoundException("Client with email "+email +"does not exist");
+
+       // clientValue.get().getCartItems().clear();
         cartItemRepository.deleteAllByClientEmail(email);
 
     }
