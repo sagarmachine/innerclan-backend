@@ -98,15 +98,18 @@ public class ClientCartController {
 
 
 
-        HashMap<String,Double> promoValid= promoService.isPromoValid("WELCOME250",email);
+        HashMap<String,String> promoValid= promoService.isPromoValid("WELCOME250",email);
         log.info("1------------"+promoValid.get("Valid Promo Code"));
-        if(!promoValid.containsKey("Valid Promo Code")) throw new PromoNotFoundException("INVALID PROMO CODE");
+        double promoValue=Double.parseDouble(promoValid.get("value"));
+        //if(promoValue==-1||promoValue==0) throw new PromoNotFoundException(promoValid.get("message"));
         log.info("2------------");
         cartItemService.deleteAllCartItems(email);
         log.info("3------------");
         cartItemService.addCartItems(email,checkOutDto.getAddToCartDtoList());
         double cartTotal= cartItemService.getCartTotal(email);
-        double netTotal=cartTotal-promoValid.get("Valid Promo Code");
+
+        if(promoValue==-1) promoValue=0;
+        double netTotal=cartTotal-promoValue;
         String[] result=new String[]{cartTotal+"",netTotal+""};
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -116,12 +119,12 @@ public class ClientCartController {
 
 
 
-    @DeleteMapping("/{productId}")
-    public ResponseEntity<?> deleteCartItem( @PathVariable("productId") long productId){
-// Principal principal
+    @DeleteMapping("")
+    public ResponseEntity<?> deleteCartItem(@RequestParam("colorId") long colorId,@RequestParam("size") String size){
+//d Principal principal
 // String email=principal.getName();
-        String email= "sagarpanwar2122@gmail.com";
-        cartItemService.deleteCartItem(email,productId);
+        String email= "nikhilkhari47@gmail.com";
+        cartItemService.deleteCartItem(email,colorId,size);
         return new ResponseEntity<>("ITEM DELETED SUCCESSFULLY TO THE CART", HttpStatus.OK);
     }
 

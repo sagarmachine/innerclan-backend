@@ -76,7 +76,7 @@ public class PromoServiceImpl implements IPromoService {
                else if(p.getExpiryDate().compareTo(new java.util.Date())<0)
                {
                    result.put("value",0+"");
-                   result.put("message","PROMO CODE ALREADY USED");
+                   result.put("message","PROMO CODE EXPIRED");
                }
                else
                {

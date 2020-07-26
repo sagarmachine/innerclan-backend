@@ -12,7 +12,7 @@ public interface ICartItemService {
     double addCartItems(String email, List<AddToCartDto> addToCartDtoList);
     List<CartItemDto> getCartItems(String email);
 
-    void deleteCartItem(String email, long productId);
+    void deleteCartItem(String email, long colorId,String size);
 
     void deleteAllCartItems(String email);
 
