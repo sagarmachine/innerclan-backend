@@ -1,5 +1,6 @@
 package com.innerclan.v1.controller.client;
 
+import com.innerclan.v1.dto.AddToCartDto;
 import com.innerclan.v1.dto.CheckOutDto;
 import com.innerclan.v1.entity.Address;
 import com.innerclan.v1.entity.Client;
@@ -17,10 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.Principal;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.TreeMap;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/v1/order")
@@ -47,15 +45,15 @@ public class OrderController {
     IOrderService orderService;
 
 
-    @GetMapping(value="")
-    public ResponseEntity<?> orderCheckOut(Principal principal, @RequestBody CheckOutDto checkOutDto){
+    @GetMapping(value="/checkOut")
+    public ResponseEntity<?> orderCheckOut(Principal principal, @RequestBody List<AddToCartDto> checkOutDto){
         String email=principal.getName();
         Optional<Client> clientValue= clientRepository.findByEmail(email);
         if(!clientValue.isPresent()) throw new ClientNotFoundException("Client with email "+email +"does not exist");
 
         cartItemService.deleteAllCartItems(email);
 
-        cartItemService.addCartItems(email,checkOutDto.getAddToCartDtoList());
+        cartItemService.addCartItems(email,checkOutDto);
 
         return new ResponseEntity<>("CART ITEMS ADDEDD AND UPDATEDD SUCCESSFULLY",HttpStatus.OK);
 
