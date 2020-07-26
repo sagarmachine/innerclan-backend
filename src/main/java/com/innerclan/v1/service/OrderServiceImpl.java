@@ -51,6 +51,13 @@ public class OrderServiceImpl implements IOrderService {
         clientRepository.save(client);
     }
 
+
+    @Override
+    public void orderFailed(String orderId) {
+
+    }
+
+
     @Override
     public void createOrder(Client client, double total, double promoDiscount, Address address, Set<CartItem> cartItems, String orderId) {
 

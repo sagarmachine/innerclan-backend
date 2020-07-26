@@ -45,7 +45,7 @@ public class OrderController {
     IOrderService orderService;
 
 
-    @GetMapping(value="/checkOut")
+    @PostMapping(value="/checkOut")
     public ResponseEntity<?> orderCheckOut(Principal principal, @RequestBody List<AddToCartDto> checkOutDto){
         String email=principal.getName();
         Optional<Client> clientValue= clientRepository.findByEmail(email);
@@ -141,59 +141,7 @@ public class OrderController {
 
     @PostMapping(value = "/pgresponse")
     public String getResponseRedirect(HttpServletRequest request, HttpServletResponse response, Model model) {
-        log.info("PAYTM RESPONSE-------------------------->");
-
-        Map<String, String[]> mapData = request.getParameterMap();
-        TreeMap<String, String> parameters = new TreeMap<String, String>();
-        mapData.forEach((key, val) -> parameters.put(key, val[0]));
-        String paytmChecksum = "";
-        if (mapData.containsKey("CHECKSUMHASH")) {
-            paytmChecksum = mapData.get("CHECKSUMHASH")[0];
-        }
-        String result;
-        log.info("PAYTM CHECKSUm  --------------------------> "+paytmChecksum);
-
-        boolean isValideChecksum = false;
-        System.out.println("RESULT : "+parameters.toString());
-        try {
-            isValideChecksum = paytmService.validateCheckSum(parameters, paytmChecksum);
-            if (isValideChecksum && parameters.containsKey("RESPCODE")) {
-                if (parameters.get("RESPCODE").equals("01")) {
-                    result = "S";
-                    log.info("PAYTM SUCCESSFUL-------------------------->");
-
-                } else {
-                    result = "F";
-                    log.info("PAYTM FAIL-------------------------->");
-
-                }
-            } else {
-                log.info("PAYTM CHECKSUm MISsMATCH --------------------------> "+paytmChecksum);
-                result = "Checksum mismatched";
-            }
-        } catch (Exception e) {
-            log.info("PAYTM EXC-------------------------->");
-
-            result = e.toString();
-        }
-        model.addAttribute("result",result);
-        parameters.remove("CHECKSUMHASH");
-        model.addAttribute("parameters",parameters);
-
-        try {
-            if(result.equals("S"))
-                response.sendRedirect("http://localhost:3000/paytmS");
-            else
-                response.sendRedirect("http://localhost:3000/paytmF");
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            log.info("PAYTM EXC 22-------------------------->");
-
-        }
-
-
-        return "report";
+      return "";
     }
 
 
