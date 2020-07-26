@@ -57,6 +57,7 @@ public class Order {
     @Column(nullable = false)
     double promoDiscount;
 
+    String promoUsed;
 
     @Embedded
     @Column(nullable = false)

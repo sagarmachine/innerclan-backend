@@ -5,6 +5,7 @@ import com.innerclan.v1.repository.ClientRepository;
 import com.innerclan.v1.service.IClientService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -33,6 +34,9 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
     @Autowired
     IClientService clientService;
+
+    @Value(value = "${innerclan.frontend.client}")
+    String innerClanClientUrl;
 
 //    @Autowired
 //    BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -74,7 +78,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         httpServletResponse.addHeader("firstName", map.get("given_name").toString().toUpperCase());
 
         //String jwt
-        httpServletResponse.sendRedirect("http://localhost:3000");
+        httpServletResponse.sendRedirect(innerClanClientUrl);
 
     }
 }
