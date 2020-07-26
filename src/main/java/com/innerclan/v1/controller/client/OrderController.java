@@ -64,15 +64,26 @@ public class OrderController {
     @GetMapping (value="/placeOrder")
     public ResponseEntity<?> placeOrder(Principal  principal, @RequestParam("promo") String promo, @RequestBody Address address){
 
+
         String email=principal.getName();
         double cartTotal=cartItemService.getCartTotal(email);
+
+
+        Optional<Client> clientValue= clientRepository.findByEmail(email);
+        if(!clientValue.isPresent()) throw new ClientNotFoundException("Client with email "+email +"does not exist");
+
+        Client client= clientValue.get();
+        client.setAddress(address);
+
         double netTotal=cartTotal;
-            double promoDiscount=0;
+        double promoDiscount=0;
         if(!promo.equals("-1")) {
-            HashMap<String, Double> promoValid = promoService.isPromoValid(promo, email);
-            if (!promoValid.containsKey("Valid Promo Code")) throw new PromoNotFoundException("INVALID PROMO CODE");
-            netTotal = cartTotal - promoValid.get("Valid Promo Code");
-            promoDiscount=promoValid.get("Valid Promo Code");
+            HashMap<String,String> promoValid = promoService.isPromoValid(promo,email);
+            String promovalue =promoValid.get("value");
+            promoDiscount =Double.parseDouble(promovalue);
+            promoDiscount=(promoDiscount==0||promoDiscount==-1?0:promoDiscount);
+           // if (promoDiscount==-1) throw new PromoNotFoundException(promoValid.get("message"));
+            netTotal = cartTotal-promoDiscount;
         }
         return paytmService.checkOut(email,netTotal,promoDiscount,address);
     }

@@ -58,31 +58,40 @@ public class PromoServiceImpl implements IPromoService {
     }
 
     @Override
-    public HashMap<String,Double> isPromoValid(String promo, String email) {
+    public HashMap<String, String> isPromoValid(String promo, String email) {
 
         Optional<Client> value= clientRepository.findByEmail(email);
         if(!value.isPresent()) throw new ClientNotFoundException("Client with email :"+email+" not found");
           Client client= value.get();
-        HashMap<String,Double> result = new HashMap<>();
+        HashMap<String,String> result = new HashMap<>();
         List<Promo> allPromos = promoRepository.findAll();
         for(Promo p:allPromos){
 
             if(p.getName().equalsIgnoreCase(promo)){
                if(client.getPromos().contains(p))
-                    result.put("Promo Code Already Used",p.getValue());
+               {
+                   result.put("value",0+"");
+                   result.put("message","PROMO CODE ALREADY USED");
+               }
                else if(p.getExpiryDate().compareTo(new java.util.Date())<0)
-                    result.put("Promo Code Expired",p.getValue());
+               {
+                   result.put("value",0+"");
+                   result.put("message","PROMO CODE ALREADY USED");
+               }
                else
-                    result.put("Valid Promo Code",p.getValue());
+               {
+                   result.put("value",p.getValue()+"");
+                   result.put("message","VALID PROMO CODE");
+               }
 
                return result;
             }
 
         }
 
-        result.put("INVALID PROMO CODE",-1.0);
+        result.put("value",-1+"");
+        result.put("message","INVALID PROMO CODE");;
         return result;
-
 
     }
 

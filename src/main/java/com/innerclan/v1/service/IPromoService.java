@@ -13,7 +13,7 @@ public interface IPromoService {
 
     void deletePromo(long id);
 
-    HashMap<String,Double> isPromoValid(String promo, String email);
+    HashMap<String, String> isPromoValid(String promo, String email);
 
     List<Promo> getPublicPromos();
 }
