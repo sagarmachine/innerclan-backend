@@ -6,6 +6,7 @@ import com.innerclan.v1.exception.IllegalOrderStatus;
 import com.innerclan.v1.exception.OrderNotFoundException;
 import com.innerclan.v1.repository.ClientRepository;
 import com.innerclan.v1.repository.OrderRepository;
+import com.innerclan.v1.repository.PromoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,9 @@ public class OrderServiceImpl implements IOrderService {
     @Autowired
     ClientRepository clientRepository;
 
+    @Autowired
+    PromoRepository promoRepository;
+
     @Override
     public void completeOrder(String orderId,String txnId, String paymentMode) {
 
@@ -33,13 +37,18 @@ public class OrderServiceImpl implements IOrderService {
             throw  new OrderNotFoundException("no order found with id :"+orderId);
 
         Order order = orderOptional.get();
-        //Client client= or
+        Client client= order.getClient();
+
+        Promo promo= promoRepository.findByName(order.getPromoUsed()).get();
+
+        client.addPromos(promo);
+        client.setTotalOrder(client.getTotalOrder()+1);
 
         order.setTransactionId(txnId);
         order.setPaymentMode(paymentMode);
         order.setStatus(OrderStatus.PLACED);
-        orderRepository.save(order);
-
+       // orderRepository.save(order);
+        clientRepository.save(client);
     }
 
     @Override
