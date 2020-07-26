@@ -51,9 +51,7 @@ public class AdminOrderViewDto {
 
     String payMethod;
 
-
-    @CollectionTable(name = "order_item", joinColumns = @JoinColumn(name = "order_id"))
     List<OrderItem> orderItems;
 
-    OrderQuery orderQuery;
+ List<String> queries;
 }

@@ -1,6 +1,7 @@
 package com.innerclan.v1.service;
 
 
+import com.innerclan.v1.entity.Address;
 import com.innerclan.v1.entity.Client;
 import com.innerclan.v1.exception.ClientNotFoundException;
 import com.innerclan.v1.repository.ClientRepository;
@@ -29,6 +30,8 @@ public class PaytmServiceImpl implements IPaytmService {
     @Autowired
     ClientRepository clientRepository;
 
+    @Autowired
+    IOrderService orderService;
 
     public  boolean validateCheckSum(TreeMap<String, String> parameters, String paytmChecksum) throws Exception {
         return CheckSumServiceHelper.getCheckSumServiceHelper().verifycheckSum(paytmClient.getMerchantKey(),
@@ -41,12 +44,13 @@ public class PaytmServiceImpl implements IPaytmService {
     }
 
     @Override
-    public  ResponseEntity<?>  checkOut(String email,double amount) {
+    public  ResponseEntity<?>  checkOut(String email, double amount,double promoDiscount, Address address) {
    Optional<Client> clientOptional= clientRepository.findByEmail(email);
         if(!clientOptional.isPresent())
             throw  new ClientNotFoundException("no client found by id : "+ email );
 
         String orderId= createOrderId(clientOptional.get());
+        orderService.createOrder(clientRepository.findByEmail(email).get(),amount,promoDiscount,address,clientRepository.findByEmail(email).get().getCartItems(),orderId);
 
       return  makePayment(orderId, amount, clientOptional.get().getUuid());
 
@@ -55,54 +59,58 @@ public class PaytmServiceImpl implements IPaytmService {
     @Override
     public void placeOrder(HttpServletRequest request, HttpServletResponse response) {
 
-        log.info("PAYTM RESPONSE-------------------------->");
-
         Map<String, String[]> mapData = request.getParameterMap();
         TreeMap<String, String> parameters = new TreeMap<String, String>();
         mapData.forEach((key, val) -> parameters.put(key, val[0]));
+
         String paytmChecksum = "";
         if (mapData.containsKey("CHECKSUMHASH")) {
             paytmChecksum = mapData.get("CHECKSUMHASH")[0];
         }
         String result;
-       // log.info("PAYTM CHECKSUm  --------------------------> "+paytmChecksum);
 
         boolean isValideChecksum = false;
-        System.out.println("RESULT : "+parameters.toString());
+
         try {
             isValideChecksum = validateCheckSum(parameters, paytmChecksum);
             if (isValideChecksum && parameters.containsKey("RESPCODE")) {
                 if (parameters.get("RESPCODE").equals("01")) {
                     result = "S";
-              //      log.info("PAYTM SUCCESSFUL-------------------------->");
+                    log.info("PAYTM SUCCESSFUL--------------------------> ");
+                    log.info(parameters.toString());
+
+                    log.info("TXN_ID :"+parameters.get("TXNID"));
+                    log.info("PAYMENTMODE :"+parameters.get("PAYMENTMODE"));
 
                 } else {
                     result = "F";
-               //     log.info("PAYTM FAIL-------------------------->");
+                    log.info("PAYTM FAILED-------------------------->");
 
                 }
             } else {
-            //    log.info("PAYTM CHECKSUm MISsMATCH --------------------------> "+paytmChecksum);
+                log.info("PAYTM CHECKSUm MISsMATCH --------------------------> "+paytmChecksum);
                 result = "Checksum mismatched";
             }
         } catch (Exception e) {
-         //   log.info("PAYTM EXC-------------------------->");
+            log.info("PAYTM EXC-------------------------->");
 
             result = e.toString();
         }
 
+
         try {
-            if(result.equals("S")){
+            if(result.equals("S"))
                 response.sendRedirect("http://localhost:3000/paytmS");
-            }
-            else {
+            else
                 response.sendRedirect("http://localhost:3000/paytmF");
-            }
+
         } catch (IOException e) {
-            e.printStackTrace();
             log.info("PAYTM EXC 22-------------------------->");
 
         }
+
+
+        //return "report";
     }
 
 
@@ -110,9 +118,9 @@ public class PaytmServiceImpl implements IPaytmService {
         return null;
     }
 
-    double calculateAmount(Client client){
-        return 0;
-    }
+//    double calculateAmount(Client client){
+//        return 0;
+//    }
 
     //@Override
     public  ResponseEntity<?>  makePayment(String orderId, Double amount, String clientUUID) {
@@ -128,6 +136,7 @@ public class PaytmServiceImpl implements IPaytmService {
             checkSum = getCheckSum(parameters);
         } catch (Exception e) {
             // Payment FailedException
+
         }
         parameters.put("CHECKSUMHASH", checkSum);
 

@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -26,7 +28,6 @@ public class Order {
     @Column(nullable = false, unique = true)
     String orderId;
 
-    @Column(nullable = false, unique = true)
     String transactionId;
 
     @ManyToOne
@@ -34,7 +35,15 @@ public class Order {
     Client client;
 
     @Column(nullable = false)
-    Date date;
+    @CreationTimestamp
+    @Temporal(value = TemporalType.DATE)
+    Date orderedOnDate;
+
+    @Column(nullable = false)
+    @CreationTimestamp
+    @Temporal(value = TemporalType.TIME)
+    Date orderedOnTime;
+
 
     Date expectedDeliveryDate;
 
@@ -53,8 +62,8 @@ public class Order {
     @Column(nullable = false)
     Address address;
 
-    @Column(nullable = false)
-    String paymentMethod;
+
+    String paymentMode;
 
 
     @ElementCollection
@@ -62,8 +71,9 @@ public class Order {
     List<OrderItem> orderItems;
 
 
-    @OneToOne
-    OrderQuery orderQuery;
+    @ElementCollection
+    @CollectionTable(name = "order_query",joinColumns = @JoinColumn(name = "order_id"))
+    List<String> queries;
 
 
     @Override

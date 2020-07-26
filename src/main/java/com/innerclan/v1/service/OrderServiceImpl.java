@@ -1,20 +1,17 @@
 package com.innerclan.v1.service;
 
 import com.innerclan.v1.dto.CartItemDto;
-import com.innerclan.v1.entity.Address;
-import com.innerclan.v1.entity.Client;
-import com.innerclan.v1.entity.Order;
-import com.innerclan.v1.entity.OrderStatus;
+import com.innerclan.v1.entity.*;
 import com.innerclan.v1.exception.IllegalOrderStatus;
 import com.innerclan.v1.exception.OrderNotFoundException;
+import com.innerclan.v1.repository.ClientRepository;
 import com.innerclan.v1.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import java.util.HashMap;
-import java.util.Optional;
-import java.util.Set;
+
+import java.util.*;
 
 
 @Service
@@ -25,13 +22,57 @@ public class OrderServiceImpl implements IOrderService {
     OrderRepository orderRepository;
 
 
+    @Autowired
+    ClientRepository clientRepository;
+
     @Override
-    public void completeOrder(String email) {
+    public void completeOrder(String orderId,String txnId, String paymentMode) {
+
+        Optional<Order> orderOptional= orderRepository.findByOrderId(orderId);
+        if(!orderOptional.isPresent())
+            throw  new OrderNotFoundException("no order found with id :"+orderId);
+
+        Order order = orderOptional.get();
+        //Client client= or
+
+        order.setTransactionId(txnId);
+        order.setPaymentMode(paymentMode);
+        order.setStatus(OrderStatus.PLACED);
+        orderRepository.save(order);
 
     }
 
     @Override
-    public void createOrder(Client client, double total, double promoDiscount, Address address, Set<CartItemDto> colors, String orderId) {
+    public void createOrder(Client client, double total, double promoDiscount, Address address, Set<CartItem> cartItems, String orderId) {
+
+        Order order = new Order();
+
+        order.setClient(client);
+        client.addOrder(order);
+        order.setStatus(OrderStatus.PAYMENT_PENDING);
+        order.setAddress(address);
+        order.setOrderId(orderId);
+        order.setTotal(total);
+        order.setPromoDiscount(promoDiscount);
+
+        List<OrderItem> orderItems= new ArrayList<>();
+
+        for (CartItem cartItem :cartItems){
+            OrderItem orderItem= new OrderItem();
+            Color color = cartItem.getColor();
+            Product product= color.getProduct();
+
+            orderItem.setColor(color.getColorName());
+            orderItem.setImage(color.getImages().get(0).getImage());
+            orderItem.setProductName(product.getProductName());
+            orderItem.setQuantity(cartItem.getQuantity());
+            orderItem.setSize(cartItem.getSize());
+            orderItem.setPrice(product.getProductPrice());
+
+            orderItems.add(orderItem);
+        }
+        order.setOrderItems(orderItems);
+           clientRepository.save(client);
 
     }
 
@@ -73,7 +114,7 @@ public class OrderServiceImpl implements IOrderService {
 
         Order order = orderOptional.get();
 
-        order.getOrderQuery().getQueries().add(query);
+        order.getQueries().add(query);
 
         orderRepository.save(order);
 

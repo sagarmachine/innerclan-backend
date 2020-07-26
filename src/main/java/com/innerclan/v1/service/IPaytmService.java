@@ -1,5 +1,6 @@
 package com.innerclan.v1.service;
 
+import com.innerclan.v1.entity.Address;
 import org.springframework.http.ResponseEntity;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,7 +15,7 @@ public interface IPaytmService {
 
      void placeOrder(HttpServletRequest request, HttpServletResponse response);
 
-    ResponseEntity<?> checkOut(String email, double totalprice);
+    ResponseEntity<?> checkOut(String email, double totalprice,double promoDiscount, Address address);
 
     // ResponseEntity<?> makePayment(String orderId, Double amount, String clientUUID);
 

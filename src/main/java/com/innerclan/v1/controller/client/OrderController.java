@@ -1,6 +1,7 @@
 package com.innerclan.v1.controller.client;
 
 import com.innerclan.v1.dto.CheckOutDto;
+import com.innerclan.v1.entity.Address;
 import com.innerclan.v1.entity.Client;
 import com.innerclan.v1.exception.ClientNotFoundException;
 import com.innerclan.v1.exception.PromoNotFoundException;
@@ -12,8 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -44,6 +43,9 @@ public class OrderController {
     @Autowired
     ClientRepository clientRepository;
 
+    @Autowired
+    IOrderService orderService;
+
 
     @GetMapping(value="")
     public ResponseEntity<?> orderCheckOut(Principal principal, @RequestBody CheckOutDto checkOutDto){
@@ -60,19 +62,19 @@ public class OrderController {
     }
 
     @GetMapping (value="/placeOrder")
-    public ResponseEntity<?> placeOrder(Principal  principal, @RequestParam("promo") String promo){
+    public ResponseEntity<?> placeOrder(Principal  principal, @RequestParam("promo") String promo, @RequestBody Address address){
 
         String email=principal.getName();
         double cartTotal=cartItemService.getCartTotal(email);
         double netTotal=cartTotal;
-
+            double promoDiscount=0;
         if(!promo.equals("-1")) {
             HashMap<String, Double> promoValid = promoService.isPromoValid(promo, email);
             if (!promoValid.containsKey("Valid Promo Code")) throw new PromoNotFoundException("INVALID PROMO CODE");
             netTotal = cartTotal - promoValid.get("Valid Promo Code");
+            promoDiscount=promoValid.get("Valid Promo Code");
         }
-
-        return paytmService.checkOut(email,netTotal);
+        return paytmService.checkOut(email,netTotal,promoDiscount,address);
     }
 
 //    @PostMapping(value = "/pgredirect")
