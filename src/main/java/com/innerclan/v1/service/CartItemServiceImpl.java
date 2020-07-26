@@ -156,6 +156,7 @@ public class CartItemServiceImpl implements ICartItemService {
 
         Client client=clientValue.get();
 
+        log.info("---> "+client.getId()+" : "+color.getId()+" : "+size);
         Optional<CartItem> cartItemValue= cartItemRepository.findByClientAndColorAndSize(client,color,size);
         if(!cartItemValue.isPresent()) throw new CartItemNotFoundException("Product Not found in the Cart");
         CartItem cartItem = cartItemValue.get();
