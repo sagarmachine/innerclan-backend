@@ -1,5 +1,6 @@
 package com.innerclan.v1.controller.client;
 
+import com.innerclan.v1.dto.AddToCartDto;
 import com.innerclan.v1.dto.CheckOutDto;
 import com.innerclan.v1.entity.Address;
 import com.innerclan.v1.entity.Client;
@@ -17,10 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.Principal;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.TreeMap;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/v1/order")
@@ -47,15 +45,15 @@ public class OrderController {
     IOrderService orderService;
 
 
-    @GetMapping(value="")
-    public ResponseEntity<?> orderCheckOut(Principal principal, @RequestBody CheckOutDto checkOutDto){
+    @PostMapping(value="/checkOut")
+    public ResponseEntity<?> orderCheckOut(Principal principal, @RequestBody List<AddToCartDto> checkOutDto){
         String email=principal.getName();
         Optional<Client> clientValue= clientRepository.findByEmail(email);
         if(!clientValue.isPresent()) throw new ClientNotFoundException("Client with email "+email +"does not exist");
 
         cartItemService.deleteAllCartItems(email);
 
-        cartItemService.addCartItems(email,checkOutDto.getAddToCartDtoList());
+        cartItemService.addCartItems(email,checkOutDto);
 
         return new ResponseEntity<>("CART ITEMS ADDEDD AND UPDATEDD SUCCESSFULLY",HttpStatus.OK);
 
@@ -75,8 +73,9 @@ public class OrderController {
      */
 
     @GetMapping("/getAddress")
-    public ResponseEntity<?> placeOrder(){
-        String email="nikhilkhari47@gmail.com";
+    public ResponseEntity<?> placeOrder(Principal principal){
+        String email=principal.getName();
+
         Optional<Client> clientValue= clientRepository.findByEmail(email);
         if(!clientValue.isPresent()) throw new ClientNotFoundException("Client with email "+email +"does not exist");
 
@@ -143,59 +142,7 @@ public class OrderController {
 
     @PostMapping(value = "/pgresponse")
     public String getResponseRedirect(HttpServletRequest request, HttpServletResponse response, Model model) {
-        log.info("PAYTM RESPONSE-------------------------->");
-
-        Map<String, String[]> mapData = request.getParameterMap();
-        TreeMap<String, String> parameters = new TreeMap<String, String>();
-        mapData.forEach((key, val) -> parameters.put(key, val[0]));
-        String paytmChecksum = "";
-        if (mapData.containsKey("CHECKSUMHASH")) {
-            paytmChecksum = mapData.get("CHECKSUMHASH")[0];
-        }
-        String result;
-        log.info("PAYTM CHECKSUm  --------------------------> "+paytmChecksum);
-
-        boolean isValideChecksum = false;
-        System.out.println("RESULT : "+parameters.toString());
-        try {
-            isValideChecksum = paytmService.validateCheckSum(parameters, paytmChecksum);
-            if (isValideChecksum && parameters.containsKey("RESPCODE")) {
-                if (parameters.get("RESPCODE").equals("01")) {
-                    result = "S";
-                    log.info("PAYTM SUCCESSFUL-------------------------->");
-
-                } else {
-                    result = "F";
-                    log.info("PAYTM FAIL-------------------------->");
-
-                }
-            } else {
-                log.info("PAYTM CHECKSUm MISsMATCH --------------------------> "+paytmChecksum);
-                result = "Checksum mismatched";
-            }
-        } catch (Exception e) {
-            log.info("PAYTM EXC-------------------------->");
-
-            result = e.toString();
-        }
-        model.addAttribute("result",result);
-        parameters.remove("CHECKSUMHASH");
-        model.addAttribute("parameters",parameters);
-
-        try {
-            if(result.equals("S"))
-                response.sendRedirect("http://localhost:3000/paytmS");
-            else
-                response.sendRedirect("http://localhost:3000/paytmF");
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            log.info("PAYTM EXC 22-------------------------->");
-
-        }
-
-
-        return "report";
+      return "";
     }
 
 

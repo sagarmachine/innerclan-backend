@@ -63,8 +63,8 @@ public class ClientServiceImpl implements IClientService {
         String jwtToken = jwtUtil.generateToken(user);
         HttpHeaders headers= new HttpHeaders();;
         headers.add("Authorization","Bearer "+ jwtToken);
-        headers.add("firstName",clientDto.getFirstName());
-
+        headers.add("Name",clientDto.getFirstName());
+        headers.add("Email",clientDto.getEmail());
         return new ResponseEntity(mapper.map(clientDto, ClientResponseDto.class), headers, HttpStatus.ACCEPTED);
 
 
@@ -86,7 +86,8 @@ public class ClientServiceImpl implements IClientService {
           client.setLastLoggedIn(new Date());
           client.setVisit(client.getVisit()+1);
           clientRepository.save(client);
-        headers.add("firstName",client.getFirstName());
+        headers.add("Name",client.getFirstName());
+        headers.add("Email",loginDto.getEmail());
 
         return new ResponseEntity(mapper.map(client, ClientResponseDto.class), headers, HttpStatus.ACCEPTED);
 

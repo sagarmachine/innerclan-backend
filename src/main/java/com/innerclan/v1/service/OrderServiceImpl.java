@@ -4,6 +4,7 @@ import com.innerclan.v1.dto.CartItemDto;
 import com.innerclan.v1.entity.*;
 import com.innerclan.v1.exception.IllegalOrderStatus;
 import com.innerclan.v1.exception.OrderNotFoundException;
+import com.innerclan.v1.repository.CartItemRepository;
 import com.innerclan.v1.repository.ClientRepository;
 import com.innerclan.v1.repository.OrderRepository;
 import com.innerclan.v1.repository.PromoRepository;
@@ -29,6 +30,9 @@ public class OrderServiceImpl implements IOrderService {
     @Autowired
     PromoRepository promoRepository;
 
+    @Autowired
+    CartItemRepository cartItemRepository;
+
     @Override
     public void completeOrder(String orderId,String txnId, String paymentMode) {
 
@@ -39,10 +43,14 @@ public class OrderServiceImpl implements IOrderService {
         Order order = orderOptional.get();
         Client client= order.getClient();
 
+
         Promo promo= promoRepository.findByName(order.getPromoUsed()).get();
 
         client.addPromos(promo);
         client.setTotalOrder(client.getTotalOrder()+1);
+        //client.setCartItems(new HashSet<>());
+
+        cartItemRepository.deleteAllByClientEmail(client.getEmail());
 
         order.setTransactionId(txnId);
         order.setPaymentMode(paymentMode);
@@ -50,6 +58,18 @@ public class OrderServiceImpl implements IOrderService {
        // orderRepository.save(order);
         clientRepository.save(client);
     }
+
+
+    @Override
+    public void orderFailed(String orderId) {
+        Optional<Order> orderOptional= orderRepository.findByOrderId(orderId);
+        if(!orderOptional.isPresent())
+            throw  new OrderNotFoundException("no order found with id :"+orderId);
+
+        Order order = orderOptional.get();
+        order.setStatus(OrderStatus.PAYMENT_FAILED);
+    }
+
 
     @Override
     public void createOrder(Client client, double total, double promoDiscount, Address address, Set<CartItem> cartItems, String orderId) {
