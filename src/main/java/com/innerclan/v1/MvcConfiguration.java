@@ -9,6 +9,6 @@ public class MvcConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**").allowedMethods("*").exposedHeaders("Authorization");
+        registry.addMapping("/**").allowedMethods("*").exposedHeaders("Authorization","Name","Email");
     }
 }
