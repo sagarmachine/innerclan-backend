@@ -120,10 +120,10 @@ public class PaytmServiceImpl implements IPaytmService {
 
         try {
             if(result.equals("S"))
-                response.sendRedirect("http://localhost:3000/paymentSuccess/");
+                response.sendRedirect("http://localhost:3000/paymentResult/"+jwtToken+"/"+client.getEmail()+"/"+client.getFirstName());
             else {
                 orderService.orderFailed(parameters.get("ORDERID"));
-                response.sendRedirect("http://localhost:3000/pamentFailed/");
+                response.sendRedirect("http://localhost:3000/paymentResult/"+jwtToken+"/"+client.getEmail()+"/"+client.getFirstName());
             }
         } catch (IOException e) {
             orderService.orderFailed(parameters.get("ORDERID"));

@@ -3,6 +3,8 @@ package com.innerclan.v1.controller.admin;
 
 import com.innerclan.v1.dto.AdminOrderViewDto;
 import com.innerclan.v1.entity.Order;
+import com.innerclan.v1.entity.OrderStatus;
+import com.innerclan.v1.exception.IllegalOrderStatus;
 import com.innerclan.v1.repository.OrderRepository;
 import com.innerclan.v1.service.IOrderService;
 import org.modelmapper.ModelMapper;
@@ -35,7 +37,7 @@ public class AdminOrderController {
 
         ModelMapper mapper= new ModelMapper();
 
-        for (Order order : orderRepository.findAll(pageable)){
+        for (Order order : orderRepository.findAllByOrderByUpdatedOnDesc(pageable)){
             AdminOrderViewDto adminOrderViewDto= new AdminOrderViewDto();
             adminOrderViewDto= mapper.map(order,AdminOrderViewDto.class);
             adminOrderViewDto.setEmail(order.getClient().getEmail());
@@ -43,6 +45,40 @@ public class AdminOrderController {
         }
 
        return new ResponseEntity<>(adminOrderView, HttpStatus.OK);
+
+    }
+
+
+
+    @GetMapping("/{status}")
+    ResponseEntity<?> getOrdersByStatus(@PathVariable("status")String s,Principal principal,int pageNumber){
+
+
+        int flag=0;
+        OrderStatus status=null;
+        for (OrderStatus st:OrderStatus.values()){
+            if(s.toString().equals(s)) {
+                flag = 1;
+                status=st;
+            }
+        }
+        if(flag==0)
+            throw  new IllegalOrderStatus("use a valid status value");
+
+
+        Pageable pageable = PageRequest.of((int) pageNumber, 10);
+        List<AdminOrderViewDto> adminOrderView= new ArrayList<>();
+
+        ModelMapper mapper= new ModelMapper();
+
+        for (Order order : orderRepository.findByStatusOrderByUpdatedOnDesc(status.toString(),pageable)){
+            AdminOrderViewDto adminOrderViewDto= new AdminOrderViewDto();
+            adminOrderViewDto= mapper.map(order,AdminOrderViewDto.class);
+            adminOrderViewDto.setEmail(order.getClient().getEmail());
+            adminOrderView.add(adminOrderViewDto);
+        }
+
+        return new ResponseEntity<>(adminOrderView, HttpStatus.OK);
 
     }
 
