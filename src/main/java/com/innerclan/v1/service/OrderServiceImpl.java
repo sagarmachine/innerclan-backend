@@ -4,10 +4,7 @@ import com.innerclan.v1.dto.CartItemDto;
 import com.innerclan.v1.entity.*;
 import com.innerclan.v1.exception.IllegalOrderStatus;
 import com.innerclan.v1.exception.OrderNotFoundException;
-import com.innerclan.v1.repository.CartItemRepository;
-import com.innerclan.v1.repository.ClientRepository;
-import com.innerclan.v1.repository.OrderRepository;
-import com.innerclan.v1.repository.PromoRepository;
+import com.innerclan.v1.repository.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -35,6 +32,9 @@ public class OrderServiceImpl implements IOrderService {
     @Autowired
     CartItemRepository cartItemRepository;
 
+    @Autowired
+    ProductRepository productRepository;
+
     @Override
     public void completeOrder(String orderId,String txnId, String paymentMode) {
 
@@ -47,21 +47,28 @@ public class OrderServiceImpl implements IOrderService {
         Order order = orderOptional.get();
         Client client= order.getClient();
 
+
          if(order.getPromoUsed()!=null)
          {Optional<Promo> promoOptional= promoRepository.findByName(order.getPromoUsed());
                  if(promoOptional.isPresent())
            client.addPromos(promoOptional.get());}
         client.setTotalOrder(client.getTotalOrder()+1);
-        //client.setCartItems(new HashSet<>());
-
-
-
+         //----- incrementing product sale;
+        List<CartItem> cartItemList= cartItemRepository.findByClient(client);
+        Set<Long> saleCounter =new HashSet<>();
+        for(CartItem c:cartItemList){
+            Product p=c.getColor().getProduct();
+            if(saleCounter.add(p.getId())) {
+                p.setSale(p.getSale()+1);
+                productRepository.save(p);
+            }
+        }
         cartItemRepository.deleteAllByClientEmail(client.getEmail());
-
+        //client.setCartItems(new HashSet<>());
         order.setTransactionId(txnId);
         order.setPaymentMode(paymentMode);
         order.setStatus(OrderStatus.PLACED);
-       // orderRepository.save(order);
+        orderRepository.save(order);
         clientRepository.save(client);
     }
 
@@ -122,7 +129,7 @@ public class OrderServiceImpl implements IOrderService {
         Optional<Order>orderOptional = orderRepository.findById(id);
 
         if(!orderOptional.isPresent())
-            throw  new OrderNotFoundException("no order foung with id "+id);
+            throw  new OrderNotFoundException("no order found with id "+id);
 
 
         int flag=0;
