@@ -5,6 +5,7 @@ import com.innerclan.v1.dto.AdminOrderViewDto;
 import com.innerclan.v1.entity.Order;
 import com.innerclan.v1.entity.OrderStatus;
 import com.innerclan.v1.exception.IllegalOrderStatus;
+import com.innerclan.v1.exception.OrderNotFoundException;
 import com.innerclan.v1.repository.OrderRepository;
 import com.innerclan.v1.service.IOrderService;
 import org.modelmapper.ModelMapper;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/api/v1/admin/order")
@@ -50,7 +52,7 @@ public class AdminOrderController {
 
 
 
-    @GetMapping("/{status}")
+    @GetMapping("/status/{status}")
     ResponseEntity<?> getOrdersByStatus(@PathVariable("status")String s,Principal principal,int pageNumber){
 
 
@@ -81,6 +83,18 @@ public class AdminOrderController {
         return new ResponseEntity<>(adminOrderView, HttpStatus.OK);
 
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getOrderDetailView(@PathVariable("id")long id){
+        Optional<Order>orderOptional=orderRepository.findById(id);
+        if(!orderOptional.isPresent())
+            throw  new OrderNotFoundException("no order found with id "+ id);
+
+        return new ResponseEntity<>(orderOptional.get(),HttpStatus.OK);
+
+    }
+
+
 
     @PutMapping("/updateOrderStatus/{id}/{status}")
     void updateOrderStatus(@PathVariable("id")long id, @PathVariable("status")String status){

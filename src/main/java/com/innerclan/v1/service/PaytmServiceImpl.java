@@ -22,6 +22,7 @@ import java.security.Principal;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -56,13 +57,13 @@ public class PaytmServiceImpl implements IPaytmService {
     }
 
     @Override
-    public  ResponseEntity<?>  checkOut(String email, double amount,double promoDiscount, Address address) {
+    public  ResponseEntity<?>  checkOut(String email, double amount,double promoDiscount,String promoUsed ,Address address) {
    Optional<Client> clientOptional= clientRepository.findByEmail(email);
         if(!clientOptional.isPresent())
             throw  new ClientNotFoundException("no client found by id : "+ email );
 
         String orderId= createOrderId(clientOptional.get());
-        orderService.createOrder(clientRepository.findByEmail(email).get(),amount,promoDiscount,address,clientRepository.findByEmail(email).get().getCartItems(),orderId);
+        orderService.createOrder(clientRepository.findByEmail(email).get(),amount,promoDiscount,promoUsed,address,clientRepository.findByEmail(email).get().getCartItems(),orderId);
 
       return  makePayment(orderId, amount, clientOptional.get().getUuid());
 
@@ -96,8 +97,6 @@ public class PaytmServiceImpl implements IPaytmService {
                     log.info("PAYMENTMODE :"+parameters.get("PAYMENTMODE"));
                     log.info("PAYMENTMODE :"+parameters.get("ORDERID"));
                     ;
-                 orderService.completeOrder(parameters.get("ORDERID"),parameters.get("TXNID"),parameters.get("PAYMENTMODE"));
-
                 } else {
                     result = "F";
                     log.info("PAYTM FAILED-------------------------->");
@@ -108,7 +107,7 @@ public class PaytmServiceImpl implements IPaytmService {
                 result = "Checksum mismatched";
             }
         } catch (Exception e) {
-            log.info("PAYTM EXC-------------------------->");
+            log.info("PAYTM EXC--------------------------> "+e.getMessage());
 
             result = e.toString();
         }
@@ -119,11 +118,13 @@ public class PaytmServiceImpl implements IPaytmService {
         String jwtToken = jwtUtil.generateToken(user);
 
         try {
-            if(result.equals("S"))
-                response.sendRedirect("http://localhost:3000/paymentResult/"+jwtToken+"/"+client.getEmail()+"/"+client.getFirstName());
-            else {
+            if(result.equals("S")) {
+                orderService.completeOrder(parameters.get("ORDERID"),parameters.get("TXNID"),parameters.get("PAYMENTMODE"));
+
+                response.sendRedirect("http://localhost:3001/paymentResult/" + jwtToken + "/" + client.getEmail() + "/" + client.getFirstName());
+            }else {
                 orderService.orderFailed(parameters.get("ORDERID"));
-                response.sendRedirect("http://localhost:3000/paymentResult/"+jwtToken+"/"+client.getEmail()+"/"+client.getFirstName());
+                response.sendRedirect("http://localhost:3001/paymentResult/"+jwtToken+"/"+client.getEmail()+"/"+client.getFirstName());
             }
         } catch (IOException e) {
             orderService.orderFailed(parameters.get("ORDERID"));
@@ -137,7 +138,7 @@ public class PaytmServiceImpl implements IPaytmService {
 
 
     String createOrderId(Client client){
-        return null;
+        return UUID.randomUUID().toString();
     }
 
 //    double calculateAmount(Client client){

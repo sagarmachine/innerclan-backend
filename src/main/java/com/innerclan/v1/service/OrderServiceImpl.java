@@ -8,6 +8,7 @@ import com.innerclan.v1.repository.CartItemRepository;
 import com.innerclan.v1.repository.ClientRepository;
 import com.innerclan.v1.repository.OrderRepository;
 import com.innerclan.v1.repository.PromoRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import java.util.*;
 
 
 @Service
+@Slf4j
 public class OrderServiceImpl implements IOrderService {
 
 
@@ -36,6 +38,8 @@ public class OrderServiceImpl implements IOrderService {
     @Override
     public void completeOrder(String orderId,String txnId, String paymentMode) {
 
+        log.info("PLACING ORDER-------------------------------------->");
+
         Optional<Order> orderOptional= orderRepository.findByOrderId(orderId);
         if(!orderOptional.isPresent())
             throw  new OrderNotFoundException("no order found with id :"+orderId);
@@ -43,10 +47,10 @@ public class OrderServiceImpl implements IOrderService {
         Order order = orderOptional.get();
         Client client= order.getClient();
 
-
-        Promo promo= promoRepository.findByName(order.getPromoUsed()).get();
-
-        client.addPromos(promo);
+         if(order.getPromoUsed()!=null)
+         {Optional<Promo> promoOptional= promoRepository.findByName(order.getPromoUsed());
+                 if(promoOptional.isPresent())
+           client.addPromos(promoOptional.get());}
         client.setTotalOrder(client.getTotalOrder()+1);
         //client.setCartItems(new HashSet<>());
 
@@ -72,7 +76,7 @@ public class OrderServiceImpl implements IOrderService {
 
 
     @Override
-    public void createOrder(Client client, double total, double promoDiscount, Address address, Set<CartItem> cartItems, String orderId) {
+    public void createOrder(Client client, double total, double promoDiscount,String promoUsed, Address address, Set<CartItem> cartItems, String orderId) {
 
         Order order = new Order();
 
@@ -83,6 +87,10 @@ public class OrderServiceImpl implements IOrderService {
         order.setOrderId(orderId);
         order.setTotal(total);
         order.setPromoDiscount(promoDiscount);
+
+        if(promoDiscount>0)
+            order.setPromoUsed(promoUsed);
+
 
         List<OrderItem> orderItems= new ArrayList<>();
 

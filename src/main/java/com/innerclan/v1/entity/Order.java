@@ -70,7 +70,6 @@ public class Order {
 
     String paymentMode;
 
-
     @ElementCollection
      @CollectionTable(name = "order_item", joinColumns = @JoinColumn(name = "order_id"))
     List<OrderItem> orderItems;

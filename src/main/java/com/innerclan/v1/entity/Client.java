@@ -2,6 +2,7 @@ package com.innerclan.v1.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -39,12 +40,14 @@ public class Client {
     String email;
 
    // @Column(nullable = false)
-    String password;
+   @JsonIgnore
+   String password;
 
     @Column(unique=true,length=10)
     String phone;
 
     @Embedded
+    @JsonIgnore
     Address address;
 
     @CreationTimestamp
@@ -62,6 +65,7 @@ public class Client {
 
     @ManyToMany (cascade ={CascadeType.PERSIST})
     @JoinTable
+    @JsonIgnore
     Set<Promo> promos;
 
     public void addPromos(Promo promo) {
@@ -74,7 +78,8 @@ public class Client {
 
 
     @OneToMany(mappedBy = "client",cascade = {CascadeType.ALL})
-   Set<CartItem> cartItems;
+    @JsonIgnore
+    Set<CartItem> cartItems;
 
     public void addCartItem(CartItem cartItem) {
         if (cartItems == null) {
@@ -92,6 +97,7 @@ public class Client {
     }
 
    @OneToMany(mappedBy = "client",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+   @JsonIgnore
    Set<Order> orders= new HashSet<>();
 
     public  void addOrder(Order order){

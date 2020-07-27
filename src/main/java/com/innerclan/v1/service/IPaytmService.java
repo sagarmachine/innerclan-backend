@@ -15,7 +15,7 @@ public interface IPaytmService {
 
      void placeOrder(HttpServletRequest request, HttpServletResponse response);
 
-    ResponseEntity<?> checkOut(String email, double totalprice,double promoDiscount, Address address);
+    ResponseEntity<?> checkOut(String email, double totalprice,double promoDiscount, String promoUsed,Address address);
 
     // ResponseEntity<?> makePayment(String orderId, Double amount, String clientUUID);
 

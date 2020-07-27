@@ -83,10 +83,10 @@ public class OrderController {
 
     }
 
-    @GetMapping (value="/placeOrder")
+    @PostMapping (value="/placeOrder")
     public ResponseEntity<?> placeOrder(Principal  principal, @RequestParam("promo") String promo, @RequestBody Address address){
 
-
+log.info("PLACING ORDER");
         String email=principal.getName();
         double cartTotal=cartItemService.getCartTotal(email);
 
@@ -100,6 +100,7 @@ public class OrderController {
 
         double netTotal=cartTotal;
         double promoDiscount=0;
+        promo=promo.toUpperCase();
         if(!promo.equals("-1")) {
             HashMap<String,String> promoValid = promoService.isPromoValid(promo,email);
             String promovalue = promoValid.get("value");
@@ -109,7 +110,7 @@ public class OrderController {
             netTotal = cartTotal-promoDiscount;
 
         }
-        return paytmService.checkOut(email,netTotal,promoDiscount,address);
+        return paytmService.checkOut(email,netTotal,promoDiscount,promo,address);
     }
 
 //    @PostMapping(value = "/pgredirect")
@@ -142,6 +143,7 @@ public class OrderController {
 
     @PostMapping(value = "/pgresponse")
     public String getResponseRedirect(HttpServletRequest request, HttpServletResponse response, Model model) {
+    paytmService.placeOrder(request,response);
       return "";
     }
 
