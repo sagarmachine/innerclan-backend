@@ -52,14 +52,23 @@ public class OrderServiceImpl implements IOrderService {
                  if(promoOptional.isPresent())
            client.addPromos(promoOptional.get());}
         client.setTotalOrder(client.getTotalOrder()+1);
+         //----- incrementing product sale;
+        List<CartItem> cartItemList= cartItemRepository.findByClient(client);
+        Set<Long> saleCounter =new HashSet<>();
+        for(CartItem c:cartItemList){
+            Product p=c.getColor().getProduct();
+            if(saleCounter.add(p.getId())) {
+                p.setSale(p.getSale()+1);
+            }
+        }
+        cartItemRepository.deleteAllByClientEmail(client.getEmail());
         //client.setCartItems(new HashSet<>());
 
-        cartItemRepository.deleteAllByClientEmail(client.getEmail());
 
         order.setTransactionId(txnId);
         order.setPaymentMode(paymentMode);
         order.setStatus(OrderStatus.PLACED);
-       // orderRepository.save(order);
+        orderRepository.save(order);
         clientRepository.save(client);
     }
 
@@ -120,7 +129,7 @@ public class OrderServiceImpl implements IOrderService {
         Optional<Order>orderOptional = orderRepository.findById(id);
 
         if(!orderOptional.isPresent())
-            throw  new OrderNotFoundException("no order foung with id "+id);
+            throw  new OrderNotFoundException("no order found with id "+id);
 
 
         int flag=0;
