@@ -4,9 +4,11 @@ import com.innerclan.v1.dto.AddToCartDto;
 import com.innerclan.v1.dto.CheckOutDto;
 import com.innerclan.v1.entity.Address;
 import com.innerclan.v1.entity.Client;
+import com.innerclan.v1.entity.Order;
 import com.innerclan.v1.exception.ClientNotFoundException;
 import com.innerclan.v1.exception.PromoNotFoundException;
 import com.innerclan.v1.repository.ClientRepository;
+import com.innerclan.v1.repository.OrderRepository;
 import com.innerclan.v1.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +25,7 @@ import java.util.*;
 @RestController
 @RequestMapping("/api/v1/order")
 @Slf4j
-public class OrderController {
+public class CllientOrderController {
 
 
     @Autowired
@@ -43,6 +45,9 @@ public class OrderController {
 
     @Autowired
     IOrderService orderService;
+
+    @Autowired
+    OrderRepository orderRepository;
 
 
     @PostMapping(value="/checkOut")
@@ -145,6 +150,23 @@ log.info("PLACING ORDER");
     public String getResponseRedirect(HttpServletRequest request, HttpServletResponse response, Model model) {
     paytmService.placeOrder(request,response);
       return "";
+    }
+
+    @GetMapping(value ="")
+    public ResponseEntity<?> getAllOrders(Principal principal){
+
+        Optional<Client> clientOptional=clientRepository.findByEmail(principal.getName());
+        if(!clientOptional.isPresent())
+            throw  new ClientNotFoundException("no client found with email"+ principal.getName());
+
+        return new ResponseEntity<>(clientOptional.get().getOrders(),HttpStatus.OK);
+    }
+
+    @PostMapping("/addQuery/{id}")
+    public ResponseEntity<?> addQuery(@PathVariable("id") long id, @RequestParam("query")  String query, Principal principal){
+
+        return    orderService.addQuery(id,query,principal.getName());
+
     }
 
 

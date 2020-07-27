@@ -145,8 +145,10 @@ public class OrderServiceImpl implements IOrderService {
     public ResponseEntity<?> addQuery(long id, String query, String email) {
 
         Optional<Order> orderOptional= orderRepository.findById(id);
+             log.info(!orderOptional.isPresent()+"");
+             log.info( orderOptional.get().getClient().getEmail().equals(email)+"");
 
-        if(!orderOptional.isPresent() || orderOptional.get().getClient().getEmail().equals(email))
+        if(!orderOptional.isPresent() || !orderOptional.get().getClient().getEmail().equals(email))
             throw new OrderNotFoundException("no order found");
 
         Order order = orderOptional.get();
