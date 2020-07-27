@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,7 +46,12 @@ public class AdminOrderController {
 //            adminOrderView.add(adminOrderViewDto);
 //        }
 
-       return new ResponseEntity<>(orderRepository.findAllByOrderByUpdatedOnDesc(pageable), HttpStatus.OK);
+
+
+          HashMap<String, Object> map= new HashMap<>();
+          map.put("total",  orderRepository.count()+"" );
+          map.put("orders",orderRepository.findAllByOrderByUpdatedOnDesc(pageable));
+       return new ResponseEntity<>(map, HttpStatus.OK);
 
     }
 
@@ -67,7 +73,7 @@ public class AdminOrderController {
             throw  new IllegalOrderStatus("use a valid status value");
 
 
-        Pageable pageable = PageRequest.of((int) pageNumber, 10);
+        Pageable pageable = PageRequest.of((int) pageNumber, 3);
         List<AdminOrderViewDto> adminOrderView= new ArrayList<>();
 
         ModelMapper mapper= new ModelMapper();
