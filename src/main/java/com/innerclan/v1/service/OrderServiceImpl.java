@@ -4,10 +4,7 @@ import com.innerclan.v1.dto.CartItemDto;
 import com.innerclan.v1.entity.*;
 import com.innerclan.v1.exception.IllegalOrderStatus;
 import com.innerclan.v1.exception.OrderNotFoundException;
-import com.innerclan.v1.repository.CartItemRepository;
-import com.innerclan.v1.repository.ClientRepository;
-import com.innerclan.v1.repository.OrderRepository;
-import com.innerclan.v1.repository.PromoRepository;
+import com.innerclan.v1.repository.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -35,6 +32,9 @@ public class OrderServiceImpl implements IOrderService {
     @Autowired
     CartItemRepository cartItemRepository;
 
+    @Autowired
+    ProductRepository productRepository;
+
     @Override
     public void completeOrder(String orderId,String txnId, String paymentMode) {
 
@@ -46,6 +46,7 @@ public class OrderServiceImpl implements IOrderService {
 
         Order order = orderOptional.get();
         Client client= order.getClient();
+
 
          if(order.getPromoUsed()!=null)
          {Optional<Promo> promoOptional= promoRepository.findByName(order.getPromoUsed());
@@ -59,6 +60,7 @@ public class OrderServiceImpl implements IOrderService {
             Product p=c.getColor().getProduct();
             if(saleCounter.add(p.getId())) {
                 p.setSale(p.getSale()+1);
+                productRepository.save(p);
             }
         }
         cartItemRepository.deleteAllByClientEmail(client.getEmail());
