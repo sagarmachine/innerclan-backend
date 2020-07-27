@@ -8,6 +8,7 @@ import com.innerclan.v1.exception.IllegalOrderStatus;
 import com.innerclan.v1.exception.OrderNotFoundException;
 import com.innerclan.v1.repository.OrderRepository;
 import com.innerclan.v1.service.IOrderService;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -23,6 +24,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/api/v1/admin/order")
+@Slf4j
 public class AdminOrderController {
 
 
@@ -58,13 +60,13 @@ public class AdminOrderController {
 
 
     @GetMapping("/status/{status}")
-    ResponseEntity<?> getOrdersByStatus(@PathVariable("status")String s,Principal principal,int pageNumber){
+    ResponseEntity<?> getOrdersByStatus(@PathVariable("status")String s,Principal principal,@RequestParam("pageNumber") int pageNumber){
 
 
         int flag=0;
         OrderStatus status=null;
         for (OrderStatus st:OrderStatus.values()){
-            if(s.toString().equals(s)) {
+            if(s.toString().equals(st.toString())) {
                 flag = 1;
                 status=st;
             }
@@ -74,18 +76,21 @@ public class AdminOrderController {
 
 
         Pageable pageable = PageRequest.of((int) pageNumber, 3);
-        List<AdminOrderViewDto> adminOrderView= new ArrayList<>();
 
-        ModelMapper mapper= new ModelMapper();
+//        ModelMapper mapper= new ModelMapper();
+//
+//        for (Order order : orderRepository.findByStatusOrderByUpdatedOnDesc(status.toString(),pageable)){
+//            AdminOrderViewDto adminOrderViewDto= new AdminOrderViewDto();
+//            adminOrderViewDto= mapper.map(order,AdminOrderViewDto.class);
+//            adminOrderViewDto.setEmail(order.getClient().getEmail());
+//            adminOrderView.add(adminOrderViewDto);
+//        }
 
-        for (Order order : orderRepository.findByStatusOrderByUpdatedOnDesc(status.toString(),pageable)){
-            AdminOrderViewDto adminOrderViewDto= new AdminOrderViewDto();
-            adminOrderViewDto= mapper.map(order,AdminOrderViewDto.class);
-            adminOrderViewDto.setEmail(order.getClient().getEmail());
-            adminOrderView.add(adminOrderViewDto);
-        }
-
-        return new ResponseEntity<>(adminOrderView, HttpStatus.OK);
+        log.info(status.toString());
+        HashMap<String, Object> map= new HashMap<>();
+        map.put("total",  orderRepository.countByStatus(status));
+        map.put("orders",orderRepository.findByStatusOrderByUpdatedOnDesc(status,pageable));
+        return new ResponseEntity<>(map, HttpStatus.OK);
 
     }
 
