@@ -32,21 +32,20 @@ public class AdminOrderController {
     IOrderService orderService;
 
     @GetMapping("")
-    ResponseEntity<?> getOrders(Principal principal,int pageNumber){
+    ResponseEntity<?> getOrders(@RequestParam("pageNumber") int pageNumber){
 
-        Pageable pageable = PageRequest.of((int) pageNumber, 10);
-        List<AdminOrderViewDto> adminOrderView= new ArrayList<>();
+        Pageable pageable = PageRequest.of((int) pageNumber, 3);
+      //  List<AdminOrderViewDto> adminOrderView= new ArrayList<>();
+        //ModelMapper mapper= new ModelMapper();
 
-        ModelMapper mapper= new ModelMapper();
+//        for (Order order : orderRepository.findAllByOrderByUpdatedOnDesc(pageable)){
+//            AdminOrderViewDto adminOrderViewDto= new AdminOrderViewDto();
+//            adminOrderViewDto= mapper.map(order,AdminOrderViewDto.class);
+//            adminOrderViewDto.setEmail(order.getClient().getEmail());
+//            adminOrderView.add(adminOrderViewDto);
+//        }
 
-        for (Order order : orderRepository.findAllByOrderByUpdatedOnDesc(pageable)){
-            AdminOrderViewDto adminOrderViewDto= new AdminOrderViewDto();
-            adminOrderViewDto= mapper.map(order,AdminOrderViewDto.class);
-            adminOrderViewDto.setEmail(order.getClient().getEmail());
-            adminOrderView.add(adminOrderViewDto);
-        }
-
-       return new ResponseEntity<>(adminOrderView, HttpStatus.OK);
+       return new ResponseEntity<>(orderRepository.findAllByOrderByUpdatedOnDesc(pageable), HttpStatus.OK);
 
     }
 

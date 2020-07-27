@@ -54,6 +54,8 @@ public class OrderServiceImpl implements IOrderService {
         client.setTotalOrder(client.getTotalOrder()+1);
         //client.setCartItems(new HashSet<>());
 
+
+
         cartItemRepository.deleteAllByClientEmail(client.getEmail());
 
         order.setTransactionId(txnId);
