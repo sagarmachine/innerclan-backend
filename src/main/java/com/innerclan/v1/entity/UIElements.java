@@ -19,12 +19,15 @@ public class UIElements {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     long id;
 
+    @Lob
     @Column(nullable = false)
     String quote;
 
+    @Lob
     @Column(nullable = false)
     String image1;
 
+    @Lob
     String image2;
 
 
