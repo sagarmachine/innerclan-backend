@@ -31,7 +31,7 @@ import java.util.*;
 @RestController
 @Slf4j
 @RequestMapping(value = "/api/v1/admin/product")
-@CrossOrigin(value = {"http://localhost:3001","http://localhost:3000"})
+//@CrossOrigin(value = {"http://localhost:3001","http://localhost:3000"})
 public class AdminProductController {
 
 

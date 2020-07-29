@@ -57,7 +57,7 @@ public class CategoryServiceImpl implements ICategoryService {
             category.setGender(Gender.MALE);
         else if(c.getGender().equals("F"))
             category.setGender(Gender.FEMALE);
-        else if(category.getGender().equals("U"))
+        else if(c.getGender().equals("U"))
             category.setGender(Gender.UNISEX);
         else
             throw  new IllegalGenderNameUsedException("only 'M' 'F' 'U' as a gender allowed");

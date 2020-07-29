@@ -19,7 +19,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/v1/admin/client")
-@CrossOrigin(value = {"http://localhost:3001","http://localhost:3000"})
+//@CrossOrigin(value = {"http://localhost:3001","http://localhost:3000"})
 public class AdminClientController {
 
 

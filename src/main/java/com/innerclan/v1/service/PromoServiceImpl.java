@@ -53,6 +53,11 @@ public class PromoServiceImpl implements IPromoService {
         Optional <Promo> value =promoRepository.findById(id);
         if(!value.isPresent()) throw new PromoNotFoundException("No Promo with id "+id+" found.");
 
+        for (Client client:value.get().getClients()){
+            client.getPromos().remove(value.get());
+            clientRepository.save(client);
+        }
+
         promoRepository.deleteById(id);
 
     }

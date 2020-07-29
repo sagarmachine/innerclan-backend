@@ -22,7 +22,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/api/v1/admin/category")
-@CrossOrigin(value = {"http://localhost:3001","http://localhost:3000"})
+//@CrossOrigin(value = {"http://localhost:3001","http://localhost:3000"})
 public class AdminCategoryController {
 
 

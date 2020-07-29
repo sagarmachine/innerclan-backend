@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.HashMap;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(value="/api/v1/admin/promo")
@@ -49,6 +50,7 @@ public class AdminPromoController {
 
     @DeleteMapping(value="/{id}")
     public ResponseEntity<?> deletePromo(@PathVariable("id") long id){
+
 
         promoService.deletePromo(id);
         return new ResponseEntity<>("Promo Successfully Deleted", HttpStatus.OK);
