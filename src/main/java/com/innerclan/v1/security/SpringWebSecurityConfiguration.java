@@ -38,7 +38,10 @@ public class SpringWebSecurityConfiguration extends WebSecurityConfigurerAdapter
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers("/**/*").permitAll();
+        http.authorizeRequests()
+                .antMatchers("/api/v1/admin/authenticate","/api/v1/product/**/*","/api/v1/client/register","/api/v1/client/category","/api/v1/client/authenticate","/api/v1/design/**/*","/api/v1/subscribe/**/*","api/v1/client/forgotPassword/**/*").permitAll()
+                .antMatchers("/api/v1/admin/**/*").hasAuthority("ADMIN")
+                .anyRequest().authenticated();
         http.exceptionHandling().authenticationEntryPoint(userNotLoginAuthenticationEntryPoint)
         .and().csrf().disable()
         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)

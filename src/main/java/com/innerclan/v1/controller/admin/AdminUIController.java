@@ -15,13 +15,13 @@ public class AdminUIController {
     @Autowired
     UIElementsRepository uiElementsRepository;
 
-    @PostMapping("")
+    @PostMapping(value="")
     public ResponseEntity<?> add(@RequestBody UIElements uiElements){
         uiElementsRepository.save(uiElements);
         return new ResponseEntity<>("UI added successfully ", HttpStatus.OK);
     }
 
-    @GetMapping("")
+    @GetMapping(value="")
     public ResponseEntity<?> get(){
         return new ResponseEntity<>(uiElementsRepository.findAll(), HttpStatus.OK);
     }

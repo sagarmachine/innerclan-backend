@@ -6,10 +6,7 @@ import com.innerclan.v1.dto.AdminProductView;
 import com.innerclan.v1.dto.UpdateProductDto;
 import com.innerclan.v1.entity.Color;
 import com.innerclan.v1.entity.Product;
-import com.innerclan.v1.exception.ColorNotFoundException;
-import com.innerclan.v1.exception.ImageNotFoundException;
-import com.innerclan.v1.exception.ImageNotSavedException;
-import com.innerclan.v1.exception.ProductNotFoundException;
+import com.innerclan.v1.exception.*;
 import com.innerclan.v1.repository.ColorRepository;
 import com.innerclan.v1.repository.ImageRepository;
 import com.innerclan.v1.repository.ProductRepository;
@@ -25,6 +22,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.security.Principal;
 import java.util.HashSet;
 import java.util.*;
 
@@ -120,7 +119,8 @@ AddProductDto addProductDto= new AddProductDto(productName,productPrice,actualPr
  //-------------------- Getting Products
 
         @GetMapping(value="/getProductsOrderByDate/{id}/{page}")
-        public ResponseEntity<?> getProductByCategoryOrderByDate(@PathVariable("id") long id,@PathVariable("page") long page){
+        public ResponseEntity<?> getProductByCategoryOrderByDate(@PathVariable("id") long id, @PathVariable("page") long page, Principal principal){
+
 
             Pageable pageable = PageRequest.of((int) page, 20);
 

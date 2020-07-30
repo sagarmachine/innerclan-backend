@@ -1,9 +1,11 @@
 package com.innerclan.v1.controller.admin;
 
 
+import com.innerclan.v1.entity.Admin;
 import com.innerclan.v1.entity.AdminLoginKey;
 import com.innerclan.v1.exception.AuthenticationException;
 import com.innerclan.v1.repository.AdminLoginKeyRepository;
+import com.innerclan.v1.repository.AdminRepository;
 import com.innerclan.v1.security.JWTUtil;
 import com.innerclan.v1.security.JWTUtilAdmin;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,14 +25,9 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.*;
 
 @RestController
-@RequestMapping("/api/v1/admin")
+@RequestMapping(value="/api/v1/admin")
 public class AdminController {
 
-
-    @Value(value = "${innerclan.admin.id}")
-      String id;
-    @Value(value = "${innerclan.admin.secret}")
-    String secret;
 
     @Autowired
     AdminLoginKeyRepository adminLoginKeyRepository;
@@ -37,26 +35,52 @@ public class AdminController {
     @Autowired
     JWTUtil jwtUtil;
 
-    @PostMapping("/authenticate")
-    public ResponseEntity<?> authenticateAdmin(@RequestParam("id")String id, @RequestParam("secret")String secret) {
+    @Autowired
+    AdminRepository adminRepository;
 
-        if(this.id.equals(id) && this.secret.equals(secret)){
-            AdminLoginKey adminLoginKey = new AdminLoginKey();
-            adminLoginKey.setLoginKey(UUID.randomUUID().toString());
-            adminLoginKeyRepository.save(adminLoginKey);
+    @Autowired
+    BCryptPasswordEncoder bCryptPasswordEncoder;
 
-            User user = new User(id, secret, new ArrayList<>());
+    @PostMapping(value="/authenticate")
+    public ResponseEntity<?> authenticateAdmin(@RequestParam("username")String username, @RequestParam("secret")String secret) {
+
+
+           Optional<Admin> adminOptional= adminRepository.findByUsername(username);
+
+           if(!adminOptional.isPresent() || !bCryptPasswordEncoder.matches(secret,adminOptional.get().getSecret()))
+               throw  new AuthenticationException("invalid credentials");
+
+            User user = new User(username, bCryptPasswordEncoder.encode(secret), new ArrayList<>());
             String jwtToken = jwtUtil.generateToken(user);
-            HttpHeaders headers= new HttpHeaders();
-            headers.add("Authorization","Bearer "+jwtToken);
-            headers.add("Key",adminLoginKey.getLoginKey());
 
-            return new ResponseEntity<>(headers, HttpStatus.OK);
-        }else{
-            throw new AuthenticationException("admin's credentials are invalid");
-        }
+
+            Admin admin =adminOptional.get();
+            admin.setKey(UUID.randomUUID().toString());
+
+            adminRepository.save(admin);
+
+         HttpHeaders headers= new HttpHeaders();
+         headers.add("Authorization","Bearer "+jwtToken);
+         headers.add("Key",admin.getKey());
+
+
+
+        return new ResponseEntity<>(headers, HttpStatus.OK);
+
 
     }
+
+
+    @PostMapping(value = "")
+    public void addAdmin(@RequestParam("username") String  username, @RequestParam("secret")String secret){
+
+        Admin admin= new Admin();
+        admin.setUsername(username);
+        admin.setSecret(bCryptPasswordEncoder.encode(secret));
+        adminRepository.save(admin);
+
+    }
+
 
 
 

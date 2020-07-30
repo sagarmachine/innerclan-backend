@@ -2,6 +2,7 @@ package com.innerclan.v1;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -11,7 +12,7 @@ import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import java.util.Properties;
 
 @SpringBootApplication
-public class V1Application {
+public class V1Application extends SpringBootServletInitializer {
 
     public static void main(String[] args) {
         SpringApplication.run(V1Application.class, args);

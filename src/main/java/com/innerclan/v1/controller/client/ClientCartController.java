@@ -27,7 +27,7 @@ import java.util.*;
 import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/client/cart")
+@RequestMapping(value="/api/v1/client/cart")
 public class ClientCartController {
 
     @Autowired
@@ -57,7 +57,7 @@ public class ClientCartController {
         return new ResponseEntity<>("ITEMs ADDED SUCCESSFULLY AND UPDATED", HttpStatus.OK);
     }
 
-    @GetMapping("")
+    @GetMapping(value="")
     public ResponseEntity<?> getCartItems(Principal principal ){
 
         String email=principal.getName();
@@ -65,7 +65,7 @@ public class ClientCartController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @GetMapping("/test")
+    @GetMapping(value="/test")
     public ResponseEntity<?> getCartItems2( ){
 
         String email="nikhilkhari47@gmail.com";
@@ -74,7 +74,7 @@ public class ClientCartController {
     }
 
 
-    @DeleteMapping("")
+    @DeleteMapping(value="")
     public ResponseEntity<?> deleteCartItem(Principal principal,@RequestParam("colorId") long colorId,@RequestParam("size") String size){
 
         String email=principal.getName();
@@ -90,7 +90,7 @@ public class ClientCartController {
 
     //only for testing purpose don't delete
 
-    @GetMapping("/test2")
+    @GetMapping(value="/test2")
     public ResponseEntity<?> getCartItems3( ){
         String email="nikhilkhari47@gmail.com";
 

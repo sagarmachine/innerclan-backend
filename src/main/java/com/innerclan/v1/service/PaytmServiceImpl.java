@@ -121,10 +121,10 @@ public class PaytmServiceImpl implements IPaytmService {
             if(result.equals("S")) {
                 orderService.completeOrder(parameters.get("ORDERID"),parameters.get("TXNID"),parameters.get("PAYMENTMODE"));
 
-                response.sendRedirect("http://localhost:3001/paymentResult/" + jwtToken + "/" + client.getEmail() + "/" + client.getFirstName());
+                response.sendRedirect("http://sheltered-scrubland-77233.herokuapp.com/paymentResult/" + jwtToken + "/" + client.getEmail() + "/" + client.getFirstName());
             }else {
                 orderService.orderFailed(parameters.get("ORDERID"));
-                response.sendRedirect("http://localhost:3001/paymentResult/"+jwtToken+"/"+client.getEmail()+"/"+client.getFirstName());
+                response.sendRedirect("http://sheltered-scrubland-77233.herokuapp.com/paymentResult/"+jwtToken+"/"+client.getEmail()+"/"+client.getFirstName());
             }
         } catch (IOException e) {
             orderService.orderFailed(parameters.get("ORDERID"));

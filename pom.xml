@@ -11,6 +11,8 @@
     <groupId>com.innerclan</groupId>
     <artifactId>v1</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <packaging>war</packaging>
+
     <name>v1</name>
     <description>Demo project for Spring Boot</description>
 
@@ -35,6 +37,29 @@
             <artifactId>spring-security-oauth2-jose</artifactId>
             <version>5.3.3.RELEASE</version>
         </dependency>
+        <dependency>
+            <groupId>net.minidev</groupId>
+            <artifactId>asm</artifactId>
+            <version>1.0.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>net.minidev</groupId>
+            <artifactId>json-smart</artifactId>
+            <version>2.3</version>
+        </dependency>
+
+        <!--        <dependency>-->
+<!--            <artifactId>json-path</artifactId>-->
+<!--            <exclusions>-->
+<!--                <exclusion>-->
+<!--                    <artifactId>json-smart</artifactId>-->
+<!--                    <groupId>net.minidev</groupId>-->
+<!--                </exclusion>-->
+<!--            </exclusions>-->
+<!--            <groupId>com.jayway.jsonpath</groupId>-->
+<!--            <optional>false</optional>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt</artifactId>

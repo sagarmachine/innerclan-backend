@@ -6,7 +6,7 @@ paytm.payment:
     website: WEBSTAGING
     industryTypeId: Retail
     paytmUrl:   https://securegw-stage.paytm.in/theia/processTransaction
-    callbackUrl: http://localhost:8082/api/v1/order/pgresponse
+    callbackUrl: http://innerclantest-env.eba-3xcbvtbq.ap-south-1.elasticbeanstalk.com/api/v1/order/pgresponse
     details:
       MID: ${paytm.payment.sandbox.merchantid}
       CHANNEL_ID: ${paytm.payment.sandbox.channelid}

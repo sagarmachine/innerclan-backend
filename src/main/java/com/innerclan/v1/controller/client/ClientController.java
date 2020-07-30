@@ -34,7 +34,7 @@ import java.util.UUID;
 
 @RestController
 @Slf4j
-@RequestMapping("/api/v1/client")
+@RequestMapping(value="/api/v1/client")
 public class ClientController {
 
     @Autowired
@@ -55,7 +55,7 @@ public class ClientController {
 
 
 
-    @PostMapping("/register")
+    @PostMapping(value="/register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody AddClientDto clientDto, BindingResult bindingResult){
 
         if(bindingResult.hasErrors()){
@@ -66,7 +66,7 @@ public class ClientController {
     }
 
 
-    @PostMapping("/authenticate")
+    @PostMapping(value="/authenticate")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginDto loginDto, BindingResult bindingResult)
     {
 

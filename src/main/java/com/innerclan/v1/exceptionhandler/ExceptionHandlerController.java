@@ -96,6 +96,14 @@ public class ExceptionHandlerController {
 
     }
 
+//    @ExceptionHandler(value = Exception.class)
+//    public ResponseEntity<String[]> exceptionHandler(Exception ex){
+//
+//        return    new ResponseEntity<>(new String[]{ex.getMessage()}, HttpStatus.INTERNAL_SERVER_ERROR);
+//
+//    }
+
+
 
 
 

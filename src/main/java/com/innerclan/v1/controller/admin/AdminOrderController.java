@@ -34,7 +34,7 @@ public class AdminOrderController {
     @Autowired
     IOrderService orderService;
 
-    @GetMapping("")
+    @GetMapping(value="")
     ResponseEntity<?> getOrders(@RequestParam("pageNumber") int pageNumber){
 
         Pageable pageable = PageRequest.of((int) pageNumber, 3);
@@ -59,7 +59,7 @@ public class AdminOrderController {
 
 
 
-    @GetMapping("/status/{status}")
+    @GetMapping(value="/status/{status}")
     ResponseEntity<?> getOrdersByStatus(@PathVariable("status")String s,Principal principal,@RequestParam("pageNumber") int pageNumber){
 
 
@@ -94,7 +94,7 @@ public class AdminOrderController {
 
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(value="/{id}")
     public ResponseEntity<?> getOrderDetailView(@PathVariable("id")long id){
         Optional<Order>orderOptional=orderRepository.findById(id);
         if(!orderOptional.isPresent())
@@ -106,7 +106,7 @@ public class AdminOrderController {
 
 
 
-    @PutMapping("/updateOrderStatus/{id}/{status}")
+    @PutMapping(value="/updateOrderStatus/{id}/{status}")
     void updateOrderStatus(@PathVariable("id")long id, @PathVariable("status")String status){
        
         orderService.updateOrderStatus(id, status);

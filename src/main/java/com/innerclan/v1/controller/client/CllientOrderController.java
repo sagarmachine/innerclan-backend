@@ -23,7 +23,7 @@ import java.security.Principal;
 import java.util.*;
 
 @RestController
-@RequestMapping("/api/v1/order")
+@RequestMapping(value="/api/v1/order")
 @Slf4j
 public class CllientOrderController {
 
@@ -77,7 +77,7 @@ public class CllientOrderController {
 
      */
 
-    @GetMapping("/getAddress")
+    @GetMapping(value="/getAddress")
     public ResponseEntity<?> placeOrder(Principal principal){
         String email=principal.getName();
 
@@ -162,7 +162,7 @@ log.info("PLACING ORDER");
         return new ResponseEntity<>(clientOptional.get().getOrders(),HttpStatus.OK);
     }
 
-    @PostMapping("/addQuery/{id}")
+    @PostMapping(value="/addQuery/{id}")
     public ResponseEntity<?> addQuery(@PathVariable("id") long id, @RequestParam("query")  String query, Principal principal){
 
         return    orderService.addQuery(id,query,principal.getName());

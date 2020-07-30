@@ -7,13 +7,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-
 
 
 
@@ -25,7 +23,7 @@ public class UserNotLoginAuthenticationEntryPoint implements AuthenticationEntry
         log.info("Login Exception "+e.getMessage());
 
         httpServletResponse.setHeader("Message","please login ");
-        httpServletResponse.setStatus(7571);
+        httpServletResponse.setStatus(404);
         PrintWriter writer=httpServletResponse.getWriter();
          writer.print("please login with valid credentials  "+ SecurityContextHolder.getContext().getAuthentication());
     }

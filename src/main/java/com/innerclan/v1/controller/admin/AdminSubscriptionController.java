@@ -23,7 +23,7 @@ public class AdminSubscriptionController {
     @Autowired
     IEmailService emailService;
 
-    @GetMapping("/mail")
+    @GetMapping(value="/mail")
     public void mailSubscription(@RequestParam("link")String link,
                                   @RequestParam("subject")String subject,
                                  @RequestParam("body")String body) {
@@ -36,7 +36,7 @@ public class AdminSubscriptionController {
 
     }
 
-        @GetMapping("")
+        @GetMapping(value="")
         public ResponseEntity<List<Subscription>> getAllSubscription(){
 
         return new ResponseEntity<>(subscriptionRepository.findAll(), HttpStatus.OK);

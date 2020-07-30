@@ -28,7 +28,7 @@ public class AdminClientController {
 
 
 
-    @GetMapping("")
+    @GetMapping(value="")
     public ResponseEntity<?> getClients() {
 
         return new ResponseEntity<>(clientRepository.findAllByOrderByCreatedOn(), HttpStatus.OK);
