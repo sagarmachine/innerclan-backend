@@ -49,14 +49,23 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         String authorization= httpServletRequest.getHeader("Authorization");
         String key = httpServletRequest.getHeader("Key");
 
+
+        log.info(authorization);
+
+
         if(key!=null && authorization!=null) {
+            log.info("0");
+
             authenticateAdmin(authorization, key,httpServletRequest,httpServletResponse,filterChain);
         }
         if(authorization!=null && authorization.length()>7){
+            log.info("1");
+
             String jwtToken = authorization.substring(7);
             String email = jwtUtil.getUsernameFromToken(jwtToken);
             UserDetails user =clientService.loadUserByUsername(email);
             if(user!=null && jwtUtil.validateToken(jwtToken,user) && SecurityContextHolder.getContext().getAuthentication()==null  ){
+                log.info("2");
 
                 Object userDetails;
                 Object principal;

@@ -28,6 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequestMapping(value="/api/v1/client/cart")
+//@CrossOrigin(value = "/**/*",origins = "/**/*", allowedHeaders = "Authorization",exposedHeaders = "Authorization")
 public class ClientCartController {
 
     @Autowired

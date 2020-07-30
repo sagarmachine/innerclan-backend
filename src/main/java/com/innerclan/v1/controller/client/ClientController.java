@@ -35,6 +35,7 @@ import java.util.UUID;
 @RestController
 @Slf4j
 @RequestMapping(value="/api/v1/client")
+//@CrossOrigin(origins = "http://localhost:3001", allowedHeaders = "Authorization", exposedHeaders = "Authorization")
 public class ClientController {
 
     @Autowired
