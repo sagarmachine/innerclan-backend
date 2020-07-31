@@ -38,15 +38,15 @@ public class AdminController {
     @Autowired
     AdminRepository adminRepository;
 
-    @Autowired
-    BCryptPasswordEncoder bCryptPasswordEncoder;
+//    @Autowired
+//    BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @PostMapping(value="/authenticate")
     public ResponseEntity<?> authenticateAdmin(@RequestParam("username")String username, @RequestParam("secret")String secret) {
 
 
            Optional<Admin> adminOptional= adminRepository.findByUsername(username);
-
+        BCryptPasswordEncoder bCryptPasswordEncoder= new BCryptPasswordEncoder();
            if(!adminOptional.isPresent() || !bCryptPasswordEncoder.matches(secret,adminOptional.get().getSecret()))
                throw  new AuthenticationException("invalid credentials");
 
@@ -73,6 +73,9 @@ public class AdminController {
 
     @PostMapping(value = "")
     public void addAdmin(@RequestParam("username") String  username, @RequestParam("secret")String secret){
+
+        BCryptPasswordEncoder bCryptPasswordEncoder= new BCryptPasswordEncoder();
+
 
         Admin admin= new Admin();
         admin.setUsername(username);
