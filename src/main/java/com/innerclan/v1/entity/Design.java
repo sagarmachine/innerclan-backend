@@ -15,7 +15,6 @@ import java.util.Date;
 @Entity
 @Getter@Setter
 @NoArgsConstructor@AllArgsConstructor
-@JsonIgnoreProperties(value = {"image"})
 public class Design {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
