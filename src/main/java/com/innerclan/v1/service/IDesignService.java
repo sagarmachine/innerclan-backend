@@ -10,4 +10,6 @@ public interface IDesignService {
     List<Design> getUnseenDesigns();
 
     List<Design> getSeenDesigns();
+
+    void deleteDesign(long id);
 }

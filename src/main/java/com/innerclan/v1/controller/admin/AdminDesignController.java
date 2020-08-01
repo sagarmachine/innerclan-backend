@@ -61,6 +61,15 @@ public class AdminDesignController {
 
     }
 
+    @DeleteMapping(value="")
+    public ResponseEntity<?> getSeenDesigns(@RequestParam("id") long id){
+
+       designService.deleteDesign(id);
+
+        return new ResponseEntity<>("DesignDeleted Successfully", HttpStatus.OK);
+
+    }
+
 
 
 }
