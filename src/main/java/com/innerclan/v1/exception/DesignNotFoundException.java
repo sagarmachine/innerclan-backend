@@ -1,5 +1,9 @@
 package com.innerclan.v1.exception;
 
+
+import lombok.Getter;
+
+@Getter
 public class DesignNotFoundException extends  RuntimeException{
 
     String message;
@@ -8,8 +12,8 @@ public class DesignNotFoundException extends  RuntimeException{
         this.message=message;
     }
 
-    @Override
-    public String getMessage() {
-        return super.getMessage();
-    }
+//    @Override
+//    public String getMessage() {
+//        return this.message;
+//    }
 }
