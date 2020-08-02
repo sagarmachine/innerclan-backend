@@ -24,7 +24,7 @@ public class ClientSubscriptionController {
     @Autowired
     ISubscriptionService subscriptionService;
 
-    @PostMapping(value="/")
+    @PostMapping(value="")
     public ResponseEntity<?> addSubscription(@RequestParam("email") String email){
 
         subscriptionService.addSubscriber(email);
