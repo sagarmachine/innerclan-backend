@@ -48,7 +48,7 @@ public class SpringWebSecurityConfiguration extends WebSecurityConfigurerAdapter
         http.authorizeRequests()
         // .anyRequest().permitAll();
                // .antMatchers("/**/*")
-        .antMatchers("/api/v1/admin/promo/isValid/*","/api/v1/admin/authenticate","/api/v1/admin","/api/v1/client/ui","/api/v1/product/**/*","/api/v1/client/register","/api/v1/client/category","/api/v1/client/authenticate","/api/v1/design/**/*","/api/v1/subscribe/**/*","api/v1/client/forgotPassword/**/*")
+        .antMatchers("/api/v1/admin/promo/isValid/*","/api/v1/admin/authenticate","/api/v1/admin","/api/v1/client/ui","/api/v1/product/**/*","/api/v1/client/register","/api/v1/client/category","/api/v1/client/authenticate","/api/v1/design","/api/v1/subscribe/**/*","api/v1/client/forgotPassword/**/*")
         .permitAll()//.antMatchers(HttpMethod.OPTIONS, "**").permitAll() ;
                 .antMatchers("/api/v1/admin/**/*").hasAuthority("ADMIN")
                 .anyRequest().authenticated();

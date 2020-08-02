@@ -42,7 +42,7 @@ public class ClientDesignController {
     @Autowired
     DesignRepository designRepo;
 
-    @PostMapping(value = "/",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping(value = "",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<?> sendDesign(@RequestParam("email") String email,
                                         @RequestParam("comment") String comment,
                                         @RequestBody MultipartFile file ){
