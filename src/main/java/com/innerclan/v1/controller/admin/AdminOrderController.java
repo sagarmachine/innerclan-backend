@@ -104,6 +104,10 @@ public class AdminOrderController {
 
     }
 
+    @PostMapping(value="/{oid}/trackingId/{tid}")
+    public void setTrackingId(@PathVariable("oid") String oid,@PathVariable("tid") String tid){
+      orderService.setTrackingId(oid,tid);
+    }
 
 
     @PutMapping(value="/updateOrderStatus/{id}/{status}")

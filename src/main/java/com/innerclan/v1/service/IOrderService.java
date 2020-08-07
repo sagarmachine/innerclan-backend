@@ -17,4 +17,6 @@ public interface IOrderService {
 
      ResponseEntity<?> addQuery(long id, String query , String email );
 
+     void setTrackingId(String oid, String tid);
+
 }

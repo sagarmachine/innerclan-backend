@@ -172,4 +172,17 @@ public class OrderServiceImpl implements IOrderService {
         return new ResponseEntity<>(params, HttpStatus.ACCEPTED);
 
     }
+
+    @Override
+    public void setTrackingId(String oid, String tid) {
+
+        Optional<Order> orderOptional=  orderRepository.findByOrderId(oid);
+
+        if(!orderOptional.isPresent())
+            throw  new OrderNotFoundException("no order found with id " + oid );
+
+        Order order = orderOptional.get();
+        order.setTrackingId(tid);
+        orderRepository.save(order);
+    }
 }

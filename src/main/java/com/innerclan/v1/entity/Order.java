@@ -49,6 +49,8 @@ public class Order {
      Date updatedOn;
 
 
+    String trackingId;
+
     Date expectedDeliveryDate;
 
     @Column(nullable = false)
