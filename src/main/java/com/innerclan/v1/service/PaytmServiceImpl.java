@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.security.Principal;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;

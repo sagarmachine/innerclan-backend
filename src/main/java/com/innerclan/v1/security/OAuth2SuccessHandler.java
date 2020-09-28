@@ -87,7 +87,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
 //       redirect(clientController.oauthAuthorizationLogin(authentication,map.get("email").toString()));
         //String jwt
-        httpServletResponse.sendRedirect("http://sheltered-scrubland-77233.herokuapp.com/auth/"+jwtToken+"/"+map.get("email").toString()+"/"+map.get("given_name").toString());
+        httpServletResponse.sendRedirect("http://localhost:3001/auth/"+jwtToken+"/"+map.get("email").toString()+"/"+map.get("given_name").toString());
 
     }
 
