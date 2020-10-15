@@ -110,15 +110,15 @@
             <artifactId>hibernate-validator</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.paytm</groupId>
+            <artifactId>checksum</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
-<!--        <dependency>-->
-<!--        <groupId>com.paytm.pg</groupId>-->
-<!--        <artifactId>pg-checksum</artifactId>-->
-<!--        <version>1.0</version>-->
-<!--      </dependency>-->
 
 
         <dependency>
@@ -134,35 +134,12 @@
         </dependency>
 
 <!--        <dependency>-->
-<!--            <groupId>com.paytm.pg</groupId>-->
-<!--            <artifactId>pg-checksum</artifactId>-->
+<!--            <groupId>paytm</groupId>-->
+<!--            <artifactId>checksum</artifactId>-->
 <!--            <version>1.0</version>-->
-<!--          </dependency>-->
-
-<!--        <dependency>-->
-<!--            <groupId>dropbox</groupId>-->
-<!--            <artifactId>dropbox-sdk</artifactId>-->
-<!--            <scope>system</scope>-->
-<!--           <version>1.3.1</version>-->
-<!--        </dependency>-->
-
-
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.boot</groupId>-->
-<!--            <artifactId>spring-boot-starter-parent</artifactId>-->
-<!--            <version>2.3.1.RELEASE</version>-->
 <!--            <scope>system</scope>-->
 <!--            <systemPath>${project.basedir}/src/main/resources/paytm-checksum-2.0.0.jar</systemPath>-->
 <!--        </dependency>-->
-
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-parent</artifactId>
-            <version>2.3.1.RELEASE</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/dropbox/dropbox-sdk/1.3.1/paytm-checksum-2.0.0.jar</systemPath>
-        </dependency>
 
     </dependencies>
 
@@ -170,13 +147,12 @@
 
     <repositories>
         <repository>
-            <id>in-project</id>
-            <name>In Project Repo</name>
-            <url>file://${project.basedir}/lib</url>
+            <id>repsy</id>
+            <name>paytm repo</name>
+            <url>https://repo.repsy.io/mvn/sagarmachine/paytm</url>
         </repository>
-
-
     </repositories>
+
     <build>
         <plugins>
             <plugin>
