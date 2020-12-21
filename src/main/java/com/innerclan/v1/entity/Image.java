@@ -18,9 +18,14 @@ public class Image {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
-    @Lob
-    @Column(nullable = false)
-    byte[] image;
+//    @Lob
+//    @Column(nullable = false)
+//    byte[] image;
+
+    String image;
+
+    String deleteImage;
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn

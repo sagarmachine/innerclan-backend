@@ -17,9 +17,17 @@ import com.innerclan.v1.repository.ProductRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -48,6 +56,9 @@ public class ProductServiceImpl implements IProductService {
     @Autowired
     ColorRepository colorRepository;
 
+
+  @Value("${imgbb.url}")
+    String url;//="https://api.imgbb.com/1/upload?key=dcbdc94a138d3a04d52f008ec67168a5";
     
 
     @Override
@@ -134,13 +145,31 @@ public class ProductServiceImpl implements IProductService {
         Product product = mapper.map(addProductDto, Product.class);
 
 
-
+        RestTemplate restTemplate = new RestTemplate();
+        MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
         try {
-            log.info("uploading "+file.getOriginalFilename());
-            product.setDefaultImage(file.getBytes());
-        } catch (IOException ex) {
-            throw new ProductNotSavedException("Try Different Image or Different Image Format");
+            map.add("image",   Base64.getEncoder().encodeToString(file.getBytes()));
+
+        } catch (Exception ex){
+            throw new ImageNotSavedException("image was not saved try a different image");
         }
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.MULTIPART_FORM_DATA);
+        HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<>(map, httpHeaders);
+
+
+        HashMap<String,Object> result= restTemplate.exchange(url, HttpMethod.POST, request, HashMap.class).getBody();
+      //  System.out.println((String)((HashMap)result.get("data")).get("display_url"));
+        product.setDefaultImage((String)((HashMap)result.get("data")).get("display_url"));
+        product.setDeleteImage((String)result.get("delete_url"));
+
+
+//        try {
+//            log.info("uploading "+file.getOriginalFilename());
+//            product.setDefaultImage(file.getBytes());
+//        } catch (IOException ex) {
+//            throw new ProductNotSavedException("Try Different Image or Different Image Format");
+//        }
           product.setProductName(product.getProductName().toUpperCase());
         category.addProducts(product);
         try {
@@ -165,12 +194,30 @@ public class ProductServiceImpl implements IProductService {
         ModelMapper mapper = new ModelMapper();
         Product product = mapper.map(updateProductDto, Product.class);
 
+
+        RestTemplate restTemplate = new RestTemplate();
+        MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
         try {
-            log.info("uploading "+file.getOriginalFilename());
-            product.setDefaultImage(file.getBytes());
-        } catch (IOException ex) {
-            throw new ProductNotSavedException("Try Different Image or Different Image Format");
+            map.add("image",   Base64.getEncoder().encodeToString(file.getBytes()));
+
+        } catch (Exception ex){
+            throw new ImageNotSavedException("image was not saved try a different image");
         }
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.MULTIPART_FORM_DATA);
+        HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<>(map, httpHeaders);
+
+
+        HashMap<String,Object> result= restTemplate.exchange(url, HttpMethod.POST, request, HashMap.class).getBody();
+        product.setDefaultImage((String)((HashMap)result.get("data")).get("display_url"));
+        product.setDeleteImage((String)result.get("delete_url"));
+
+//        try {
+//            log.info("uploading "+file.getOriginalFilename());
+//            product.setDefaultImage(file.getBytes());
+//        } catch (IOException ex) {
+//            throw new ProductNotSavedException("Try Different Image or Different Image Format");
+//        }
         product.setView(productOptional.get().getView());
         product.setSale(productOptional.get().getSale());
         product.setCreatedOn(productOptional.get().getCreatedOn());
@@ -201,15 +248,24 @@ public class ProductServiceImpl implements IProductService {
         Color color=colorOptional.get();
         Image image= new Image();
 
+        RestTemplate restTemplate = new RestTemplate();
+        MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
         try {
-            image.setImage(file.getBytes());
-            color.addImages(image);
-            colorRepository.save(color);
+            map.add("image",   Base64.getEncoder().encodeToString(file.getBytes()));
 
-   }
-        catch (Exception ex){
-    throw new ImageNotSavedException("image was not saved try a different image");
-}
+        } catch (Exception ex){
+            throw new ImageNotSavedException("image was not saved try a different image");
+        }
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.MULTIPART_FORM_DATA);
+        HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<>(map, httpHeaders);
+
+
+       HashMap<String,Object> result= restTemplate.exchange(url, HttpMethod.POST, request, HashMap.class).getBody();
+        image.setImage((String)((HashMap)result.get("data")).get("display_url"));
+        image.setDeleteImage((String)result.get("delete_url"));
+        color.addImages(image);
+        colorRepository.save(color);
         return colorRepository.findById(colorId).get();
     }
 

@@ -20,7 +20,7 @@ public class CartItemDto {
 
     String selectedColorName;
 
-    byte[] selectedColorImage;
+    String selectedColorImage;
 
     long quantity;
 

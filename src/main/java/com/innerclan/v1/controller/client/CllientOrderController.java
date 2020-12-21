@@ -147,8 +147,8 @@ log.info("PLACING ORDER");
 
 
     @PostMapping(value = "/pgresponse")
-    public String getResponseRedirect(HttpServletRequest request, HttpServletResponse response, Model model) {
-    paytmService.placeOrder(request,response);
+    public String getResponseRedirect(@RequestParam("CUST_ID")String CUST_ID,HttpServletRequest request, HttpServletResponse response, Model model) {
+    paytmService.placeOrder(request,response,CUST_ID);
       return "";
     }
 

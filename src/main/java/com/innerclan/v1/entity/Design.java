@@ -26,9 +26,11 @@ public class Design {
     @Column(nullable=false)
     String comment;
 
-    @Lob
-    @Column(nullable=false)
-    byte[] image;
+    //@Lob
+    //@Column(nullable=false)
+
+    String image;
+    String deleteImage;
 
     @CreationTimestamp
     @JsonFormat(pattern = "yyyy-MM-dd")

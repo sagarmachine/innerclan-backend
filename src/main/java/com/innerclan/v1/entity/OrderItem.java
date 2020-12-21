@@ -22,9 +22,12 @@ public class OrderItem {
     @Column(nullable = false)
     double price;
 
-    @Lob
-    @Column(nullable = false)
-    byte[] image;
+//    @Lob
+//    @Column(nullable = false)
+//    byte[] image;
+
+    String image;
+    String deleteImage;
 
     @Column(nullable = false)
     long quantity;

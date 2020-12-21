@@ -7,7 +7,7 @@ import com.innerclan.v1.exception.ClientNotFoundException;
 import com.innerclan.v1.repository.ClientRepository;
 import com.innerclan.v1.repository.OrderRepository;
 import com.innerclan.v1.security.JWTUtil;
-import com.paytm.pg.merchant.CheckSumServiceHelper;
+import com.paytm.pg.merchant.PaytmChecksum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -45,14 +45,32 @@ public class PaytmServiceImpl implements IPaytmService {
     @Autowired
     OrderRepository orderRepository;
 
-    public  boolean validateCheckSum(TreeMap<String, String> parameters, String paytmChecksum) throws Exception {
-        return CheckSumServiceHelper.getCheckSumServiceHelper().verifycheckSum(paytmClient.getMerchantKey(),
-                parameters, paytmChecksum);
+    public  boolean validateCheckSum(TreeMap<String, String> parameters, String paytmChecksum){
+
+        try{
+            String actualAmount = (orderRepository.findByOrderId(parameters.get("ORDER_ID")).get().getTotal()) + "";
+
+            System.out.println(actualAmount+"  "+parameters.get("TXN_AMOUNT"));
+
+            if (parameters.get("TXN_AMOUNT").equals((actualAmount.substring(0, actualAmount.indexOf('.')))))
+                return true;
+            else
+                return false;
+        }catch (Exception ex){
+            System.out.println("SOME EXC "+ex );
+            return false;
+        }
+
+      //  return PaytmChecksum.verifySignature(parameters,paytmClient.getMerchantKey(),paytmChecksum);
+
+//                CheckSumServiceHelper.getCheckSumServiceHelper().verifycheckSum(paytmClient.getMerchantKey(),
+//                parameters, paytmChecksum);
     }
 
 
     public  String getCheckSum(TreeMap<String, String> parameters) throws Exception {
-        return CheckSumServiceHelper.getCheckSumServiceHelper().genrateCheckSum(paytmClient.getMerchantKey(), parameters);
+        return PaytmChecksum.generateSignature(parameters,paytmClient.getMerchantKey());
+              //  CheckSumServiceHelper.getCheckSumServiceHelper().genrateCheckSum(paytmClient.getMerchantKey(), parameters);
     }
 
     @Override
@@ -68,14 +86,47 @@ public class PaytmServiceImpl implements IPaytmService {
 
     }
 
+//    private  boolean isValidKey(String key){
+//
+//        switch (key){
+//
+//            case "ORDER_ID":
+//            case "ORDER_ID":
+//            case "ORDER_ID":
+//            case "ORDER_ID":
+//            case "ORDER_ID":
+//            case "ORDER_ID":
+//            case "TXN_AMOUNT":
+//            case  "CUST_ID": return true;
+//
+//        }
+//
+//    }
+
     @Override
-    public void placeOrder(HttpServletRequest request, HttpServletResponse response) {
-
-
+    public void placeOrder(HttpServletRequest request, HttpServletResponse response, String CUST_ID) {
 
         Map<String, String[]> mapData = request.getParameterMap();
+        System.out.println(mapData);
         TreeMap<String, String> parameters = new TreeMap<String, String>();
-        mapData.forEach((key, val) -> parameters.put(key, val[0]));
+//        mapData.forEach((key, val) -> {
+//        //    if () {
+//                parameters.put(key, val[0]);
+//       //     }
+//        });
+
+            paytmClient.getDetails().forEach((k, v) -> parameters.put(k, v));
+            // parameters.put("MOBILE_NO", env.getProperty("paytm.mobile"));
+            //  parameters.put("EMAIL", env.getProperty("paytm.email"));
+            parameters.put("ORDER_ID", mapData.get("ORDERID")[0]);
+            parameters.put("TXN_AMOUNT", mapData.get("TXNAMOUNT")[0].substring(0,mapData.get("TXNAMOUNT")[0].indexOf('.')));
+            parameters.put("CUST_ID", CUST_ID);
+            parameters.put("CALLBACK_URL",parameters.get("CALLBACK_URL")+"?CUST_ID="+CUST_ID);
+
+
+
+        System.out.println(parameters);
+        System.out.println(CUST_ID);
 
         String paytmChecksum = "";
         if (mapData.containsKey("CHECKSUMHASH")) {
@@ -87,15 +138,10 @@ public class PaytmServiceImpl implements IPaytmService {
 
         try {
             isValideChecksum = validateCheckSum(parameters, paytmChecksum);
-            if (isValideChecksum && parameters.containsKey("RESPCODE")) {
-                if (parameters.get("RESPCODE").equals("01")) {
+            if (isValideChecksum && mapData.containsKey("RESPCODE")) {
+                if (mapData.get("RESPCODE")[0].equals("01")) {
                     result = "S";
-                    log.info("PAYTM SUCCESSFUL--------------------------> ");
-                    log.info(parameters.toString());
-                    log.info("TXN_ID :"+parameters.get("TXNID"));
-                    log.info("PAYMENTMODE :"+parameters.get("PAYMENTMODE"));
-                    log.info("PAYMENTMODE :"+parameters.get("ORDERID"));
-                    ;
+
                 } else {
                     result = "F";
                     log.info("PAYTM FAILED-------------------------->");
@@ -111,22 +157,22 @@ public class PaytmServiceImpl implements IPaytmService {
             result = e.toString();
         }
 
-        Client client=orderRepository.findByOrderId(parameters.get("ORDERID")).get().getClient();
+        Client client=orderRepository.findByOrderId(parameters.get("ORDER_ID")).get().getClient();
 
         UserDetails user =clientService.loadUserByUsername(client.getEmail());
         String jwtToken = jwtUtil.generateToken(user);
 
         try {
             if(result.equals("S")) {
-                orderService.completeOrder(parameters.get("ORDERID"),parameters.get("TXNID"),parameters.get("PAYMENTMODE"));
+                orderService.completeOrder(parameters.get("ORDER_ID"),parameters.get("TXN_ID"),parameters.get("PAYMENTMODE"));
 
-                response.sendRedirect("http://sheltered-scrubland-77233.herokuapp.com/paymentResult/" + jwtToken + "/" + client.getEmail() + "/" + client.getFirstName());
+                response.sendRedirect("http://localhost:3001/paymentResult/" + jwtToken + "/" + client.getEmail() + "/" + client.getFirstName());
             }else {
-                orderService.orderFailed(parameters.get("ORDERID"));
-                response.sendRedirect("http://sheltered-scrubland-77233.herokuapp.com/paymentResult/"+jwtToken+"/"+client.getEmail()+"/"+client.getFirstName());
+                orderService.orderFailed(parameters.get("ORDER_ID"));
+                response.sendRedirect("http://localhost:3001/paymentResult/"+jwtToken+"/"+client.getEmail()+"/"+client.getFirstName());
             }
         } catch (IOException e) {
-            orderService.orderFailed(parameters.get("ORDERID"));
+            orderService.orderFailed(parameters.get("ORDER_ID"));
             log.info("PAYTM EXC 22-------------------------->");
 
          }
@@ -146,13 +192,21 @@ public class PaytmServiceImpl implements IPaytmService {
 
     //@Override
     public  ResponseEntity<?>  makePayment(String orderId, Double amount, String clientUUID) {
+
         TreeMap<String, String> parameters = new TreeMap<>();
+
+
+     //   paytmClient.setCallbackUrl(paytmClient.getCallbackUrl()+"?CUST_ID="+clientUUID);
+
         paytmClient.getDetails().forEach((k, v) -> parameters.put(k, v));
         // parameters.put("MOBILE_NO", env.getProperty("paytm.mobile"));
         //  parameters.put("EMAIL", env.getProperty("paytm.email"));
         parameters.put("ORDER_ID", orderId);
-        parameters.put("TXN_AMOUNT", amount+"");
+        parameters.put("TXN_AMOUNT",( amount+"").substring(0,(amount+"").indexOf('.')));
         parameters.put("CUST_ID", clientUUID);
+        parameters.put("CALLBACK_URL",parameters.get("CALLBACK_URL")+"?CUST_ID="+clientUUID);
+
+        System.out.println(parameters);
         String checkSum = null;
         try {
             checkSum = getCheckSum(parameters);
@@ -160,6 +214,7 @@ public class PaytmServiceImpl implements IPaytmService {
             // Payment FailedException
 
         }
+        System.out.println(checkSum);
         parameters.put("CHECKSUMHASH", checkSum);
 
         return new ResponseEntity(parameters, HttpStatus.ACCEPTED);

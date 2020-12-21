@@ -46,8 +46,12 @@ public class Product {
 
     long view;
 
-    @Lob
-    byte[] defaultImage;
+//    @Lob
+//    byte[] defaultImage;
+
+    String defaultImage;
+
+    String deleteImage;
 
     long sale;
 

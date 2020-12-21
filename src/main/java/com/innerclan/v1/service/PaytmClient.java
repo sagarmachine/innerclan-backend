@@ -28,6 +28,8 @@ public class PaytmClient{
 
     private String paytmUrl;
 
+    private  String callbackUrl;
+
     private Map<String, String> details;
 //
 }

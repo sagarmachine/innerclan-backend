@@ -19,7 +19,7 @@ public class ClientProductView {
 
     double actualPrice;
 
-    byte[] defaultImage;
+    String defaultImage;
 
     long size;
 

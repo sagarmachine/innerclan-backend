@@ -13,7 +13,7 @@ public interface IPaytmService {
      boolean validateCheckSum(TreeMap<String, String> parameters, String paytmChecksum) throws Exception ;
      String getCheckSum(TreeMap<String, String> parameters) throws Exception ;
 
-     void placeOrder(HttpServletRequest request, HttpServletResponse response);
+     void placeOrder(HttpServletRequest request, HttpServletResponse response, String CUST_ID);
 
     ResponseEntity<?> checkOut(String email, double totalprice,double promoDiscount, String promoUsed,Address address);
 
