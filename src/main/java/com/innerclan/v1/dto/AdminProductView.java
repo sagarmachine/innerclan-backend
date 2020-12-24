@@ -37,7 +37,7 @@ public class AdminProductView {
 
     int sale;
 
-    byte[] defaultImage;
+    String defaultImage;
 
     long size;
 
