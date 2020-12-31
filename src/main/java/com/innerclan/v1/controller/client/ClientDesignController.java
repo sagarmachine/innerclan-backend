@@ -67,6 +67,7 @@ public class ClientDesignController {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.MULTIPART_FORM_DATA);
         HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<>(map, httpHeaders);
+
         HashMap<String,Object> result= restTemplate.exchange(url, HttpMethod.POST, request, HashMap.class).getBody();
         design.setImage((String)((HashMap)result.get("data")).get("display_url"));
         design.setDeleteImage((String)result.get("delete_url"));

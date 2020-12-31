@@ -29,7 +29,7 @@ public class V1Application extends SpringBootServletInitializer {
         mailSender.setPort(587);
 
         mailSender.setUsername("sagarmonkey800@gmail.com");
-        mailSender.setPassword("gvbepespkbkqivfv");
+        mailSender.setPassword("sftidtfshhhnrvnk");
 
 
         Properties props = mailSender.getJavaMailProperties();

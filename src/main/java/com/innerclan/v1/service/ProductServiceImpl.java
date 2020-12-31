@@ -57,9 +57,11 @@ public class ProductServiceImpl implements IProductService {
     ColorRepository colorRepository;
 
 
-  @Value("${imgbb.url}")
-    String url;//="https://api.imgbb.com/1/upload?key=dcbdc94a138d3a04d52f008ec67168a5";
-    
+//  @Value("${imgbb.url}")
+//    String url;//="https://api.imgbb.com/1/upload?key=dcbdc94a138d3a04d52f008ec67168a5";
+String url="https://api.imgbb.com/1/upload?key=dcbdc94a138d3a04d52f008ec67168a5";
+
+
 
     @Override
 
@@ -155,6 +157,7 @@ public class ProductServiceImpl implements IProductService {
         }
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.MULTIPART_FORM_DATA);
+
         HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<>(map, httpHeaders);
 
 
